@@ -1,0 +1,37 @@
+//some variables used for console only
+$console-navbar-height: 50px;
+
+$pallette-primary: #6d1e70;
+$pallette-secondary: #a90362;
+$pallette-error: #f44336;
+$pallette-error-dark: darken($pallette-error, 10);
+$pallette-warning: #ff9800;
+$pallette-success: #5cb85c;
+$pallette-gray-light: #ebedef;
+$pallette-gray-lighter: #b3b3b3;
+$pallette-gray: #666666;
+$pallette-gray-dark: #333;
+
+$font-size: 15px;
+$h1-font-size: 2.6em; // 39/15
+$h2-font-size: 2.133em; // 32/15
+$h3-font-size: 1.733em; // 26/15
+$h4-font-size: 1.266em; // 19/15
+$h5-font-size: 1em; // 15/15
+$h6-font-size: 0.866em; // 13/15
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+$line-height-base: 1.428571429 !default; // 20/14
+
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.07), 0 2px 1px -1px rgba(0, 0, 0, 0.06);
+
+$navbar-height: 50px;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 992px;
+$screen-lg-min: 1200px;
+$screen-xxs-max: ($screen-xs-min - 1);
+$screen-xs-max: ($screen-sm-min - 1);
+$screen-sm-max: ($screen-md-min - 1);
+$screen-md-max: ($screen-lg-min - 1);

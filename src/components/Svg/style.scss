@@ -1,0 +1,36 @@
+.svgPartial {
+  display: inline-block;
+  svg,
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+  }
+}
+
+.svgStatic {
+  //if parent height-width is larger, we'll simply align the image in the
+  //container
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  //use max height to avoid aspect ratio issues in e.g. firefox
+  //as long as the parent as a fixed height/width, this'll be fine
+  max-height: 100%;
+  max-width: 100%;
+  object,
+  img,
+  svg {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  //fix per https://gist.github.com/larrybotha/7881691
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    img[src$=".svg"] {
+      width: 100%;
+    }
+  }
+}

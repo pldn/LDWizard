@@ -1,0 +1,56 @@
+@import "../../theme/vars.scss";
+.alert {
+  display: flex;
+  .icon {
+    margin-left: 15px;
+    width: 15px;
+    display: flex;
+    align-items: center;
+  }
+  &.sm {
+    margin: 0;
+    .content {
+      padding: 5px 15px;
+    }
+  }
+  transition: box-shadow 0.25s;
+  border-radius: 2px;
+  .content {
+    padding: 11px;
+    width: 100%;
+  }
+  color: white;
+}
+.error {
+  &.transparent {
+    background-color: transparent;
+    color: $pallette-error;
+    border: 1px solid $pallette-error;
+  }
+  background-color: $pallette-error;
+}
+.warning {
+  &.transparent {
+    background-color: transparent;
+    color: $pallette-warning;
+    border: 1px solid $pallette-warning;
+  }
+  background-color: $pallette-warning;
+}
+.info {
+  &.transparent {
+    background-color: transparent;
+    color: $pallette-primary;
+    border: 1px solid $pallette-primary;
+  }
+  background-color: $pallette-primary;
+}
+
+.success {
+  &.transparent {
+    background-color: transparent;
+    color: $pallette-success;
+    border: 1px solid $pallette-success;
+  }
+  background-color: $pallette-success;
+}

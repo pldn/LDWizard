@@ -1,0 +1,149 @@
+{
+  "name": "ld-wizard-basic",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "author": "Gerwin Bosch <gerwin.bosch@triply.cc.com>",
+  "private": true,
+  "license": "TBD",
+  "scripts": {
+    "build": "better-npm-run build",
+    "dev": "better-npm-run dev",
+    "test": "tsc -p ./tsconfig-test.json && mocha $(find ./test -name '*-test.js') --require source-map-support/register",
+    "util:analyzeBundle": "ANALYZE_BUNDLE=true yarn run build",
+    "util:buildWebpackConfig": "tsc -p tsconfig-webpack.json",
+    "util:bundlesize": "bundlesize",
+    "util:lint": "ESLINT_STRICT=true  eslint --ext .tsx --ext .ts ./src",
+    "util:markStable": "git tag -d stable && git push origin :refs/tags/stable && git tag stable && git push origin stable",
+    "util:prettify": "prettier --parser typescript --write $(find ./src -regex '.*\\.tsx?$') && prettier --parser css --write $(find ./src -regex '.*\\.?scss$')",
+    "util:validateTs:watch": "tsc -p ./tsconfig-validate.json --noEmit --watch --preserveWatchOutput",
+    "util:validateTs": "tsc -p ./tsconfig-validate.json --noEmit"
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "prettier --parser typescript --write",
+      "eslint"
+    ],
+    "*.js": [
+      "prettier --write"
+    ],
+    "*.css": [
+      "prettier --parser css --write"
+    ],
+    "*.scss": [
+      "prettier --parser css --write"
+    ]
+  },
+  "betterScripts": {
+    "dev": {
+      "command": "yarn run util:buildWebpackConfig && webpack-dev-server  --history-api-fallback --public 0.0.0.0 --host 0.0.0.0 --port 4000 --hot  --config ./webpack/config.js --disable-host-check",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "build": {
+      "command": "rm -rf ./lib && yarn run util:buildWebpackConfig && webpack --colors --display-error-details --config ./webpack/config.js",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.29",
+    "@fortawesome/free-brands-svg-icons": "^5.13.1",
+    "@fortawesome/free-regular-svg-icons": "^5.13.1",
+    "@fortawesome/free-solid-svg-icons": "^5.13.1",
+    "@fortawesome/react-fontawesome": "^0.1.11",
+    "@material-ui/core": "^4.10.2",
+    "@triply/ratt": "^0.1.7",
+    "@triply/utils": "^1.3.54",
+    "@types/recoil": "^0.0.1",
+    "classnames": "^2.2.6",
+    "lodash-es": "^4.17.15",
+    "n3": "^1.5.0",
+    "papaparse": "^5.2.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.2.0",
+    "recoil": "^0.0.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/runtime": "^7.8.3",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.3.3",
+    "@types/autoprefixer": "^9.6.1",
+    "@types/chai": "^4.2.11",
+    "@types/classnames": "^2.2.10",
+    "@types/html-webpack-plugin": "^3.2.1",
+    "@types/lodash-es": "^4.17.3",
+    "@types/mini-css-extract-plugin": "^0.9.0",
+    "@types/mocha": "^7.0.2",
+    "@types/optimize-css-assets-webpack-plugin": "^5.0.1",
+    "@types/papaparse": "^5.0.4",
+    "@types/react": "16.9.38",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/terser-webpack-plugin": "^3.0.0",
+    "@types/webpack": "^4.41.2",
+    "@types/webpack-bundle-analyzer": "^3.8.0",
+    "@typescript-eslint/eslint-plugin": "^3.3.0",
+    "@typescript-eslint/parser": "^3.3.0",
+    "autoprefixer": "^9.8.0",
+    "babel-loader": "^8.0.6",
+    "better-npm-run": "^0.1.1",
+    "bundlesize": "^0.18.0",
+    "chai": "^4.2.0",
+    "concurrently": "^5.0.2",
+    "css-loader": "^3.6.0",
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-jest": "^23.6.0",
+    "eslint-plugin-lodash": "^7.1.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.2.11",
+    "mini-css-extract-plugin": "^0.9.0",
+    "mocha": "^8.0.1",
+    "node-sass": "^4.13.1",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss": "^7.0.26",
+    "postcss-bgimage": "^2.1.1",
+    "postcss-loader": "^3.0.0",
+    "prettier": "^2.0.5",
+    "raw-loader": "^4.0.1",
+    "react-refresh": "^0.8.3",
+    "sass-loader": "^8.0.2",
+    "source-map-loader": "^1.0.0",
+    "source-map-support": "^0.5.16",
+    "style-loader": "^1.1.2",
+    "svgo-loader": "^2.2.1",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.7.5",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.41.5",
+    "webpack-build-notifier": "^2.0.0",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "bundlesize": [
+    {
+      "compression": "none",
+      "path": "lib/LDWizard-basic.min.js",
+      "maxSize": "700 kb"
+    },
+    {
+      "compression": "none",
+      "path": "lib/LDWizard-basic.min.css",
+      "maxSize": "10 kB"
+    }
+  ]
+}

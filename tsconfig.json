@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "listFiles": false,
+    "rootDir": ".",
+    "baseUrl": "./src",
+    "jsx": "react"
+  },
+  "include": ["./typings-custom/main.d.ts", "./src/**/*", "./webpack/**/*"],
+  "compileOnSave": false
+}

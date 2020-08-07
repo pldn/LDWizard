@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "outDir": "./test",
+    "module": "commonjs",
+    "target": "es6",
+    "incremental": true,
+    "esModuleInterop": true,
+  },
+  "include": ["src/**/__tests__/*"]
+}
