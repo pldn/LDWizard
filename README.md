@@ -1,15 +1,17 @@
-# LD Wizard Application: Hello world
+<img src="img/LDWizard-square.png" align="right" height="150">
+
+# “Hello world” Wizard
 
 A minimal yet functional implementation of the [LD Wizard
 Interface](https://github.com/netwerk-digitaal-erfgoed/LDWizard).
 
 You can clone this repository in order to build your own LD Wizard Application.
 
-See the [LD Wizard design document](https://github.com/netwerk-digitaal-erfgoed/LDWizard/blob/master/docs/design.md) for more information.
+See the [LD Wizard design document](https://github.com/netwerk-digitaal-erfgoed/LDWizard/blob/master/docs/design.md) for more information about the LD Wizard framework.
 
-See the [LD Wizard Application for Cultural
-Heritage](https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard)
-for an example of a fully configured implementation for a specific domain.
+See the [Cultural Heritage
+Wizard](https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard) for
+an example of a fully configured implementation for a specific domain.
 
 ## Prerequisites / Getting started
 
