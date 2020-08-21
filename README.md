@@ -38,6 +38,28 @@ an example of a fully configured implementation for a specific domain.
 
 2. Go to <http://localhost:4000> in your favorite web browser.
 
+
+
+## Production docker deployment
+
+
+1. Build the image:
+
+```bash
+docker-compose -f ./docker/docker-compose.yml build
+```
+
+2. Start the service:
+
+```bash
+docker-compose -f ./docker/docker-compose.yml up
+```
+
+Goto <http://localhost:4000>
+
+
+
+
 ## Releasing
 
 To mark a version as 'stable', run `yarn run util:markStable`.
