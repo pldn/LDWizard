@@ -43,7 +43,7 @@ an example of a fully configured implementation for a specific domain.
 ## Production docker deployment
 
 
-1. Build the image:
+1. Build the Docker image:
 
 ```bash
 docker-compose -f ./docker/docker-compose.yml build
@@ -55,10 +55,7 @@ docker-compose -f ./docker/docker-compose.yml build
 docker-compose -f ./docker/docker-compose.yml up
 ```
 
-Goto <http://localhost:4000>
-
-
-
+3. Go to <http://localhost:4000> in your favorite web browser.
 
 ## Releasing
 
