@@ -40,4 +40,4 @@ an example of a fully configured implementation for a specific domain.
 
 ## Releasing
 
-To mark a version as 'stable', run `yarn run util:markStable`.
+To mark a version as stable, run `yarn run util:markStable`.
