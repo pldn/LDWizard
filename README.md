@@ -13,7 +13,9 @@ See the [Cultural Heritage
 Wizard](https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard) for
 an example of a fully configured implementation for a specific domain.
 
-## Prerequisites / Getting started
+## 1. Installation
+
+The following steps are necessary in order to install the “Hello world” Wizard:
 
 1. Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com).
 
@@ -32,16 +34,32 @@ an example of a fully configured implementation for a specific domain.
 
 3. Run `yarn` to install the dependencies.
 
-## Local use / development
+## 2. Usage
+
+The following steps allow you to run the “Hello world” Wizard locally:
 
 1. Run `yarn dev` to start the LD Wizard application.
 
 2. Go to <http://localhost:4000> in your favorite web browser.
 
+## 3. Development
 
+This section contains information about developing the “Hello world” Wizard.
 
-## Production docker deployment
+### 3.1 Used dependencies
 
+This LD Wizard Application makes use of the following modern web libraries:
+
+- [Font Awesome](https://fontawesome.com)
+- [Material-UI](https://material-ui.com)
+- [React](https://reactjs.org)
+- [Recoil](https://recoiljs.org)
+
+## 4. Deployment
+
+This section contains information about deploying the “Hello world” Wizard.
+
+### 4.1 Docker
 
 1. Build the Docker image:
 
@@ -57,6 +75,6 @@ docker-compose -f ./docker/docker-compose.yml up
 
 3. Go to <http://localhost:4000> in your favorite web browser.
 
-## Releasing
+### 4.2 Releasing
 
 To mark a version as stable, run `yarn run util:markStable`.
