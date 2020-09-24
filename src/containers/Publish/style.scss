@@ -1,0 +1,56 @@
+.publishOptions > * {
+  margin: 2rem 0;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+.tokenField {
+  display: flex;
+  align-items: center;
+}
+
+.menuItem {
+  display: flex;
+}
+// Need increased specitifity to override Mui default styling
+.itemSelector .selectDisplay {
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+}
+.avatar {
+  max-width: 2rem;
+  max-height: 2rem;
+  margin-right: 1rem;
+  font-family: "Lucida Console", Monaco, monospace;
+  text-transform: uppercase;
+}
+.datasetSelector {
+  margin-left: 2rem;
+  display: inline-flex;
+  align-items: flex-end;
+}
+div.downloadContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.downloadSegment {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 1rem;
+  width: 300px;
+}
+.downloadContent {
+  flex-grow: 1;
+}
+button.actionButtons {
+  border-radius: unset;
+}
+.loadedTokenMessage {
+  display: flex;
+  align-items: center;
+}
+.processAlert {
+  margin-bottom: 1rem;
+}

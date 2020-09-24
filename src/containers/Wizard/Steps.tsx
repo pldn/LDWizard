@@ -7,7 +7,7 @@ import StepButton from "@material-ui/core/StepButton";
 import { Step as UploadStep } from "../Upload";
 import { Step as ConfigureStep } from "../Configure";
 // import { Step as TransformStep } from "../Transform";
-import { Step as ExportStep } from "../Export";
+import { Step as ExportStep } from "../Publish";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "state";

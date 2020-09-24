@@ -1,7 +1,4 @@
 import { TransformationScript, TransformationConfiguration } from "Definitions";
-/**
- * This file is used as a template for a CoW transformation script
- */
 
 interface CowColumn {
   "@id"?: string;
@@ -75,4 +72,4 @@ async function getCowTransformationScript(configuration: TransformationConfigura
   return JSON.stringify(script, undefined, 2);
 }
 
-// export default getCowTransformationScript;
+export default getCowTransformationScript;

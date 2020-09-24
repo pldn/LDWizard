@@ -1,12 +1,8 @@
 import Ratt from "@triply/ratt";
 import fromArray from "@triply/ratt/lib/middlewares/reading/fromArray";
 import { Util } from "n3";
-import toNtriplesString from "./middlewares/toNtriplesString";
+import toNtriplesString from "utils/ratt/middlewares/toNtriplesString";
 import { ApplyTransformation } from "Definitions";
-
-/**
- * This file is used as a template for a Ratt transformation script
- */
 
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "ratt" && Array.isArray(opts.source)) {
@@ -35,4 +31,4 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     throw new Error("Not supported");
   }
 };
-// export default applyTransformation;
+export default applyTransformation;

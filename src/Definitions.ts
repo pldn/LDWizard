@@ -7,6 +7,7 @@ export type Matrix = Array<Array<string>>;
 export type Source = File | string;
 export type TransformationScript = string | {};
 export type TransformationOutput = string;
+export type AutocompleteSuggestion = string | Rdf.NamedNode | { iri: string; description?: string };
 export type ColumnConfiguration = {
   columnName: string;
 };
@@ -19,6 +20,10 @@ export interface TransformationConfiguration {
   columnConfiguration: ColumnConfiguration[];
   /** Needed for RML to specify the input file */
   sourceFileName: string;
+  /** Meta information about the CSV dialect */
+  csvProps: {
+    delimiter: string;
+  };
 }
 
 /**
@@ -44,7 +49,7 @@ export type SetBaseIri = (baseIri: string | Rdf.NamedNode) => void;
 /**
  * Get suggestions for the class, given some textual input
  */
-export type GetClassSuggestions = (partialString: string) => Promise<Array<string | Rdf.NamedNode>>;
+export type GetClassSuggestions = (partialString: string) => Promise<Array<AutocompleteSuggestion>>;
 
 /**
  * Select a key column from the matrix
@@ -54,7 +59,7 @@ export type SelectKeyColumn = (key: number) => void;
 /**
  * Get suggestions for a property given some textual input
  */
-export type GetPropertySuggestions = (partialString: string) => Promise<Array<string | Rdf.NamedNode>>;
+export type GetPropertySuggestions = (partialString: string) => Promise<Array<AutocompleteSuggestion>>;
 
 /**
  * Get the transformation script from the internal transformation configuration
@@ -82,6 +87,6 @@ export interface UploadTransformationI<P> {
   publishConfiguration: P;
 }
 /**
- * Upload the source data, transformation script, and transformation output to a public enviroment
+ * Upload the source data, transformation script, and transformation output to a public environment
  */
 export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promise<void>;

@@ -3,5 +3,9 @@
 }
 .button {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+button.actionButtons {
+  border-radius: unset;
 }

@@ -1,9 +1,6 @@
 import { TransformationScript, TransformationConfiguration } from "Definitions";
 import { DataFactory, Writer } from "n3";
 const { namedNode, literal } = DataFactory;
-/**
- * This file is used as a template for a RML transformation script
- */
 
 const rmlPrefixes: { [key: string]: string } = {
   rml: "http://semweb.mmlab.be/ns/rml#",
@@ -91,4 +88,4 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
   });
 }
 
-// export default getRmlTransformationScript;
+export default getRmlTransformationScript;

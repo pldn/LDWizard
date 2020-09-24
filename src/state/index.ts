@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import { TransformationConfiguration, Matrix } from "Definitions";
+import { wizardConfig } from "config";
 
 export const sourceState = atom<File | string | undefined>({
   key: "source",
@@ -14,8 +15,11 @@ export const matrixState = atom<Matrix | undefined>({
 export const transformationConfigState = atom<TransformationConfiguration>({
   key: "config",
   default: {
-    baseIri: "https://ldwizard.triply.cc/",
+    baseIri: wizardConfig.defaultBaseIri,
     columnConfiguration: [],
     sourceFileName: "input.csv",
+    csvProps: {
+      delimiter: ",",
+    },
   },
 });

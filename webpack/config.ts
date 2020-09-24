@@ -204,6 +204,7 @@ const config: webpack.Configuration = {
   output: {
     path: path.resolve("lib"),
     filename: "[name].min.js",
+    libraryTarget: "umd",
   },
   entry: {
     "LDWizard-basic": [path.resolve(__dirname, "./../src/index.tsx")],
@@ -211,6 +212,7 @@ const config: webpack.Configuration = {
   node: {
     fs: "empty",
   },
+  externals: { "fs-extra": "fs-extra" },
 };
 
 export default config;

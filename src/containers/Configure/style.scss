@@ -1,0 +1,10 @@
+.tableWrapper {
+  margin: 1rem;
+
+  tbody > tr:last-child td {
+    border-bottom: unset;
+  }
+}
+button.actionButtons {
+  border-radius: unset;
+}

@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import applyTransformation from "../applyTransformation";
+import applyTransformation from "config/rattScript";
 var expect = chai.expect;
 
 describe("Ratt - applyTransformation", function () {
@@ -9,6 +9,7 @@ describe("Ratt - applyTransformation", function () {
         baseIri: "http://blaat",
         columnConfiguration: [{ columnName: "a" }, { columnName: "b" }],
         sourceFileName: "inputFile.csv",
+        csvProps: { delimiter: "," },
       },
       source: [
         ["a", "b"],
