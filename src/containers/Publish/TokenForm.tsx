@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import * as style from "./style.scss";
 import { currentTokenState, accountsInfoQuery } from "state/clientJs";
 import ErrorBoundary from "components/ErrorBoundary";
-import App from "@triply/client.js";
+import App from "@triply/triplydb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface Props {}

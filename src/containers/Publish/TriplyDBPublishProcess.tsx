@@ -14,8 +14,8 @@ import { matrixState, sourceState, transformationConfigState } from "state";
 import { wizardConfig } from "config";
 import { AlertTitle, Alert } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import App from "@triply/client.js";
-import Dataset from "@triply/client.js/lib/Dataset";
+import App from "@triply/triplydb";
+import Dataset from "@triply/triplydb/lib/Dataset";
 
 import * as styles from "./style.scss";
 
