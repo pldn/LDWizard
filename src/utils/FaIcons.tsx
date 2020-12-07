@@ -7,16 +7,19 @@ import { faThumbsUp, faCircle, faFileCode, faFile, faFileArchive } from "@fortaw
 
 import {
   faBook,
-  faCaretDown,
   faCircle as faCircleSolid,
+  faCaretDown,
   faDatabase,
   faDownload,
   faExclamationTriangle,
   faFileCsv,
+  faPlay,
+  faInfo,
   faInfoCircle,
+  faLongArrowAltDown,
   faPlus,
-  faTimes,
   faThumbsUp as faThumbsUpSolid,
+  faTimes,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -31,12 +34,15 @@ export default function registerIcons() {
     faDatabase,
     faDownload,
     faExclamationTriangle,
+    faGithub,
+    faPlay,
+    faInfo,
+    faInfoCircle,
     faFile,
     faFileArchive,
     faFileCode,
     faFileCsv,
-    faGithub,
-    faInfoCircle,
+    faLongArrowAltDown,
     faPlus,
     faTimes,
     faThumbsUp,
@@ -44,7 +50,6 @@ export default function registerIcons() {
     faUpload
   );
 }
-
 declare module "@fortawesome/fontawesome-svg-core" {
   export interface Props {
     title: string;

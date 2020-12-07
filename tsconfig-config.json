@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig-build.json",
+  "compilerOptions": {
+    "outDir": "./types",
+    "module": "commonjs",
+    "rootDir": "./src/config",
+    "esModuleInterop": true,
+    "incremental": false,
+    "strict": false,
+    "declaration": true,
+    "emitDeclarationOnly": true
+  },
+  "files": ["./src/config/WizardConfig.ts"],
+  "include": []
+}

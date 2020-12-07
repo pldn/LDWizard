@@ -1,6 +1,6 @@
 import Ratt from "@triply/ratt";
-import fromArray from "@triply/ratt/lib/middlewares/reading/fromArray";
-import { Util } from "n3";
+import fromCsv from "@triply/ratt/lib/middlewares/reading/fromCsv";
+import { Util, NamedNode } from "n3";
 import toNtriplesString from "./middlewares/toNtriplesString";
 import { ApplyTransformation } from "Definitions";
 
@@ -9,17 +9,32 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     const baseIri = Util.prefix(opts.config.baseIri);
     const app = new Ratt();
 
-    app.use(fromArray(opts.source));
+    const getColumnConfig = (colName: string) =>
+      opts.config.columnConfiguration.find((col) => col.columnName === colName);
+
+    app.use(fromCsv(opts.source));
 
     let rowCount = 0;
     app.use((ctx, next) => {
-      const subject = baseIri("" + rowCount);
+      const subject =
+        opts.config.key !== undefined && opts.config.key >= 0
+          ? baseIri(
+              "" + ctx.record[opts.config.columnConfiguration[opts.config.key].columnName].value.replace(/ /g, "_")
+            )
+          : baseIri("" + rowCount);
       for (const col in ctx.record) {
-        if (ctx.record[col]) {
-          ctx.store.addQuad(subject, baseIri(col), ctx.record[col]);
+        if (ctx.record[col] && ctx.record[col].value.length > 0) {
+          const colConf = getColumnConfig(col);
+          const predicate =
+            colConf && colConf.propertyIri ? new NamedNode(colConf.propertyIri) : baseIri(col.replace(/ /g, "_"));
+          ctx.store.addQuad(subject, predicate, ctx.record[col]);
         }
       }
-      ctx.store.addQuad(subject, ctx.app.prefix["rdf"]("type"), ctx.app.prefix["rdfs"]("Resource"));
+      ctx.store.addQuad(
+        subject,
+        ctx.app.prefix["rdf"]("type"),
+        typeof opts.config.baseIri === "string" ? new NamedNode(opts.config.resourceClass) : opts.config.baseIri
+      );
       rowCount++;
       return next(ctx.record, ctx.store);
     });
@@ -31,4 +46,3 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     throw new Error("Not supported");
   }
 };
-export default applyTransformation;

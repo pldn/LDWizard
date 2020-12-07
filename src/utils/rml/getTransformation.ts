@@ -1,8 +1,10 @@
-import { TransformationScript, TransformationConfiguration } from "Definitions";
+import { TransformationScript, TransformationConfiguration } from "../../Definitions";
 import { DataFactory, Writer } from "n3";
+import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../../utils/helpers";
 const { namedNode, literal } = DataFactory;
 /**
- * This file is used as a template for a RML transformation script
+ * This file serves as the base template for a Rml transformation script
+ * See `../../config/rmlScript.ts` for the current transformation script
  */
 
 const rmlPrefixes: { [key: string]: string } = {
@@ -33,6 +35,23 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             predicate: namedNode("csvw:url"),
             object: literal(configuration.sourceFileName),
           },
+          {
+            predicate: namedNode("csvw:dialect"),
+            object: writer.blank([
+              {
+                predicate: namedNode("rdf:type"),
+                object: namedNode("csvw:Dialect"),
+              },
+              {
+                predicate: namedNode("csvw:delimiter"),
+                object: literal(configuration.csvProps.delimiter),
+              },
+              {
+                predicate: namedNode("csvw:encoding"),
+                object: literal("UTF-8"),
+              },
+            ]),
+          },
         ]),
       },
       {
@@ -42,12 +61,19 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
     ])
   );
 
-  // RML doesn't support adding base-iri + row-numbers as an identifier, so we use b-nodes here
-  writer.addQuad(
-    namedNode(":TriplesMap"),
-    namedNode("rr:subjectMap"),
-    writer.blank([{ predicate: namedNode("rr:termType"), object: namedNode("rr:BlankNode") }])
-  );
+  const keyColumnName =
+    (configuration.key !== undefined &&
+      configuration.key >= 0 &&
+      configuration.columnConfiguration[configuration.key].columnName) ||
+    undefined;
+  const subjectTuple = !!keyColumnName
+    ? {
+        predicate: namedNode("rr:template"),
+        object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{${keyColumnName}}`),
+      }
+    : // RML doesn't support adding base-iri + row-numbers as an identifier, so we use b-nodes here
+      { predicate: namedNode("rr:termType"), object: namedNode("rr:BlankNode") };
+  writer.addQuad(namedNode(":TriplesMap"), namedNode("rr:subjectMap"), writer.blank([subjectTuple]));
   // Assign "rdfs:Resource" as a class to each row
   writer.addQuad(
     namedNode(":TriplesMap"),
@@ -61,20 +87,25 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
         predicate: namedNode("rr:objectMap"),
         object: writer.blank({
           predicate: namedNode("rr:constant"),
-          object: namedNode("http://www.w3.org/2000/01/rdf-schema#Resource"),
+          object: namedNode(configuration.resourceClass),
         }),
       },
     ])
   );
   // Add columns to the transform script
   for (const header of configuration.columnConfiguration) {
+    if (header.columnName === keyColumnName) continue;
     writer.addQuad(
       namedNode(":TriplesMap"),
       namedNode("rr:predicateObjectMap"),
       writer.blank([
         {
           predicate: namedNode("rr:predicate"),
-          object: namedNode(`${baseIri}${header.columnName}`),
+          object: namedNode(
+            header.propertyIri
+              ? header.propertyIri
+              : `${getBasePredicateIri(baseIri)}${cleanCSVValue(header.columnName)}`
+          ),
         },
         {
           predicate: namedNode("rr:objectMap"),
@@ -90,5 +121,5 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
     });
   });
 }
-
+// Disabled export as this is a base template file
 // export default getRmlTransformationScript;

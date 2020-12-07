@@ -9,7 +9,8 @@
     "strict": false
   },
   "files": [
-    "./webpack/config.ts"
+    "./webpack/config.ts",
+    "./webpack/ldwizard-build.ts"
   ],
   "include": []
 }

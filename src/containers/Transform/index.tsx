@@ -4,7 +4,7 @@ import { Button, Typography, Container, CircularProgress } from "@material-ui/co
 import styles from "./style.scss";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "state";
+import { matrixState } from "../../state";
 
 interface Props {}
 export const Step = 3;

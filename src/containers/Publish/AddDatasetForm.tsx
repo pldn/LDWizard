@@ -11,7 +11,12 @@ import {
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { userDatasetsState, currentDsIdState, currentAccountDataSelector, currentTokenState } from "state/clientJs";
+import {
+  userDatasetsState,
+  currentDsIdState,
+  currentAccountDataSelector,
+  currentTokenState,
+} from "../../state/clientJs";
 import App from "@triply/triplydb";
 interface Props {}
 

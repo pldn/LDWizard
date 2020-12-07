@@ -1,9 +1,14 @@
-import { TransformationScript, TransformationConfiguration } from "Definitions";
-import transformScript from "./applyTransformation.txt";
+import { TransformationScript, TransformationConfiguration } from "../../Definitions";
+const transformScript: string = require("./applyTransformation.txt").default;
 
 async function getRattTransformationScript(configuration: TransformationConfiguration): Promise<TransformationScript> {
-  // TODO: Actually use the transformation
-  return transformScript;
+  const lines = transformScript.split("\n");
+  lines.push(
+    `applyTransformation({config:${JSON.stringify(configuration)},type:"ratt",source:"./${
+      configuration.sourceFileName
+    }"})`
+  );
+  return lines.join("\n");
 }
 
 export default getRattTransformationScript;

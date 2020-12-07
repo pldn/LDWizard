@@ -1,3 +1,19 @@
+button.actionButtons {
+  border-radius: unset;
+}
+div.baseIriField {
+  > div {
+    border-radius: unset;
+  }
+}
+div.globalSettingsForm {
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+
+  .normalSettings {
+    margin-bottom: 1rem;
+  }
+}
 .tableWrapper {
   margin: 1rem;
 
@@ -5,6 +21,45 @@
     border-bottom: unset;
   }
 }
-button.actionButtons {
-  border-radius: unset;
+th.tableHeader {
+  font-weight: bold;
+  &:hover {
+    background-color: #eee;
+  }
+  &.disabled {
+    cursor: default;
+    background-color: #ccc;
+  }
+}
+.hint {
+  pointer-events: none;
+}
+.keyColumnWrapper {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: baseline;
+  .keyColumnSelector {
+    min-width: 120px;
+  }
+  .keyColumnInfo {
+    margin-left: 1rem;
+  }
+}
+.duplicateWarning {
+  padding-left: 1em;
+}
+div.tooltip :global(.MuiTooltip-tooltip) {
+  max-width: 100vw;
+}
+.indent {
+  margin-left: 1em;
+}
+.columnConfigSection {
+  margin-top: 1.5rem;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+div.hintOverride {
+  align-items: center;
 }

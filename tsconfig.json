@@ -12,7 +12,6 @@
     "sourceMap": true,
     "listFiles": false,
     "rootDir": ".",
-    "baseUrl": "./src",
     "jsx": "react"
   },
   "include": ["./typings-custom/main.d.ts", "./src/**/*", "./webpack/**/*"],

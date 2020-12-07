@@ -1,5 +1,5 @@
 import * as React from "react";
-import Alert from "components/Alert";
+import Alert from "../Alert";
 import { Button } from "@material-ui/core";
 import * as styles from "./style.scss";
 interface Props {

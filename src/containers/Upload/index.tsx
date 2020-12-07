@@ -2,11 +2,10 @@ import React, { ChangeEventHandler } from "react";
 import styles from "./style.scss";
 import { Button, Box, Typography } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import Papa from "papaparse";
 import { useHistory } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { sourceState, matrixState, transformationConfigState } from "state";
+import { sourceState, matrixState, transformationConfigState } from "../../state";
 interface Props {}
 export const Step = 1;
 const parseCSV: (File: File) => Promise<Papa.ParseResult<string[]>> = (file) => {

@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "./style.scss";
 import { Container, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@material-ui/core";
-import FontAwesomeIcon from "components/FontAwesomeIcon";
-import SplitButton from "components/SplitButton";
-import { TransformationType } from "Definitions";
+import FontAwesomeIcon from "../../components/FontAwesomeIcon";
+import SplitButton from "../../components/SplitButton";
+import { TransformationType } from "../../Definitions";
 import { useRecoilValue } from "recoil";
-import { sourceState, transformationConfigState } from "state";
-import { wizardConfig } from "config";
+import { sourceState, transformationConfigState } from "../../state";
+import { wizardAppConfig } from "../../config";
 
 interface Props {
   transformationResult: string;
@@ -82,7 +82,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult }) => {
                 getButtonlabel={(selectedOption) => `Download ${selectedOption}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
-                  wizardConfig
+                  wizardAppConfig
                     .getTransformationScript(transformationConfig, result as TransformationType)
                     .then((file) => {
                       const fileBase =

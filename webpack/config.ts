@@ -12,8 +12,8 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import svgoConfig from "@triply/utils/lib/svgo";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash";
+import { Renderer as MarkdownRenderer } from "marked";
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
-
 const plugins: webpack.Plugin[] = [
   new webpack.DefinePlugin({
     __DEVELOPMENT__: isDev,
@@ -36,7 +36,7 @@ plugins.push(
   new HtmlWebpackPlugin({
     template: path.resolve(__dirname, "index.html"),
     // filename: "index.html"
-    favicon: path.resolve(__dirname, "t.svg"),
+    favicon: "",
   })
 );
 
@@ -185,15 +185,24 @@ export const genericConfig: webpack.Configuration = {
         test: /\.png$/,
         loader: "file-loader",
       },
+      {
+        test: /\.md$/,
+        use: [
+          {
+            loader: "html-loader",
+          },
+          {
+            loader: "markdown-loader",
+            options: {
+              pedantic: true,
+              renderer: new MarkdownRenderer(),
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
-    modules: [
-      "node_modules", //add this as well, so we recursively look in e.g. ./node_modules/<pkg>/node_modules too
-      path.resolve("./src"),
-      path.resolve("./node_modules"),
-      path.resolve("../../node_modules"),
-    ],
     extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
   },
   plugins: plugins,
@@ -207,7 +216,7 @@ const config: webpack.Configuration = {
     libraryTarget: "umd",
   },
   entry: {
-    "LDWizard-basic": [path.resolve(__dirname, "./../src/index.tsx")],
+    "LDWizard-base": [path.resolve(__dirname, "./../src/index.tsx")],
   },
   node: {
     fs: "empty",

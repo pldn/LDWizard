@@ -1,0 +1,16 @@
+.hintField {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  .hintButton {
+    margin-left: 1rem;
+  }
+}
+// While specified inside .hintField will be drawn outside of it
+.hintPopup {
+  // Stops triggering the onHoverEnter of the anchor
+  pointer-events: none;
+  .hintContent {
+    padding: 1rem 0.5rem;
+  }
+}

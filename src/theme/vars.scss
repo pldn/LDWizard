@@ -1,8 +1,13 @@
+:root {
+  --primary: #6d1e70;
+  --secondary: #a90362;
+}
+
 //some variables used for console only
 $console-navbar-height: 50px;
 
-$pallette-primary: #6d1e70;
-$pallette-secondary: #a90362;
+$pallette-primary: var(--primary);
+$pallette-secondary: var(--secondary);
 $pallette-error: #f44336;
 $pallette-error-dark: darken($pallette-error, 10);
 $pallette-warning: #ff9800;

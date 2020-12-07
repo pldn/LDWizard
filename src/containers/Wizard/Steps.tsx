@@ -7,10 +7,10 @@ import StepButton from "@material-ui/core/StepButton";
 import { Step as UploadStep } from "../Upload";
 import { Step as ConfigureStep } from "../Configure";
 // import { Step as TransformStep } from "../Transform";
-import { Step as ExportStep } from "../Publish";
+import { Step as PublishStep } from "../Publish";
 import { useHistory, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "state";
+import { matrixState } from "../../state";
 const Steps: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
@@ -26,8 +26,8 @@ const Steps: React.FC = () => {
         <Step key={ConfigureStep} disabled={!parsedCsv} completed={!!parsedCsv && currentStep > 1}>
           <StepButton onClick={() => history.push(`/${ConfigureStep}`)}>Configure</StepButton>
         </Step>
-        <Step key={ExportStep}>
-          <StepLabel>Export</StepLabel>
+        <Step key={PublishStep}>
+          <StepLabel>Publish</StepLabel>
         </Step>
       </Stepper>
     </Container>

@@ -1,59 +1,93 @@
 import React from "react";
 import {
-  Paper,
   Button,
   Box,
   Table,
   TableContainer,
-  TableHead,
   TableRow,
   TableCell,
   TableBody,
   Container,
+  Paper,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  TableHead,
 } from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState, transformationConfigState } from "state";
+import { matrixState } from "../../state";
 import * as styles from "./style.scss";
-import { useSetRecoilState } from "recoil";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import BaseIriField from "./BaseIriField";
+import FontAwesomeIcon from "../../components/FontAwesomeIcon";
+import TableHeaders from "./InteractiveTableHeaders";
+import ResourceClassField from "./ClassField";
+import { Skeleton } from "@material-ui/lab";
+import ColumnSelector from "./ColumnSelector";
 interface Props {}
+
 export const Step = 2;
+
+const useCanScroll = () => {
+  const [canScroll, setCanScroll] = React.useState(false);
+  React.useEffect(() => {
+    setCanScroll(document.body.scrollHeight !== document.body.offsetHeight);
+  }, []);
+  return canScroll;
+};
 
 const Configure: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
-  const setTransformationConfig = useSetRecoilState(transformationConfigState);
   const history = useHistory();
-
+  const canScroll = useCanScroll();
   const confirmConfiguration = () => {
-    setTransformationConfig((state) => {
-      if (!parsedCsv) return state;
-      return {
-        ...state,
-        columnConfiguration: parsedCsv[0].map((header) => {
-          return {
-            columnName: header,
-          };
-        }),
-      };
-    });
     history.push(`/${Step + 1}`);
   };
+
   if (!parsedCsv) {
     return <Redirect to="/1" />;
   }
   return (
     <>
+      <Container className={styles.globalSettingsForm}>
+        <Box className={styles.normalSettings}>
+          <ColumnSelector />
+          <React.Suspense fallback={<Skeleton width="500px" height="3rem" />}>
+            <ResourceClassField />
+          </React.Suspense>
+        </Box>
+        <Accordion variant="outlined" square className={styles.accordion}>
+          <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
+            <Typography>Advanced</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <BaseIriField />
+          </AccordionDetails>
+        </Accordion>
+      </Container>
+      {canScroll && (
+        <Container>
+          <a href="#navigationButtons">
+            <FontAwesomeIcon icon={["fas", "long-arrow-alt-down"]} /> Scroll to bottom
+          </a>
+        </Container>
+      )}
       <Paper variant="outlined" square className={styles.tableWrapper}>
         <TableContainer>
           <Table>
-            <TableHead>
-              <TableRow>
-                {parsedCsv[0].map((header, idx) => (
-                  <TableCell key={`${header}${idx}`}>{header}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
+            <React.Suspense
+              fallback={
+                <Skeleton
+                  width="100%"
+                  height="5rem"
+                  style={{ display: "table-caption" }}
+                  component={(props) => <TableHead {...props} />}
+                />
+              }
+            >
+              <TableHeaders />
+            </React.Suspense>
             <TableBody>
               {parsedCsv.slice(1, 10).map((row, rowIndex) => {
                 return (
@@ -65,14 +99,14 @@ const Configure: React.FC<Props> = ({}) => {
                 );
               })}
             </TableBody>
-          </Table>{" "}
+          </Table>
         </TableContainer>
       </Paper>
-      <Box>
-        <Button onClick={() => history.push(`/${Step - 1}`)} className={styles.actionButtons}>
+      <Box id="navigationButtons">
+        <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>
           Back
         </Button>
-        <Button variant="contained" color="primary" onClick={confirmConfiguration} className={styles.actionButtons}>
+        <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
           Next
         </Button>
       </Box>

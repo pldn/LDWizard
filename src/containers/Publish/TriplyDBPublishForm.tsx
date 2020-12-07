@@ -3,10 +3,10 @@ import { Card, CardHeader, CardContent, Box, CardActions, Avatar, Typography } f
 import TokenForm from "./TokenForm";
 import DatasetSelector from "./DatasetSelector";
 import { useRecoilState, useRecoilValue } from "recoil";
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "../../components/ErrorBoundary";
 import AccountSelector from "./AccountSelector";
 import { Skeleton } from "@material-ui/lab";
-import { currentTokenState, apiInfoState } from "state/clientJs";
+import { currentTokenState, apiInfoState } from "../../state/clientJs";
 import AddDataset from "./AddDatasetForm";
 import * as styles from "./style.scss";
 import TriplyDBPublishProcess from "./TriplyDBPublishProcess";

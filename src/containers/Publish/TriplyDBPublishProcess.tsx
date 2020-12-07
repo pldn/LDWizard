@@ -9,9 +9,14 @@ import {
   Typography,
   IconButton,
 } from "@material-ui/core";
-import { currentDatasetSelector, currentTokenState, currentAccountDataSelector, apiInfoState } from "state/clientJs";
-import { matrixState, sourceState, transformationConfigState } from "state";
-import { wizardConfig } from "config";
+import {
+  currentDatasetSelector,
+  currentTokenState,
+  currentAccountDataSelector,
+  apiInfoState,
+} from "../../state/clientJs";
+import { matrixState, sourceState, transformationConfigState } from "../../state";
+import { wizardAppConfig } from "../../config";
 import { AlertTitle, Alert } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import App from "@triply/triplydb";
@@ -76,9 +81,9 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult }) => {
       await ds.importFromFiles(stringToFile(transformationResult, "results.nt", "application/n-triples"));
       setProcessText("Uploading scripts");
 
-      const rattScript = await wizardConfig.getTransformationScript(transformationConfig, "ratt");
-      const cowScript = await wizardConfig.getTransformationScript(transformationConfig, "cow");
-      const rmlScript = await wizardConfig.getTransformationScript(transformationConfig, "rml");
+      const rattScript = await wizardAppConfig.getTransformationScript(transformationConfig, "ratt");
+      const cowScript = await wizardAppConfig.getTransformationScript(transformationConfig, "cow");
+      const rmlScript = await wizardAppConfig.getTransformationScript(transformationConfig, "rml");
       // We need to check if we are overwriting or uploading new assets
       // Removes extension from filename
       const fileBase = typeof source !== "string" ? source.name.replace(/\.[^/.]+$/, "") : undefined;

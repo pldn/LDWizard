@@ -2,11 +2,11 @@ import * as React from "react";
 import { TextField, Button, Typography, Checkbox, FormControlLabel, IconButton } from "@material-ui/core";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as style from "./style.scss";
-import { currentTokenState, accountsInfoQuery } from "state/clientJs";
-import ErrorBoundary from "components/ErrorBoundary";
+import { currentTokenState, accountsInfoQuery } from "../../state/clientJs";
+import ErrorBoundary from "../../components/ErrorBoundary";
 import App from "@triply/triplydb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import wizardConfig from "../../config";
 export interface Props {}
 const TokenForm: React.FC<Props> = () => {
   const [token, setToken] = useRecoilState(currentTokenState);
@@ -75,8 +75,13 @@ const TokenForm: React.FC<Props> = () => {
               helperText={
                 tokenError || (
                   <>
-                    Create a new token {/* TODO: Create a config */}
-                    <a href="https://triplydb.com/me/-/settings/tokens" target="_blank">
+                    Create a new token{" "}
+                    <a
+                      href={`${wizardConfig.dataplatformLink}${
+                        wizardConfig.dataplatformLink.endsWith("/") ? "" : "/"
+                      }me/-/settings/tokens`}
+                      target="_blank"
+                    >
                       here
                     </a>
                   </>

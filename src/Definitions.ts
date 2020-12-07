@@ -10,6 +10,8 @@ export type TransformationOutput = string;
 export type AutocompleteSuggestion = string | Rdf.NamedNode | { iri: string; description?: string };
 export type ColumnConfiguration = {
   columnName: string;
+  propertyIri?: string;
+  iriPrefix?: string;
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -20,6 +22,8 @@ export interface TransformationConfiguration {
   columnConfiguration: ColumnConfiguration[];
   /** Needed for RML to specify the input file */
   sourceFileName: string;
+  /** Class URI applied to each row */
+  resourceClass: string;
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;

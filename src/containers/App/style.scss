@@ -1,23 +1,18 @@
 @import "../../theme/vars.scss";
 
 .image {
-  height: 50px;
-  padding-right: 2rem;
-}
-body {
-  background: #eee;
-}
-a {
-  color: $pallette-secondary;
-  text-decoration: none;
-  &:hover {
-    text-shadow: 1px 0 0;
-  }
+  height: 70px;
+  margin-right: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+body {
+  background: #eee;
 }
 .main {
   flex-grow: 1;
@@ -41,5 +36,19 @@ a {
     :global(.secondary) {
       fill: $pallette-secondary;
     }
+  }
+}
+a {
+  color: $pallette-secondary;
+  text-decoration: none;
+  &:hover {
+    text-shadow: 1px 0 0;
+  }
+}
+main.homepage {
+  display: flex;
+  flex-grow: 1;
+  button.actionButton {
+    margin-bottom: 1rem;
   }
 }

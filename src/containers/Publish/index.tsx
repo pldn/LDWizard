@@ -1,21 +1,18 @@
 import React from "react";
 import styles from "./style.scss";
 import { Box, Container, Button } from "@material-ui/core";
-import { wizardConfig, PublishElement } from "config";
-import { Skeleton, Alert } from "@material-ui/lab";
-
-import FontAwesomeIcon from "components/FontAwesomeIcon";
-
 import { useHistory, Redirect } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { matrixState, sourceState, transformationConfigState } from "state";
-import DownloadResults from "./DownloadResults";
-import { currentTokenState } from "state/clientJs";
-import ErrorBoundary from "components/ErrorBoundary";
+import { matrixState, sourceState, transformationConfigState } from "../../state";
 import TriplyDBUpload from "./TriplyDBPublishForm";
+import { Skeleton, Alert } from "@material-ui/lab";
+import ErrorBoundary from "../../components/ErrorBoundary";
+import { currentTokenState } from "../../state/clientJs";
+import DownloadResults from "./DownloadResults";
+import { wizardAppConfig, PublishElement } from "../../config";
 interface Props {}
 export const Step = 3;
-const Export: React.FC<Props> = ({}) => {
+const Publish: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
   const source = useRecoilValue(sourceState);
   const transformationConfig = useRecoilValue(transformationConfigState);
@@ -28,7 +25,7 @@ const Export: React.FC<Props> = ({}) => {
       setTransformationResult(undefined);
       setTransformationError(undefined);
       if (parsedCsv) {
-        const transformationResult = await wizardConfig.applyTransformation({
+        const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
           source: parsedCsv,
           type: "ratt",
@@ -61,6 +58,7 @@ const Export: React.FC<Props> = ({}) => {
       </>
     );
   }
+
   if (!transformationResult) {
     return (
       <Container>
@@ -91,13 +89,12 @@ const Export: React.FC<Props> = ({}) => {
       </ErrorBoundary>
     ),
   };
-
   return (
     <>
       <Container className={styles.publishOptions}>
-        {wizardConfig.publishOrder.map((publishOption) => publishOptions[publishOption])}
+        {wizardAppConfig.publishOrder.map((publishOption) => publishOptions[publishOption])}
         {Object.entries(publishOptions).map(([key, value]) => {
-          if (wizardConfig.publishOrder.indexOf(key as PublishElement) >= 0) return null;
+          if (wizardAppConfig.publishOrder.indexOf(key as PublishElement) >= 0) return null;
           return value;
         })}
       </Container>
@@ -112,4 +109,4 @@ const Export: React.FC<Props> = ({}) => {
     </>
   );
 };
-export default Export;
+export default Publish;

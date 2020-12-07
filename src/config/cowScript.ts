@@ -1,4 +1,5 @@
-import { TransformationScript, TransformationConfiguration } from "Definitions";
+import { TransformationScript, TransformationConfiguration } from "../Definitions";
+import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 
 interface CowColumn {
   "@id"?: string;
@@ -31,22 +32,41 @@ async function getCowTransformationScript(configuration: TransformationConfigura
   const baseIri = configuration.baseIri.toString();
 
   const columns: CowColumn[] = [];
-  // Add "rdfs:Resource" as class to the identifier
+  const keyColumn = `${getBaseIdentifierIri(baseIri)}{${
+    (configuration.key !== undefined &&
+      configuration.key >= 0 &&
+      configuration.columnConfiguration[configuration.key].columnName) ||
+    "_row"
+  }}`;
   columns.push({
     virtual: true,
     propertyUrl: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-    aboutUrl: "{_row}",
-    valueUrl: "http://www.w3.org/2000/01/rdf-schema#Resource",
+    aboutUrl: keyColumn,
+    valueUrl: configuration.resourceClass,
   });
-  // Add columns to the transform script
   for (const columnConfig of configuration.columnConfiguration) {
-    if (configuration.columnConfiguration.length === 0) continue;
-    columns.push({
-      datatype: "string",
-      "@id": `${baseIri}column/${columnConfig.columnName}`,
-      name: columnConfig.columnName,
-      propertyUrl: `${baseIri}${columnConfig.columnName}`,
-    });
+    if (columnConfig.columnName.length === 0) continue;
+    if (
+      columnConfig.columnName === (configuration.key && configuration.columnConfiguration[configuration.key].columnName)
+    )
+      continue;
+    if (columnConfig.iriPrefix !== undefined) {
+      columns.push({
+        "@id": `${baseIri}column/${columnConfig.columnName}`,
+        name: columnConfig.columnName,
+        propertyUrl:
+          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCSVValue(columnConfig.columnName)}`,
+        valueUrl: `${columnConfig.iriPrefix}{${columnConfig.columnName}}`,
+      });
+    } else {
+      columns.push({
+        datatype: "string",
+        "@id": `${baseIri}column/${columnConfig.columnName}`,
+        name: columnConfig.columnName,
+        propertyUrl:
+          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCSVValue(columnConfig.columnName)}`,
+      });
+    }
   }
 
   const script: CowTransformation = {
@@ -59,12 +79,12 @@ async function getCowTransformationScript(configuration: TransformationConfigura
     ],
     url: "",
     dialect: {
-      delimiter: ",",
+      delimiter: configuration.csvProps.delimiter,
       encoding: "UTF-8",
       quoteChar: '"',
     },
     tableSchema: {
-      aboutUrl: "{_row}",
+      aboutUrl: keyColumn,
       primaryKey: "Resource",
       columns: columns,
     },

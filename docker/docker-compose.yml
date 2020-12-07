@@ -1,9 +1,9 @@
 version: '3'
 services:
   ldwizard:
-    image: ldwizard/hello-world:1.0.0
+    image: ldwizard/nde:1.0.0
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
     ports:
-      - "4000:80"
+      - "4000:80" 

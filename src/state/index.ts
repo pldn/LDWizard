@@ -1,13 +1,22 @@
-import { atom } from "recoil";
-import { TransformationConfiguration, Matrix } from "Definitions";
-import { wizardConfig } from "config";
+import { atom, selector, DefaultValue } from "recoil";
+import { TransformationConfiguration, Matrix } from "../Definitions";
+import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
+import { MD5 } from "jshashes";
+import { wizardAppConfig } from "../config";
+const hasher = new MD5().setUTF8(true);
+const DEFAULT_PREFIXES: PrefixesArray = [
+  {
+    iri: "https://schema.org/",
+    prefixLabel: "schema",
+  },
+];
 
 export const sourceState = atom<File | string | undefined>({
   key: "source",
   default: undefined,
 });
 
-export const matrixState = atom<Matrix | undefined>({
+const matrixAtom = atom<Matrix | undefined>({
   key: "matrix",
   default: undefined,
 });
@@ -15,11 +24,40 @@ export const matrixState = atom<Matrix | undefined>({
 export const transformationConfigState = atom<TransformationConfiguration>({
   key: "config",
   default: {
-    baseIri: wizardConfig.defaultBaseIri,
+    baseIri: wizardAppConfig.defaultBaseIri,
     columnConfiguration: [],
     sourceFileName: "input.csv",
+    resourceClass: "http://www.w3.org/2000/01/rdf-schema#Resource",
     csvProps: {
       delimiter: ",",
     },
   },
+});
+
+export const matrixState = selector({
+  key: "sourceState",
+  get: ({ get }) => get(matrixAtom),
+  set: ({ set, reset }, newValue: Matrix | undefined | DefaultValue) => {
+    if (newValue instanceof DefaultValue) {
+      reset(matrixAtom);
+    } else {
+      set(matrixAtom, newValue);
+      if (newValue) {
+        set(transformationConfigState, (state) => {
+          return {
+            ...state,
+            baseIri:
+              wizardAppConfig.defaultBaseIri +
+              hasher.hex(newValue.map((row) => row.join(",")).join("\n")).substr(0, 6) +
+              "/",
+          };
+        });
+      }
+    }
+  },
+});
+
+export const prefixState = selector({
+  key: "prefixes",
+  get: wizardAppConfig.getPrefixes,
 });
