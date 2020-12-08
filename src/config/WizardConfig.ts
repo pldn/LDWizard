@@ -15,7 +15,7 @@ export default interface WizardConfig {
   secondaryColor?: string;
   icon?: string;
   favIcon?: string;
-  homepageContent?: string;
+  homepageMarkdown?: string;
   /**
    * App settings
    */

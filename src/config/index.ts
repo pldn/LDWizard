@@ -60,7 +60,7 @@ export const wizardAppConfig: WizardAppConfig = {
   secondaryColor: config.secondaryColor || "#a90362",
   brandLogo: config.icon || defaultImage,
   favIcon: config.favIcon || defaultFavIcon,
-  homepageMarkdown: config.homepageContent || undefined,
+  homepageMarkdown: config.homepageMarkdown || undefined,
   /** App
    *
    */

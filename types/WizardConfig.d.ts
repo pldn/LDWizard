@@ -12,7 +12,7 @@ export default interface WizardConfig {
   secondaryColor?: string;
   icon?: string;
   favIcon?: string;
-  homepageContent?: string;
+  homepageMarkdown?: string;
   defaultBaseIri?: string;
   publishOrder?: PublishElement[];
   predicateConfig?: {
