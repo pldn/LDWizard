@@ -3,6 +3,7 @@ import * as styles from "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Container, Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import * as mdStyles from "./markdownStyle.scss";
 
 interface Props {
   content: string;
@@ -13,7 +14,7 @@ const WelcomePage: React.FC<Props> = ({ content }) => {
     <Container component="main" maxWidth="md" className={styles.homepage}>
       <Paper square>
         <Container>
-          <div dangerouslySetInnerHTML={{ __html: content }} />
+          <div className={mdStyles.markdownContent} dangerouslySetInnerHTML={{ __html: content }} />
         </Container>
         <Container>
           <Link to="/1">

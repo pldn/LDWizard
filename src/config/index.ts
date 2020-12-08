@@ -53,9 +53,9 @@ export const wizardAppConfig: WizardAppConfig = {
    * Branding
    */
   appName: config.appName || "LD-Wizard",
-  dataplatformLink: config.dataplatformLink || "https://triplydb.com/",
+  dataplatformLink: config.dataplatformLink || "https://data.netwerkdigitaalerfgoed.nl/",
   documentationLink: config.documentationLink || "https://github.com/netwerk-digitaal-erfgoed/LDWizard",
-  repositoryLink: config.repositoryLink || "https://github.com/netwerk-digitaal-erfgoed/LDWizard-HelloWorld",
+  repositoryLink: config.repositoryLink || "https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core",
   primaryColor: config.primaryColor || "#6d1e70",
   secondaryColor: config.secondaryColor || "#a90362",
   brandLogo: config.icon || defaultImage,

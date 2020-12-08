@@ -1,0 +1,633 @@
+@import "../../theme/vars.scss";
+
+.markdownContent {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  background-color: white;
+  padding: 40px 60px;
+
+  //Lists
+  ul {
+    list-style-type: none;
+    padding: 0 0 0 15px;
+    margin-left: 15px;
+    position: relative;
+
+    li::before {
+      content: "–";
+      display: inline-block;
+      color: inherit;
+      position: absolute;
+      margin-left: -15px;
+    }
+  }
+
+  figcaption {
+    margin: 1rem 0 0;
+    font-size: 0.6em;
+    line-height: 1rem;
+    text-align: center;
+    letter-spacing: 0.2px;
+  }
+
+  audio,
+  canvas,
+  iframe,
+  img,
+  svg,
+  video {
+    vertical-align: middle;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  p,
+  ul,
+  ol,
+  dl,
+  blockquote {
+    margin: 1.6rem 0 0;
+    font-size: 1rem;
+  }
+
+  & > p:first-child {
+    margin: calc(1rem - 1px) 0 0;
+    font-size: 1.1rem;
+    line-height: calc(2.1rem - 0.4rem); /* Fine tune line height for this font size */
+  }
+
+  ol,
+  ul {
+    padding-left: 1.3em;
+    padding-right: 1.5em;
+  }
+
+  ol ol,
+  ul ul,
+  ul ol,
+  ol ul {
+    margin: 1rem 0 0;
+  }
+
+  blockquote {
+    padding: 0 0 0 1.5em;
+    border-left: #3eb0ef 2px solid;
+  }
+
+  blockquote p:last-child {
+    margin-bottom: 0;
+  }
+
+  blockquote p {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 400;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    font-style: italic;
+  }
+
+  blockquote small {
+    display: inline-block;
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+  /* Quotation marks */
+  blockquote small:before {
+    content: "\2014 \00A0";
+  }
+
+  blockquote cite {
+    font-weight: bold;
+  }
+  blockquote cite a {
+    font-weight: normal;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol,
+  dl,
+  pre,
+  blockquote,
+  .gatsby-highlight,
+  .post-comments,
+  .footnotes {
+    min-width: 100%;
+  }
+
+  li {
+    word-break: break-word;
+  }
+
+  li p {
+    margin: 0;
+  }
+
+  .gatsby-resp-image-link:hover,
+  a img:hover {
+    box-shadow: none;
+  }
+
+  small {
+    display: inline-block;
+    line-height: 1.6em;
+  }
+
+  li:first-child {
+    margin-top: 0;
+  }
+
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Full bleed images (#full)
+  Super neat trick courtesy of @JoelDrapper
+  Usage (In Ghost edtior):
+  ![img](/some/image.jpg#full)
+  */
+  img[src$="#full"] {
+    max-width: none;
+    width: 100vw;
+  }
+
+  /* Image captions
+  Usage (In Ghost editor):
+  ![img](/some/image.jpg)
+  <small>Your image caption</small>
+  */
+  img + br + small {
+    display: block;
+    margin-top: -3em;
+    margin-bottom: 1.5em;
+    text-align: center;
+  }
+
+  /* Override third party iframe styles */
+  iframe {
+    margin: calc(2.1rem) auto !important;
+  }
+
+  figure iframe {
+    margin: 0 auto !important;
+  }
+
+  .fluid-width-video-wrapper {
+    margin: 1.5em 0 3em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: inherit;
+    outline: none;
+  }
+
+  h1 .anchor,
+  h2 .anchor,
+  h3 .anchor,
+  h4 .anchor,
+  h5 .anchor,
+  h6 .anchor {
+    margin: -2px 0 0 -40px;
+    padding: 0 12px;
+    box-shadow: none;
+  }
+
+  h1 .anchor svg,
+  h2 .anchor svg,
+  h3 .anchor svg,
+  h4 .anchor svg,
+  h5 .anchor svg,
+  h6 .anchor svg {
+    height: 16px;
+    width: 16px;
+    // fill: var(--midgrey);
+    fill: #738a94;
+  }
+
+  .anchor:hover {
+    border: none;
+    text-decoration: none;
+    box-shadow: none;
+  }
+
+  & > h1:first-child,
+  & > h2:first-child,
+  & > h3:first-child,
+  & > h4:first-child,
+  & > h5:first-child,
+  & > h6:first-child {
+    margin: 2.1rem 0 0;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 4.2rem;
+    letter-spacing: -0.2px;
+    margin: 4.2rem 0 0;
+  }
+
+  @media (max-width: 500px) {
+    h1 {
+      font-size: 1.9rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.9rem;
+    font-weight: 500;
+    line-height: 2.67rem;
+    margin: 3.7rem 0 0;
+  }
+
+  @media (max-width: 500px) {
+    h2 {
+      font-size: 1.7rem;
+    }
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 2.67rem;
+    margin: 3.2rem 0 0;
+    letter-spacing: -0.4px;
+  }
+  @media (max-width: 500px) {
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+
+  h4 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: calc(2.1rem - 0.4rem);
+    margin: 3.1rem 0 0;
+  }
+  @media (max-width: 500px) {
+    h4 {
+      font-size: 1rem;
+    }
+  }
+
+  h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.6rem;
+    margin: 2.1rem 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    word-spacing: 3px;
+  }
+  @media (max-width: 500px) {
+    h5 {
+      font-size: 1.3rem;
+    }
+  }
+
+  /* Fixing in-page anchors for headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    // One of the plugins adds position relative to all headings,
+    // this causes the fix below to draw over most useful links.
+    position: unset !important;
+    &:before {
+      display: block;
+      content: "";
+      padding-top: 80px;
+      margin-top: -80px;
+    }
+  }
+
+  h2 + p,
+  h3 + p,
+  h4 + p,
+  h5 + p,
+  h6 + p {
+    margin: 0.5rem 0 0;
+  }
+
+  h1 + h1,
+  h1 + h2,
+  h1 + h3,
+  h1 + h4,
+  h1 + h6 {
+    margin: 3.2rem 0 0;
+  }
+
+  h2 + h2,
+  h2 + h3,
+  h2 + h4,
+  h2 + h6 {
+    margin: 1rem 0 0;
+  }
+
+  h3 + h3,
+  h3 + h4,
+  h3 + h6 {
+    margin: 1rem 0 0;
+  }
+
+  h4 + h4,
+  h4 + h6 {
+    margin: 0.5rem 0 0;
+  }
+
+  h5 + ul,
+  h5 + ol,
+  h5 + blockquote {
+    margin: 3.2rem 0 0;
+  }
+
+  h5 + h1,
+  h5 + h2,
+  h5 + h3,
+  h5 + h4,
+  h5 + h5,
+  h5 + h6 {
+    margin: 3.2rem 0 0;
+  }
+
+  hr {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 4.2rem 0 0;
+    padding: 0;
+    height: 1px;
+    border: none;
+    border-top: 1px solid #e5eff5;
+  }
+
+  hr + p,
+  hr + ul,
+  hr + ol,
+  hr + blockquote {
+    margin: 4.2rem 0 0;
+  }
+
+  hr + h1,
+  hr + h2,
+  hr + h3,
+  hr + h4,
+  hr + h5,
+  hr + h6 {
+    margin: 3.2rem 0 0;
+  }
+
+  /* Some grouped styles for smaller viewports */
+  @media (max-width: 500px) {
+    hr {
+      margin: 3.2rem 0 0;
+    }
+
+    hr + h1,
+    hr + h2,
+    hr + h3,
+    hr + h4,
+    hr + h5,
+    hr + h6 {
+      margin: 2.1rem 0 0;
+    }
+  }
+
+  /* Non-text content */
+
+  figure + p,
+  figure + ul,
+  figure + ol,
+  figure + blockquote,
+  p + figure,
+  ul + figure,
+  ol + figure,
+  blockquote + figure,
+  h6 + figure,
+  pre + p,
+  pre + ul,
+  pre + ol,
+  pre + blockquote,
+  p + pre,
+  ul + pre,
+  ol + pre,
+  blockquote + pre,
+  h6 + pre,
+  div + p,
+  div + ul,
+  div + ol,
+  div + blockquote,
+  p + div,
+  ul + div,
+  ol + div,
+  blockquote + div,
+  h6 + div,
+  table + p,
+  table + ul,
+  table + ol,
+  table + blockquote,
+  p + table,
+  ul + table,
+  ol + table,
+  blockquote + table,
+  h6 + table {
+    margin: 1rem 0 0;
+  }
+
+  figure + h1,
+  figure + h3,
+  figure + h4,
+  figure + h5,
+  figure + h6,
+  pre + h1,
+  pre + h3,
+  pre + h4,
+  pre + h5,
+  pre + h6,
+  div + h1,
+  div + h3,
+  div + h4,
+  div + h5,
+  div + h6,
+  table + h1,
+  table + h3,
+  table + h4,
+  table + h5,
+  table + h6 {
+    margin: 3.2rem 0 0;
+  }
+
+  figure + h2,
+  pre + h2,
+  div + h2 {
+    margin: 5.3rem 0 0;
+  }
+
+  h1 + figure,
+  h2 + figure,
+  h3 + figure,
+  h4 + figure,
+  h5 + figure,
+  h6 + figure,
+  h1 + pre,
+  h2 + pre,
+  h3 + pre,
+  h4 + pre,
+  h5 + pre,
+  h6 + pre,
+  h1 + div,
+  h2 + div,
+  h3 + div,
+  h4 + div,
+  h5 + div,
+  h6 + div,
+  h1 + table,
+  h2 + table,
+  h3 + table,
+  h4 + table,
+  h5 + table,
+  h6 + table {
+    margin: 1rem 0;
+  }
+
+  /* Footnotes */
+  .footnotes-sep {
+    margin-bottom: 30px;
+  }
+
+  .footnotes {
+    font-size: 1rem;
+  }
+
+  .footnotes p {
+    margin: 0;
+  }
+
+  .footnote-backref {
+    color: $pallette-secondary !important;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Some grouped styles for smaller viewports */
+  @media (max-width: 500px) {
+    .post-meta {
+      font-size: 0.8rem;
+      line-height: 0.9em;
+    }
+    .post-title {
+      font-size: 1.9rem;
+    }
+    .post-image {
+      margin-bottom: 4vw;
+      height: 350px;
+    }
+
+    padding: 20px 0;
+
+    &:before,
+    &:after {
+      display: none;
+    }
+  }
+
+  /* Tables */
+  table {
+    display: block;
+    overflow-x: auto;
+    margin: 2.1rem 0 0;
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    vertical-align: top;
+    align-self: flex-start;
+  }
+
+  thead,
+  tbody {
+    width: 100%;
+  }
+
+  tr:first-child td:first-child {
+    border-top-left-radius: 4px;
+  }
+
+  tr {
+    width: 100%;
+  }
+
+  th {
+    padding: 12px;
+    border-bottom: 3px solid #edf3f8;
+    text-align: left;
+    color: var(--darkgrey);
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.1rem;
+    letter-spacing: 0.2px;
+  }
+
+  td {
+    min-width: 150px;
+    padding: 14px;
+    border-bottom: 1px solid #edf3f8;
+    border-right: 1px solid #edf3f8;
+    vertical-align: top;
+    text-align: left;
+    line-height: 1.6em;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  td:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  td ul {
+    margin: 0.7em 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  td ul li {
+    margin: 0.7em 0;
+    padding: 0;
+  }
+}
