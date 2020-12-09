@@ -4,7 +4,7 @@
 
 This repository implements the [LD Wizard design document](https://github.com/netwerk-digitaal-erfgoed/LDWizard/blob/master/docs/design.md).  This repository is intended for LD Wizard Core developers.  **Users that want to configure their own LD Wizard application should follow [these instructions](https://github.com/netwerk-digitaal-erfgoed/LDWizard#2-create-your-own-ld-wizard).**
 
-## 1. Setup
+## 1. Develop the code locally
 
 Perform the following steps in order to develop LD Wizard Core locally:
 
