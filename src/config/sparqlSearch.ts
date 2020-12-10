@@ -1,34 +1,50 @@
-const CLASS_SEARCH_QUERY = (term: string) => `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT distinct ?iri ?description WHERE {
+const CLASS_SEARCH_QUERY = (term: string) => `prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select distinct ?iri ?description {
   {
-    ?iri a rdfs:Class .
-    ?iri rdfs:comment ?description .
-    ?iri rdfs:label ?label .
-    FILTER(regex(str(?description),str("${term}"))|| regex(str(?iri),str("${term}"))||regex(str(?label),str("${term}")))
+    ?iri a rdfs:Class.
+    ?iri rdfs:comment ?description.
+    ?iri rdfs:label ?label.
+    filter(regex(str(?description), "${term}") ||
+           regex(str(?iri), "${term}") ||
+           regex(str(?label), "${term}"))
   } union {
-    ?iri a rdfs:Class .
-    ?iri rdfs:comment ?description .
+    ?iri a rdfs:Class.
+    ?iri rdfs:comment ?description.
     ?iri rdfs:label ?label.
   }
-} LIMIT 10`;
+}
+limit 10`;
 
-const PREDICATE_SEARCH_CONFIG = (term: string) => `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT distinct ?iri ?description WHERE {
+const PREDICATE_SEARCH_CONFIG = (term: string) => `prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+select distinct ?iri ?description {
   {
-    BIND("/ISO3166" as ?apiVariable)
-    ?iri a rdf:Property .
-    ?iri rdfs:comment ?description .
-    ?iri rdfs:label ?label .
-    FILTER(regex(str(?description),str("${term}"))|| regex(str(?iri),str("${term}"))||regex(str(?label),str("${term}")))
+    bind("/ISO3166" as ?apiVariable)
+    {
+      ?iri a rdf:Property.
+    } union {
+      ?iri a owl:DatatypeProperty.
+    } union {
+      ?iri a owl:ObjectProperty.
+    }
+    ?iri rdfs:comment ?description.
+    ?iri rdfs:label ?label.
+    filter(regex(str(?description), "${term}") ||
+           regex(str(?iri), "${term}") ||
+           regex(str(?label), "${term}"))
   } union {
-    ?iri a rdf:Property .
-    ?iri rdfs:comment ?description .
+    {
+      ?iri a rdf:Property.
+    } union {
+      ?iri a owl:DatatypeProperty.
+    } union {
+      ?iri a owl:ObjectProperty.
+    }
+    ?iri rdfs:comment ?description.
     ?iri rdfs:label ?label.
   }
-} LIMIT 10`;
+}
+limit 10`;
 
 interface SparqlResult {
   iri: string;
