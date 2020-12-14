@@ -10,9 +10,9 @@ export function cleanCSVValue(headerName: string) {
 
 export function getBasePredicateIri(baseIri: string) {
   if (baseIri.endsWith("#")) {
-    return baseIri.slice(0, -1) + "/dev#";
+    return baseIri.slice(0, -1) + "/def#";
   }
-  return baseIri + "dev/";
+  return baseIri + "def/";
 }
 export function getBaseIdentifierIri(baseIri: string) {
   if (baseIri.endsWith("#")) {
