@@ -24,7 +24,7 @@ import getClassName from "classnames";
 import HintWrapper from "../../components/HintWrapper";
 import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
-import { cleanCSVValue, getBasePredicateIri } from "../../utils/helpers";
+import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers";
 
 interface Props {}
 const TableHeaders: React.FC<Props> = ({}) => {
@@ -39,7 +39,7 @@ const TableHeaders: React.FC<Props> = ({}) => {
             const propertyIRI = transformationConfig.columnConfiguration[idx].propertyIri;
             const fullUri =
               propertyIRI ??
-              `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCSVValue(
+              `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                 columnConfig.columnName
               )}`;
             const shortUri = propertyIRI !== undefined ? getPrefixed(propertyIRI, prefixes) || propertyIRI : "";
@@ -196,7 +196,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         label="property URI"
                         error={!!autocompleteError}
                         helperText={autocompleteError || getPrefixed(propertyIri, prefixes)}
-                        placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCSVValue(
+                        placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName
                         )}`}
                         InputLabelProps={{ shrink: true }}

@@ -1,9 +1,10 @@
 import Ratt from "@triply/ratt";
-import fromArray from "@triply/ratt/lib/middlewares/reading/fromArray";
-import { Util, NamedNode } from "n3";
+import fromJson from "@triply/ratt/lib/middlewares/reading/fromJson";
+
 import toNtriplesString from "../utils/ratt/middlewares/toNtriplesString";
 import { ApplyTransformation } from "../Definitions";
-import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import fromArray from "../utils/ratt/middlewares/fromArray";
 
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data. See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
@@ -16,43 +17,47 @@ import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../uti
  */
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "ratt" && Array.isArray(opts.source)) {
-    const baseDefIri = Util.prefix(getBasePredicateIri(opts.config.baseIri.toString()));
-    const baseInstanceIri = Util.prefix(getBaseIdentifierIri(opts.config.baseIri.toString()));
-    const app = new Ratt();
+    const app = new Ratt({
+      prefixes: {
+        baseDefIri: getBasePredicateIri(opts.config.baseIri.toString()),
+        baseInstanceIri: getBaseIdentifierIri(opts.config.baseIri.toString()),
+      },
+    });
 
     const getColumnConfig = (colName: string) =>
       opts.config.columnConfiguration.find((col) => col.columnName === colName);
 
-    // Load from supplied array
     app.use(fromArray(opts.source));
 
-    let rowCount = 0;
     const keyColumn =
-      opts.config.key !== undefined &&
+      typeof opts.config.key === "number" &&
       opts.config.key >= 0 &&
       opts.config.columnConfiguration[opts.config.key].columnName;
     app.use((ctx, next) => {
-      const subject = baseInstanceIri(!!keyColumn ? cleanCSVValue(ctx.record[keyColumn].value) : "" + rowCount);
+      const keyVal = keyColumn && ctx.record[keyColumn] ? ctx.record[keyColumn] : ctx.recordId;
+      const subject = app.prefix.baseInstanceIri(keyVal ? cleanCsvValue(keyVal) : "" + ctx.recordId);
 
-      for (const col in ctx.record) {
+      for (const [col, value] of Object.entries(ctx.record)) {
         if (col === keyColumn) continue;
-        if (ctx.record[col] && ctx.record[col].value.length > 0) {
+        if (ctx.record[col] && typeof value === "string") {
           const colConf = getColumnConfig(col);
           if (!colConf) continue;
-          const predicate = colConf.propertyIri ? new NamedNode(colConf.propertyIri) : baseDefIri(cleanCSVValue(col));
+          const predicate = colConf.propertyIri
+            ? ctx.store.iri(colConf.propertyIri)
+            : app.prefix.baseDefIri(cleanCsvValue(col));
           const object =
             colConf.iriPrefix !== undefined
-              ? new NamedNode(`${colConf.iriPrefix}${cleanCSVValue(ctx.record[col].value)}`)
-              : ctx.record[col];
+              ? ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`)
+              : ctx.store.literal(ctx.record[col]);
+
           ctx.store.addQuad(subject, predicate, object);
         }
       }
       ctx.store.addQuad(
         subject,
-        ctx.app.prefix["rdf"]("type"),
-        typeof opts.config.baseIri === "string" ? new NamedNode(opts.config.resourceClass) : opts.config.baseIri
+        app.prefix.rdf("type"),
+        typeof opts.config.baseIri === "string" ? ctx.store.iri(opts.config.resourceClass) : opts.config.baseIri
       );
-      rowCount++;
       return next(ctx.record, ctx.store);
     });
     const { mw, end } = toNtriplesString();

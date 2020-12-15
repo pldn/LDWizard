@@ -1,7 +1,7 @@
 import * as chai from "chai";
-import { Store, DataFactory } from "n3";
-import Ratt, { Middleware } from "@triply/ratt";
-import { addQuad } from "@triply/ratt/lib/middlewares/transforming";
+import { DataFactory } from "n3";
+import Ratt, { Middleware, Store } from "@triply/ratt";
+import { addQuad, toLiteral } from "@triply/ratt/lib/middlewares/store";
 import toNtriplesString from "../toNtriplesString";
 var expect = chai.expect;
 
@@ -14,9 +14,9 @@ function getDummyMiddleware(): Middleware {
 }
 describe("Ratt - ToNtriplesString", function () {
   it("ToNtriplesString", async function () {
-    const app = new Ratt();
+    const app = new Ratt({ prefixes: { ex: "https://ex.com/" } });
     app.use(getDummyMiddleware());
-    app.use(addQuad(DataFactory.namedNode("ex:1"), DataFactory.namedNode("ex:2"), (ctx) => ctx.record.id));
+    app.use(addQuad(app.prefix.ex("1"), app.prefix.ex("2"), toLiteral("id")));
 
     const { mw, end } = toNtriplesString();
     app.use(mw);

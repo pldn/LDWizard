@@ -1,6 +1,6 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions";
 import { DataFactory, Writer } from "n3";
-import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 const { namedNode, literal } = DataFactory;
 
 const rmlPrefixes: { [key: string]: string } = {
@@ -100,7 +100,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
           object: namedNode(
             header.propertyIri
               ? header.propertyIri
-              : `${getBasePredicateIri(baseIri)}${cleanCSVValue(header.columnName)}`
+              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
           ),
         },
         {

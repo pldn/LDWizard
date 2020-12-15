@@ -1,5 +1,5 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions";
-import { cleanCSVValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 
 interface CowColumn {
   "@id"?: string;
@@ -55,7 +55,7 @@ async function getCowTransformationScript(configuration: TransformationConfigura
         "@id": `${baseIri}column/${columnConfig.columnName}`,
         name: columnConfig.columnName,
         propertyUrl:
-          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCSVValue(columnConfig.columnName)}`,
+          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCsvValue(columnConfig.columnName)}`,
         valueUrl: `${columnConfig.iriPrefix}{${columnConfig.columnName}}`,
       });
     } else {
@@ -64,7 +64,7 @@ async function getCowTransformationScript(configuration: TransformationConfigura
         "@id": `${baseIri}column/${columnConfig.columnName}`,
         name: columnConfig.columnName,
         propertyUrl:
-          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCSVValue(columnConfig.columnName)}`,
+          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCsvValue(columnConfig.columnName)}`,
       });
     }
   }
