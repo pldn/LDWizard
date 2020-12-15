@@ -105,8 +105,8 @@ describe("Ratt - applyTransformation", function () {
         ],
         type: "ratt",
       });
-      expect(result.trim().split("\n")).to.have.lengthOf(3);
-      expect(result).to.contain("http://blaat/c");
+      expect(result.trim().split("\n")).to.have.lengthOf(2);
+      expect(result).to.contain("http://blaat/id/c");
     });
     it("Use row number by default", async function () {
       const result = await applyTransformation({
@@ -126,7 +126,7 @@ describe("Ratt - applyTransformation", function () {
         type: "ratt",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
-      expect(result).to.contain("http://blaat/0");
+      expect(result).to.contain("http://blaat/id/0");
     });
   });
 });
