@@ -141,8 +141,7 @@
   "devDependencies": {},
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "post-merge": "./bin/hooks/postMerge"
+      "pre-commit": "lint-staged"
     }
   },
   "bundlesize": [
