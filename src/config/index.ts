@@ -65,7 +65,7 @@ export const wizardAppConfig: WizardAppConfig = {
    *
    */
   publishOrder: ["download", "triplyDB"],
-  defaultBaseIri: config.defaultBaseIri || "https://ldwizard.triply.cc/",
+  defaultBaseIri: config.defaultBaseIri || "https://data.netwerkdigitaalerfgoed.nl/",
 
   /**
    * Search and IRI Processing
