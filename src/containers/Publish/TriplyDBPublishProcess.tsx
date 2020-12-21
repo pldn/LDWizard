@@ -22,8 +22,11 @@ import { AlertTitle, Alert } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import App from "@triply/triplydb";
 import Dataset from "@triply/triplydb/lib/Dataset";
+import { unparse as serializeCsv } from "papaparse";
 
 import * as styles from "./style.scss";
+import { Matrix } from "../../Definitions";
+import { getFileBaseName } from "../../utils/helpers";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
@@ -49,9 +52,10 @@ async function uploadAsset(ds: Dataset, file: File) {
 
 interface Props {
   transformationResult: string;
+  refinedCsv: Matrix | undefined;
 }
 
-const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult }) => {
+const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const selectedDataset = useRecoilValue(currentDatasetSelector);
   const parsedCsv = useRecoilValue(matrixState);
   const source = useRecoilValue(sourceState);
@@ -95,7 +99,10 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult }) => {
         );
       }
       if (typeof cowScript === "string") {
-        const fileName = typeof source === "string" ? `convert.csv-metadata.json` : `${source?.name}-metadata.json`;
+        const fileName =
+          typeof source === "string"
+            ? `convert${refinedCsv ? "-refined" : ""}.csv-metadata.json`
+            : `${refinedCsv ? `${getFileBaseName(source.name)}-refined.csv` : source?.name}-metadata.json`;
         await uploadAsset(ds, stringToFile(cowScript, fileName, "application/json+ld"));
       }
       if (typeof rmlScript === "string") {
@@ -106,6 +113,16 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult }) => {
         await uploadAsset(ds, stringToFile(source, "source.csv", "text/csv"));
       } else {
         await uploadAsset(ds, source);
+      }
+      if (refinedCsv) {
+        await uploadAsset(
+          ds,
+          stringToFile(
+            serializeCsv(refinedCsv),
+            typeof source === "string" ? "source-refined.csv" : getFileBaseName(source.name) + "-refined.csv",
+            "text/csv"
+          )
+        );
       }
       setProcessFinished(true);
     } catch (e) {

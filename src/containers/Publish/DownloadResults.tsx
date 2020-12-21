@@ -3,15 +3,17 @@ import styles from "./style.scss";
 import { Container, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@material-ui/core";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon";
 import SplitButton from "../../components/SplitButton";
-import { TransformationType } from "../../Definitions";
+import { Matrix, TransformationType } from "../../Definitions";
 import { useRecoilValue } from "recoil";
 import { sourceState, transformationConfigState } from "../../state";
 import { wizardAppConfig } from "../../config";
-
+import { unparse as serializeCsv } from "papaparse";
+import { getFileBaseName } from "../../utils/helpers";
 interface Props {
   transformationResult: string;
+  refinedCsv: Matrix | undefined;
 }
-const DownloadResults: React.FC<Props> = ({ transformationResult }) => {
+const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
   const transformationConfig = useRecoilValue(transformationConfigState);
@@ -40,18 +42,38 @@ const DownloadResults: React.FC<Props> = ({ transformationResult }) => {
           <Card variant="outlined" className={styles.downloadSegment}>
             <CardHeader title="Download CSV" avatar={<FontAwesomeIcon icon={["fas", "file-csv"]} />} />
             <CardContent className={styles.downloadContent}>
-              Download your tabular source data as standardized CSV.{" "}
+              {refinedCsv &&
+                "Your data has been enriched before being transformed, the CoW and RML transformation scripts expect to use this file\n"}
+              Download your tabular source data as standardized CSV.
             </CardContent>
             <CardActions>
-              <Button
-                onClick={() => downloadFile(source, "source.csv", "text/csv")}
-                component="span"
-                variant="contained"
-                color="primary"
-                disabled={!source}
-              >
-                Download CSV
-              </Button>
+              {refinedCsv ? (
+                <SplitButton
+                  actions={["Enriched CSV", "CSV"]}
+                  getButtonlabel={(selectedOption) => `Download ${selectedOption}`}
+                  onActionSelected={(action) => {
+                    downloadFile(
+                      action === "CSV" ? source : serializeCsv(refinedCsv),
+                      action === "CSV"
+                        ? "source.csv"
+                        : typeof source !== "string"
+                        ? getFileBaseName(source.name) + "-enriched.csv"
+                        : "source-enriched.csv",
+                      "text/csv"
+                    );
+                  }}
+                />
+              ) : (
+                <Button
+                  onClick={() => downloadFile(source, "source.csv", "text/csv")}
+                  component="span"
+                  variant="contained"
+                  color="primary"
+                  disabled={!source}
+                >
+                  Download CSV
+                </Button>
+              )}
             </CardActions>
           </Card>
           <Card variant="outlined" className={styles.downloadSegment}>
@@ -93,7 +115,9 @@ const DownloadResults: React.FC<Props> = ({ transformationResult }) => {
                           downloadFile(file, `${fileBase ? fileBase + "." : ""}convert.ts`, "text/x-typescript");
                         } else if (result === "cow") {
                           const fileName =
-                            typeof source === "string" ? `convert.csv-metadata.json` : `${source?.name}-metadata.json`;
+                            typeof source === "string"
+                              ? `convert.csv-metadata.json`
+                              : `${refinedCsv ? fileBase + "-enriched.csv" : source?.name}-metadata.json`;
                           downloadFile(file, fileName, "application/json+ld");
                         } else if (result === "rml") {
                           downloadFile(file, `${fileBase || "rules"}.rml.ttl`, "text/turtle");

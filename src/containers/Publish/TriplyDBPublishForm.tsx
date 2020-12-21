@@ -10,17 +10,19 @@ import { currentTokenState, apiInfoState } from "../../state/clientJs";
 import AddDataset from "./AddDatasetForm";
 import * as styles from "./style.scss";
 import TriplyDBPublishProcess from "./TriplyDBPublishProcess";
+import { Matrix } from "../../Definitions";
 // ClientJS Recoil state
 
 // Component
 
 export interface Props {
   transformationResult: string;
+  refinedCsv: Matrix | undefined;
 }
 
 // clientJs global reference
 
-const TriplyDBUpload: React.FC<Props> = ({ transformationResult }) => {
+const TriplyDBUpload: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const [token, setToken] = useRecoilState(currentTokenState);
   const apiInfo = useRecoilValue(apiInfoState);
   const resetToken = (errorText: string) => {
@@ -57,7 +59,7 @@ const TriplyDBUpload: React.FC<Props> = ({ transformationResult }) => {
         </CardContent>
         <CardActions>
           <React.Suspense fallback={<Skeleton variant="rect" />}>
-            <TriplyDBPublishProcess transformationResult={transformationResult} />
+            <TriplyDBPublishProcess transformationResult={transformationResult} refinedCsv={refinedCsv} />
           </React.Suspense>
         </CardActions>
       </Card>

@@ -10,10 +10,12 @@ import ErrorBoundary from "../../components/ErrorBoundary";
 import { currentTokenState } from "../../state/clientJs";
 import DownloadResults from "./DownloadResults";
 import { wizardAppConfig, PublishElement } from "../../config";
+import { Matrix } from "../../Definitions";
 interface Props {}
 export const Step = 3;
 const Publish: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
+  const [refinedCsv, setRefinedCsv] = React.useState<Matrix>();
   const source = useRecoilValue(sourceState);
   const transformationConfig = useRecoilValue(transformationConfigState);
   const setCurrentToken = useSetRecoilState(currentTokenState);
@@ -24,10 +26,36 @@ const Publish: React.FC<Props> = ({}) => {
     const transformFunction = async () => {
       setTransformationResult(undefined);
       setTransformationError(undefined);
+      // Refinement
+      let tempRefinedCsv: Matrix | undefined = undefined;
+      if (parsedCsv && transformationConfig.columnConfiguration.some((config) => !!config.columnRefinement)) {
+        tempRefinedCsv = parsedCsv;
+        for (const column of transformationConfig.columnConfiguration) {
+          if (column.columnRefinement === undefined || column.iriPrefix !== undefined) continue;
+          const columnIdx: number = tempRefinedCsv[0].indexOf(column.columnName);
+          tempRefinedCsv = await Promise.all(
+            tempRefinedCsv.map(async (row, rowIdx) => {
+              let toInject = undefined;
+              if (rowIdx === 0) {
+                toInject = column.columnName + "-refined";
+              } else {
+                toInject =
+                  column.columnRefinement &&
+                  wizardAppConfig.refinementOptions
+                    .find((config) => config.label === column.columnRefinement)
+                    ?.transformation(row[columnIdx]);
+              }
+              return new Array(...row.slice(0, columnIdx + 1), (await toInject) || "", ...row.slice(columnIdx + 1));
+            })
+          );
+        }
+        setRefinedCsv(tempRefinedCsv);
+      }
+      // Transformation
       if (parsedCsv) {
         const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
-          source: parsedCsv,
+          source: tempRefinedCsv || parsedCsv,
           type: "ratt",
         });
         setTransformationResult(transformationResult);
@@ -67,7 +95,7 @@ const Publish: React.FC<Props> = ({}) => {
     );
   }
   const publishOptions: { [P in PublishElement]: React.ReactElement } = {
-    download: <DownloadResults transformationResult={transformationResult} />,
+    download: <DownloadResults refinedCsv={refinedCsv} transformationResult={transformationResult} />,
     triplyDB: (
       <ErrorBoundary
         resetAction={(errorText: string) => {
@@ -76,7 +104,8 @@ const Publish: React.FC<Props> = ({}) => {
             errorText ===
               "Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc." ||
             // Token is deleted
-            errorText === "Token does not exist."
+            errorText === "Token does not exist." ||
+            errorText.indexOf("401: Token does not exist.") >= 0
           ) {
             localStorage.removeItem("token");
             setCurrentToken("");
@@ -84,7 +113,7 @@ const Publish: React.FC<Props> = ({}) => {
         }}
       >
         <React.Suspense fallback={<Skeleton variant="rect" height={200} />}>
-          <TriplyDBUpload transformationResult={transformationResult} />
+          <TriplyDBUpload transformationResult={transformationResult} refinedCsv={refinedCsv} />
         </React.Suspense>
       </ErrorBoundary>
     ),

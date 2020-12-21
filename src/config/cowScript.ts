@@ -58,6 +58,14 @@ async function getCowTransformationScript(configuration: TransformationConfigura
           columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCsvValue(columnConfig.columnName)}`,
         valueUrl: `${columnConfig.iriPrefix}{${columnConfig.columnName}}`,
       });
+    } else if (columnConfig.columnRefinement) {
+      columns.push({
+        "@id": `${baseIri}column/${columnConfig.columnName}-refined`,
+        name: columnConfig.columnName + "-refined",
+        datatype: "xsd:anyURI",
+        propertyUrl:
+          columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCsvValue(columnConfig.columnName)}`,
+      });
     } else {
       columns.push({
         datatype: "string",

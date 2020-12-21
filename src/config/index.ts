@@ -3,6 +3,7 @@ import {
   GetClassSuggestions,
   GetPropertySuggestions,
   GetTransformationScript,
+  ColumnRefinements,
 } from "../Definitions";
 import getRattTransformationScript from "../utils/ratt/getTransformation";
 import getCowTransformationScript from "./cowScript";
@@ -45,6 +46,7 @@ export interface WizardAppConfig {
   getPropertySuggestions: GetPropertySuggestions;
   getTransformationScript: GetTransformationScript;
   applyTransformation: ApplyTransformation;
+  refinementOptions: ColumnRefinements;
 }
 export type PublishElement = "download" | "triplyDB";
 
@@ -102,6 +104,10 @@ export const wizardAppConfig: WizardAppConfig = {
         throw new Error(`Script ${type} has not been implemented yet`);
     }
   },
+  /**
+   * RefinementOptions
+   */
+  refinementOptions: config.columnRefinements || [],
 };
 
 export default wizardAppConfig;

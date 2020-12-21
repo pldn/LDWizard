@@ -1,6 +1,6 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions";
 import { DataFactory, Writer } from "n3";
-import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers";
 const { namedNode, literal } = DataFactory;
 
 const rmlPrefixes: { [key: string]: string } = {
@@ -18,6 +18,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
 
   // Create base RML interface
   const writer = new Writer({ prefixes: rmlPrefixes });
+  const usesRefinedSource = configuration.columnConfiguration.some((config) => !!config.columnRefinement);
   writer.addQuad(namedNode(":TriplesMap"), namedNode("rdf:type"), namedNode("rr:TriplesMap"));
   writer.addQuad(
     namedNode(":TriplesMap"),
@@ -29,7 +30,11 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
           { predicate: namedNode("rdf:type"), object: namedNode("csvw:Table") },
           {
             predicate: namedNode("csvw:url"),
-            object: literal(configuration.sourceFileName),
+            object: literal(
+              usesRefinedSource
+                ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                : configuration.sourceFileName
+            ),
           },
           {
             predicate: namedNode("csvw:dialect"),
@@ -105,14 +110,47 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
         },
         {
           predicate: namedNode("rr:objectMap"),
-          object: writer.blank([
+          object: writer.blank(
             header.iriPrefix !== undefined
-              ? {
-                  predicate: namedNode("rr:template"),
-                  object: literal(`${header.iriPrefix}{${header.columnName}}`),
-                }
-              : { predicate: namedNode("rml:reference"), object: literal(header.columnName) },
-          ]),
+              ? header.iriPrefix === ""
+                ? [
+                    {
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${header.columnName}`),
+                    },
+                    {
+                      predicate: namedNode("rr:termType"),
+                      object: namedNode("rr:IRI"),
+                    },
+                  ]
+                : [
+                    {
+                      predicate: namedNode("rr:termType"),
+                      object: namedNode("rr:IRI"),
+                    },
+                    {
+                      predicate: namedNode("rr:template"),
+                      object: literal(`${header.iriPrefix}{${header.columnName}}`),
+                    },
+                  ]
+              : header.columnRefinement
+              ? [
+                  {
+                    predicate: namedNode("rml:reference"),
+                    object: literal(`${header.columnName}-refined`),
+                  },
+                  {
+                    predicate: namedNode("rr:termType"),
+                    object: namedNode("rr:IRI"),
+                  },
+                ]
+              : [
+                  {
+                    predicate: namedNode("rml:reference"),
+                    object: literal(header.columnName),
+                  },
+                ]
+          ),
         },
       ])
     );

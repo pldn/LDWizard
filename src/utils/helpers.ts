@@ -22,3 +22,6 @@ export function getBaseIdentifierIri(baseIri: string) {
   }
   return baseIri + "id/";
 }
+export function getFileBaseName(fileName: string) {
+  return fileName.split(".")[0];
+}

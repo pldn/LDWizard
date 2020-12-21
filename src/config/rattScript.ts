@@ -1,11 +1,8 @@
 import Ratt from "@triply/ratt";
-import fromJson from "@triply/ratt/lib/middlewares/reading/fromJson";
-
 import toNtriplesString from "../utils/ratt/middlewares/toNtriplesString";
 import { ApplyTransformation } from "../Definitions";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 import fromArray from "../utils/ratt/middlewares/fromArray";
-
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data. See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
  * When making changes to this file make sure to copy the result to `/src/utils/ratt/applyTransformation.txt`
@@ -45,10 +42,12 @@ const applyTransformation: ApplyTransformation = async (opts) => {
           const predicate = colConf.propertyIri
             ? ctx.store.iri(colConf.propertyIri)
             : app.prefix.baseDefIri(cleanCsvValue(col));
-          const object =
-            colConf.iriPrefix !== undefined
-              ? ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`)
-              : ctx.store.literal(ctx.record[col]);
+          let object = ctx.store.literal(ctx.record[col]);
+          if (colConf.iriPrefix !== undefined) {
+            object = ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`);
+          } else if (colConf.columnRefinement !== undefined) {
+            object = ctx.store.iri(ctx.record[col + "-refined"]);
+          }
 
           ctx.store.addQuad(subject, predicate, object);
         }
