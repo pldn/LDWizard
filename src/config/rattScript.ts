@@ -46,6 +46,7 @@ const applyTransformation: ApplyTransformation = async (opts) => {
           if (colConf.iriPrefix !== undefined) {
             object = ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`);
           } else if (colConf.columnRefinement !== undefined) {
+            if (ctx.record[col + "-refined"] === undefined || ctx.record[col + "-refined"] === "") continue;
             object = ctx.store.iri(ctx.record[col + "-refined"]);
           }
 
