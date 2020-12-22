@@ -3,6 +3,11 @@ export declare type PrefixEntry = {
   prefixLabel: string;
   iri: string;
 };
+export interface ColumnRefinement {
+  label: string;
+  description: string;
+  transformation: (value: string) => Promise<string | undefined>;
+}
 export default interface WizardConfig {
   appName?: string;
   dataplatformLink?: string;
@@ -24,4 +29,5 @@ export default interface WizardConfig {
     endpoint: string;
   };
   getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
+  columnRefinements?: ColumnRefinement[];
 }
