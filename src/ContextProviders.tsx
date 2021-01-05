@@ -3,7 +3,7 @@
  * So, just add them here, and include it in our index file
  */
 import React, { useEffect } from "react";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import wizardConfig from "./config";
@@ -23,11 +23,11 @@ const ContextProviders: React.FC = ({ children }) => {
     document.head.appendChild(favIcon);
   }, []);
   return (
-    <BrowserRouter>
+    <HashRouter hashType="noslash">
       <RecoilRoot>
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </RecoilRoot>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 export default ContextProviders;
