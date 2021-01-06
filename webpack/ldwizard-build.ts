@@ -26,7 +26,7 @@ program.action(async () => {
 
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     compiler.hooks.compile.tap("LDWizard-base", () => {
       console.info(`[LD-Wizard] Compiling `);
     });

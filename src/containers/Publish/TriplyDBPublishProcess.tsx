@@ -14,7 +14,6 @@ import {
   currentTokenState,
   currentAccountDataSelector,
   apiInfoState,
-  iteratorToArray,
 } from "../../state/clientJs";
 import { matrixState, sourceState, transformationConfigState } from "../../state";
 import { wizardAppConfig } from "../../config";
@@ -33,9 +32,9 @@ function stringToFile(content: string, fileName: string, contentType: string) {
 }
 async function uploadAsset(ds: Dataset, file: File) {
   try {
-    const currentAssets = await iteratorToArray(ds.getAssets());
-    const existingAsset = currentAssets.find((asset) => asset.getInfo().assetName === file.name);
-    await ds.uploadAsset(file, file.name, existingAsset?.getInfo().identifier);
+    // const currentAssets = await ds.getAssets().toArray();
+    // const existingAsset = currentAssets.find((asset) => asset.getInfo().assetName === file.name);
+    await ds.uploadAsset(file, file.name);
   } catch (e) {
     if (
       // No difference detected API side

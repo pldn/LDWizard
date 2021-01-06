@@ -3,11 +3,6 @@ import { selector, atom, DefaultValue, selectorFamily, RecoilValueReadOnly, Reco
 import App from "@triply/triplydb";
 import { Models } from "@triply/utils";
 
-export async function iteratorToArray<I>(asyncIterator: AsyncIterable<I>): Promise<Array<I>> {
-  const arr = [];
-  for await (const i of asyncIterator) arr.push(i);
-  return arr;
-}
 const currentUserAtom = atom<number>({
   key: "selectedUserId",
   default: 0,
@@ -49,7 +44,7 @@ const datasetsOfAccountQuery = selectorFamily({
     const selectedAccount = get(accountsInfoQuery)[currentAccountState];
     if (!selectedAccount) return [];
     const account = await App.get(get(currentTokenState)).getAccount(selectedAccount.accountName);
-    const datasets = await iteratorToArray(account.getDatasets());
+    const datasets = await account.getDatasets().toArray();
     const retrievedDatasets = await Promise.all(
       datasets.map(async (ds) => {
         return await ds.getInfo();
