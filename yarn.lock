@@ -6922,14 +6922,6 @@ n3@^1.4.0, n3@^1.5.0:
   dependencies:
     queue-microtask "^1.1.2"
 
-n3@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/n3/-/n3-1.7.0.tgz#618391e1685d24ff642213777156380653807405"
-  integrity sha512-8R0Qj545WnVLQxOfxxyFKzOpO13hF3jhSMJfO0FNqvbsPZDiR9ZDmGGjXAlcoZDf/88OsCYd7rHML284vm1h6A==
-  dependencies:
-    queue-microtask "^1.1.2"
-    readable-stream "^3.6.0"
-
 nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
