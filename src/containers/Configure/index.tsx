@@ -68,7 +68,7 @@ const Configure: React.FC<Props> = ({}) => {
       </Container>
       {canScroll && (
         <Container>
-          <a href="#navigationButtons">
+          <a href={`#${Step}#navigationButtons`}>
             <FontAwesomeIcon icon={["fas", "long-arrow-alt-down"]} /> Scroll to bottom
           </a>
         </Container>
@@ -102,7 +102,7 @@ const Configure: React.FC<Props> = ({}) => {
           </Table>
         </TableContainer>
       </Paper>
-      <Box id="navigationButtons">
+      <Box id={`${Step}#navigationButtons`}>
         <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>
           Back
         </Button>
