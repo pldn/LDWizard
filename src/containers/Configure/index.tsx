@@ -25,6 +25,7 @@ import TableHeaders from "./InteractiveTableHeaders";
 import ResourceClassField from "./ClassField";
 import { Skeleton } from "@material-ui/lab";
 import ColumnSelector from "./ColumnSelector";
+import ScrollCopier from "../../components/ScrollCopier";
 interface Props {}
 
 export const Step = 2;
@@ -41,6 +42,7 @@ const Configure: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
   const history = useHistory();
   const canScroll = useCanScroll();
+  const tableRef = React.useRef<HTMLDivElement>(null);
   const confirmConfiguration = () => {
     history.push(`/${Step + 1}`);
   };
@@ -74,7 +76,8 @@ const Configure: React.FC<Props> = ({}) => {
         </Container>
       )}
       <Paper variant="outlined" square className={styles.tableWrapper}>
-        <TableContainer>
+        <ScrollCopier scrollRef={tableRef} />
+        <TableContainer ref={tableRef}>
           <Table>
             <React.Suspense
               fallback={
