@@ -56,17 +56,21 @@ const AddDataset: React.FC<Props> = ({}) => {
       >
         <DialogTitle>Add new dataset</DialogTitle>
         <DialogContent>
-          <TextField
-            value={newDatasetName}
-            onChange={(event) => {
-              setNewDatasetName(event.currentTarget.value), setDatasetCreationError(undefined);
-            }}
-            error={!!datasetCreationError}
-            helperText={datasetCreationError}
-          />
+          <form id="addDatasetForm">
+            <TextField
+              value={newDatasetName}
+              onChange={(event) => {
+                setNewDatasetName(event.currentTarget.value), setDatasetCreationError(undefined);
+              }}
+              error={!!datasetCreationError}
+              helperText={datasetCreationError}
+            />
+          </form>
         </DialogContent>
         <DialogActions>
           <Button
+            type="submit"
+            form="addDatasetForm"
             color="primary"
             disabled={!!datasetCreationError || newDatasetName.length === 0}
             onClick={createNewDataset}
