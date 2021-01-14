@@ -114,8 +114,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
       if (selectedHeader === undefined) return state;
       const columnConfiguration = [...state.columnConfiguration];
       // Objects in recoil arrays are read-only
-      const processedPropertyIri = propertyIri.length > 0 ? propertyIri : undefined;
-      const processedIriPrefix = iriPrefix !== undefined ? iriPrefix : undefined;
+      const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
+      const processedIriPrefix = iriPrefix !== undefined ? iriPrefix.trim() : undefined;
 
       columnConfiguration[selectedHeader] = {
         columnName: columnConfiguration[selectedHeader].columnName,

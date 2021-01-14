@@ -27,7 +27,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
     setTransformationConfig((state) => {
       return {
         ...state,
-        resourceClass: classValue.length > 0 ? classValue : "http://www.w3.org/2000/01/rdf-schema#Resource",
+        resourceClass: classValue.length > 0 ? classValue.trim() : "http://www.w3.org/2000/01/rdf-schema#Resource",
       };
     });
   };
