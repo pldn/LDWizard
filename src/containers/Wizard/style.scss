@@ -1,3 +1,6 @@
 .topIndent {
   margin-top: 2rem;
 }
+.stepButton:not(:disabled) {
+  cursor: pointer;
+}
