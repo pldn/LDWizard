@@ -1,7 +1,7 @@
 const CLASS_SEARCH_CONFIG = [
   {
     simple_query_string: {
-      query: '"http://www.w3.org/2000/01/rdf-schema#Class" | "http://www.w3.org/2002/07/owl#Class"',
+      query: '"http://www.w3.org/2002/07/owl#Class" | "http://www.w3.org/2000/01/rdf-schema#Class"',
       fields: ["http://www w3 org/1999/02/22-rdf-syntax-ns#type"],
     },
   },
@@ -10,7 +10,8 @@ const CLASS_SEARCH_CONFIG = [
 const PREDICATE_SEARCH_CONFIG = [
   {
     simple_query_string: {
-      query: '"http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"',
+      query:
+        '"http://www.w3.org/2002/07/owl#DatatypeProperty" | "http://www.w3.org/2002/07/owl#ObjectProperty" | "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"',
       fields: ["http://www w3 org/1999/02/22-rdf-syntax-ns#type"],
     },
   },
