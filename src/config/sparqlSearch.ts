@@ -1,16 +1,32 @@
 const CLASS_SEARCH_QUERY = (term: string) => `prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select distinct ?iri ?description {
   {
-    ?iri a rdfs:Class.
-    ?iri rdfs:comment ?description.
-    ?iri rdfs:label ?label.
-    filter(regex(str(?description), "${term}") ||
-           regex(str(?iri), "${term}") ||
-           regex(str(?label), "${term}"))
+    # Support both OWL and RDFS classes.
+    {
+      ?iri a owl:Class.
+    } union {
+      ?iri a rdfs:Class.
+    }
+    ?iri
+      rdfs:comment ?description;
+      rdfs:label ?label.
+    # Prefer classes that match with the search term.
+    filter(
+      regex(str(?description), "${term}", "i") ||
+      # Sometimes IRIs contain substring that can be used to filter.
+      regex(str(?iri), "${term}", "i") ||
+      regex(str(?label), "${term}", "i"))
   } union {
-    ?iri a rdfs:Class.
-    ?iri rdfs:comment ?description.
-    ?iri rdfs:label ?label.
+    # Since the above regex match is relatively crude,
+    # also return a tail of arbitrary classes.
+    {
+      ?iri a owl:Class.
+    } union {
+      ?iri a rdfs:Class.
+    }
+    ?iri
+      rdfs:comment ?description;
+      rdfs:label ?label.
   }
 }
 limit 10`;
@@ -19,20 +35,26 @@ const PREDICATE_SEARCH_CONFIG = (term: string) => `prefix owl: <http://www.w3.or
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select distinct ?iri ?description {
   {
-    bind("/ISO3166" as ?apiVariable)
+    # Support both OWL and RDF properties.
     {
-      ?iri a rdf:Property.
-    } union {
       ?iri a owl:DatatypeProperty.
     } union {
       ?iri a owl:ObjectProperty.
+    } union {
+      ?iri a rdf:Property.
     }
-    ?iri rdfs:comment ?description.
-    ?iri rdfs:label ?label.
-    filter(regex(str(?description), "${term}") ||
-           regex(str(?iri), "${term}") ||
-           regex(str(?label), "${term}"))
+    ?iri
+      rdfs:comment ?description;
+      rdfs:label ?label.
+    # Prefer classes that match with the search term.
+    filter(
+      regex(str(?description), "${term}", "i") ||
+      # Sometimes IRIs contain substring that can be used to filter.
+      regex(str(?iri), "${term}", "i") ||
+      regex(str(?label), "${term}", "i"))
   } union {
+    # Since the above regex match is relatively crude,
+    # also return a tail of arbitrary properties.
     {
       ?iri a rdf:Property.
     } union {
@@ -40,8 +62,9 @@ select distinct ?iri ?description {
     } union {
       ?iri a owl:ObjectProperty.
     }
-    ?iri rdfs:comment ?description.
-    ?iri rdfs:label ?label.
+    ?iri
+      rdfs:comment ?description;
+      rdfs:label ?label.
   }
 }
 limit 10`;
