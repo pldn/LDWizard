@@ -43,4 +43,5 @@ export default interface WizardConfig {
    * Refinement options
    */
   columnRefinements?: ColumnRefinement[];
+  exampleCSV?: string;
 }

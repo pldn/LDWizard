@@ -47,6 +47,7 @@ export interface WizardAppConfig {
   getTransformationScript: GetTransformationScript;
   applyTransformation: ApplyTransformation;
   refinementOptions: ColumnRefinements;
+  exampleCsv: string | undefined;
 }
 export type PublishElement = "download" | "triplyDB";
 
@@ -68,14 +69,11 @@ export const wizardAppConfig: WizardAppConfig = {
    */
   publishOrder: ["download", "triplyDB"],
   defaultBaseIri: config.defaultBaseIri || "https://data.netwerkdigitaalerfgoed.nl/",
+  exampleCsv: config.exampleCSV || undefined,
 
   /**
    * Search and IRI Processing
    */
-  /**
-   * Transformation
-   */
-  applyTransformation: applyTransformation,
   getClassSuggestions: (term) =>
     config.classConfig?.method === "elastic"
       ? getElasticClassSuggestions(term, config.classConfig.endpoint)
@@ -92,6 +90,10 @@ export const wizardAppConfig: WizardAppConfig = {
         prefixLabel: "schema",
       },
     ]),
+  /**
+   * Transformation
+   */
+  applyTransformation: applyTransformation,
   getTransformationScript: (config, type) => {
     switch (type) {
       case "cow":
