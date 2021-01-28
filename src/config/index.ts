@@ -23,6 +23,11 @@ import defaultFavIcon from "./assets/favIcon.svg";
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
 
+export type TriplyDbReference = {
+  label: string;
+  link: string;
+};
+
 export interface WizardAppConfig {
   /**
    * Branding
@@ -36,6 +41,7 @@ export interface WizardAppConfig {
   repositoryLink: string;
   dataplatformLink: string;
   homepageMarkdown: string | undefined;
+  triplyDbInstances: TriplyDbReference[];
   /**
    * App functions
    */
@@ -68,6 +74,7 @@ export const wizardAppConfig: WizardAppConfig = {
    *
    */
   publishOrder: ["download", "triplyDB"],
+  triplyDbInstances: config.triplyDbInstances || [],
   defaultBaseIri: config.defaultBaseIri || "https://data.netwerkdigitaalerfgoed.nl/",
   exampleCsv: config.exampleCSV || undefined,
 

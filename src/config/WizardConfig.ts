@@ -4,6 +4,11 @@
 export type PublishElement = "download" | "triplyDB";
 export type PrefixEntry = { prefixLabel: string; iri: string };
 
+export type TriplyDbReference = {
+  label: string;
+  link: string;
+};
+
 export interface ColumnRefinement {
   label: string;
   description: string;
@@ -38,6 +43,7 @@ export default interface WizardConfig {
     method: "elastic" | "sparql";
     endpoint: string;
   };
+  triplyDbInstances?: TriplyDbReference[];
   getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
   /**
    * Refinement options

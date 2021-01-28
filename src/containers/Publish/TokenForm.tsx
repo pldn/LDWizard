@@ -73,7 +73,21 @@ const TokenForm: React.FC<Props> = () => {
                 setTokenError(undefined);
               }}
               helperText={
-                tokenError || (
+                tokenError || wizardConfig.triplyDbInstances.length > 0 ? (
+                  <>
+                    Create a new token at:{" "}
+                    {wizardConfig.triplyDbInstances.map((reference, idx) => {
+                      return (
+                        <>
+                          {idx !== 0 && (idx === wizardConfig.triplyDbInstances.length - 1 ? " or " : ", ")}
+                          <a href={`${reference.link}${reference.link.endsWith("/") ? "" : "/"}me/-/settings/tokens`}>
+                            {reference.label}
+                          </a>
+                        </>
+                      );
+                    })}
+                  </>
+                ) : (
                   <>
                     Create a new token{" "}
                     <a
