@@ -3,6 +3,10 @@ export declare type PrefixEntry = {
   prefixLabel: string;
   iri: string;
 };
+export declare type TriplyDbReference = {
+  label: string;
+  link: string;
+};
 export interface ColumnRefinement {
   label: string;
   description: string;
@@ -28,6 +32,8 @@ export default interface WizardConfig {
     method: "elastic" | "sparql";
     endpoint: string;
   };
+  triplyDbInstances?: TriplyDbReference[];
   getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
   columnRefinements?: ColumnRefinement[];
+  exampleCSV?: string;
 }
