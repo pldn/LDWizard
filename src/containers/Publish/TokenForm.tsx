@@ -15,8 +15,15 @@ const TokenForm: React.FC<Props> = () => {
   const tokenOwner = accounts[0];
 
   const [shouldStoreToken, setShouldStoreToken] = React.useState(true);
-  const [currentTokenValue, setCurrentTokenValue] = React.useState("");
+  const [currentTokenValue, setCurrentTokenValue] = React.useState(localStorage.getItem("token") || "");
   const [tokenError, setTokenError] = React.useState<string>();
+
+  // Load token on mount here, this way we can prevent updates
+  React.useEffect(() => {
+    // Load-token should handle itself correctly
+    loadToken().catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadToken = async () => {
     try {
@@ -30,13 +37,19 @@ const TokenForm: React.FC<Props> = () => {
       if (e.message === "info is null") {
         setTokenError("This token cannot be use please create a new one");
       } else if (e.message === "Invalid token") {
+        // Invalid formatted token
         setTokenError(e.message);
+      } else if (e.message.indexOf("401: Token does not exist.") >= 0) {
+        // Deleted token
+        setTokenError("Token no longer exists");
+        setToken("");
+        setCurrentTokenValue("");
+        localStorage.removeItem("token");
       } else {
         throw e;
       }
     }
   };
-
   return (
     <ErrorBoundary>
       {!!token && (
@@ -73,7 +86,8 @@ const TokenForm: React.FC<Props> = () => {
                 setTokenError(undefined);
               }}
               helperText={
-                tokenError || wizardConfig.triplyDbInstances.length > 0 ? (
+                tokenError ||
+                (wizardConfig.triplyDbInstances.length > 0 ? (
                   <>
                     Create a new token at:{" "}
                     {wizardConfig.triplyDbInstances.map((reference, idx) => {
@@ -99,7 +113,7 @@ const TokenForm: React.FC<Props> = () => {
                       here
                     </a>
                   </>
-                )
+                ))
               }
             />
             <FormControlLabel

@@ -9,7 +9,7 @@ const currentUserAtom = atom<number>({
 });
 const currentTokenAtom = atom<string>({
   key: "currentTokenAtom",
-  default: localStorage.getItem("token") || "",
+  default: "",
 });
 // Keep this internally as it is used to extend the users
 const createdDatasetsAtom = atom<Models.Dataset[]>({

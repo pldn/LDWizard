@@ -1,15 +1,8 @@
 import { atom, selector, DefaultValue } from "recoil";
 import { TransformationConfiguration, Matrix } from "../Definitions";
-import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
 import { MD5 } from "jshashes";
 import { wizardAppConfig } from "../config";
 const hasher = new MD5().setUTF8(true);
-const DEFAULT_PREFIXES: PrefixesArray = [
-  {
-    iri: "https://schema.org/",
-    prefixLabel: "schema",
-  },
-];
 
 export const sourceState = atom<File | string | undefined>({
   key: "source",
