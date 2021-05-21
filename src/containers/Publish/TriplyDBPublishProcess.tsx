@@ -157,12 +157,12 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
       {processFinished && (
         <Alert severity={"success"} className={styles.processAlert}>
           <AlertTitle>
-            {(apiInfo as any).consoleUrl ? (
+            {apiInfo?.consoleUrl ? (
               <>
                 Finished publishing. {/* Waiting for next utils-public release */}
                 <a
                   target="_blank"
-                  href={`${(apiInfo as any).consoleUrl}/${selectedAccount?.accountName}/${selectedDataset?.name}`}
+                  href={`${apiInfo.consoleUrl}/${selectedAccount?.accountName}/${selectedDataset?.name}`}
                 >
                   Click here to view your results
                 </a>

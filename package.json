@@ -64,7 +64,7 @@
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.1",
     "@triply/ratt": "3.0.3",
-    "@triply/triplydb": "2.1.2",
+    "@triply/triplydb": "2.1.32",
     "@triply/utils": "1.3.57",
     "@types/autoprefixer": "^9.6.1",
     "@types/chai": "^4.2.18",

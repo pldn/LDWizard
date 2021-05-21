@@ -148,6 +148,10 @@ export const genericConfig: webpack.Configuration = {
       {
         test: /\.js$/,
         use: ["source-map-loader"],
+        exclude: [
+          // These packages have issues with their sourcemaps
+          path.resolve(__dirname, `../node_modules/rdf-data-factory`),
+        ],
         enforce: "pre",
       },
       {
