@@ -5,7 +5,7 @@ import * as path from "path";
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
 import autoprefixer from "autoprefixer";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
