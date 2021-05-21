@@ -109,7 +109,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     getAutocompleteSuggestions();
   }, [selectedColumn, propertyIri]);
 
-  const confirmIri = () => {
+  const confirmIri = (e: React.FormEvent) => {
+    e.preventDefault();
     setTransformationConfig((state) => {
       if (selectedHeader === undefined) return state;
       const columnConfiguration = [...state.columnConfiguration];
