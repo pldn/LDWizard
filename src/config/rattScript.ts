@@ -44,7 +44,16 @@ const applyTransformation: ApplyTransformation = async (opts) => {
           const predicate = colConf.propertyIri
             ? ctx.store.iri(colConf.propertyIri)
             : app.prefix.baseDefIri(cleanCsvValue(col));
-          let object: NamedNode | RDF.Literal = ctx.store.literal(ctx.record[col]);
+          let object: NamedNode | RDF.Literal;
+          try {
+            object = ctx.store.literal(ctx.record[col]);
+          } catch (e) {
+            // Create a nicely formatted error letting the user know that his CSV has empty values
+            if (e.expected === "non-empty-string") {
+              continue;
+            }
+            throw e;
+          }
           if (colConf.iriPrefix !== undefined) {
             object = ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`);
           } else if (colConf.columnRefinement !== undefined) {

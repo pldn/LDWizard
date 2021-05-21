@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Box, Container, Button } from "@material-ui/core";
+import { Box, Container, Button, Typography } from "@material-ui/core";
 import { useHistory, Redirect } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { matrixState, sourceState, transformationConfigState } from "../../state";
@@ -73,7 +73,12 @@ const Publish: React.FC<Props> = ({}) => {
     return (
       <>
         <Container>
-          <Alert severity="error">{transformationError}</Alert>
+          <Alert severity="error">
+            <Typography variant="h5" gutterBottom>
+              An error occurred while performing the transformation
+            </Typography>
+            <Typography variant="body2">{transformationError}</Typography>
+          </Alert>
         </Container>
         <Box>
           <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>

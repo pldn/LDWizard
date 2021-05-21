@@ -3,6 +3,8 @@ import toNtriplesString from "../utils/ratt/middlewares/toNtriplesString";
 import { ApplyTransformation } from "../Definitions";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 import fromArray from "../utils/ratt/middlewares/fromArray";
+import { NamedNode } from "n3";
+import * as RDF from "rdf-js";
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data. See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
  * When making changes to this file make sure to copy the result to `/src/utils/ratt/applyTransformation.txt`
@@ -42,10 +44,20 @@ const applyTransformation: ApplyTransformation = async (opts) => {
           const predicate = colConf.propertyIri
             ? ctx.store.iri(colConf.propertyIri)
             : app.prefix.baseDefIri(cleanCsvValue(col));
-          let object = ctx.store.literal(ctx.record[col]);
+          let object: NamedNode | RDF.Literal;
+          try {
+            object = ctx.store.literal(ctx.record[col]);
+          } catch (e) {
+            // Create a nicely formatted error letting the user know that his CSV has empty values
+            if (e.expected === "non-empty-string") {
+              continue
+            }
+            throw e;
+          }
           if (colConf.iriPrefix !== undefined) {
             object = ctx.store.iri(`${colConf.iriPrefix}${cleanCsvValue(value)}`);
-          } else if (colConf.columnRefinement!== undefined) {
+          } else if (colConf.columnRefinement !== undefined) {
+            if (ctx.record[col + "-refined"] === undefined || ctx.record[col + "-refined"] === "") continue;
             object = ctx.store.iri(ctx.record[col + "-refined"]);
           }
 
