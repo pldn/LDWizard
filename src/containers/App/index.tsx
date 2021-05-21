@@ -36,13 +36,13 @@ const App: React.FC<Props> = () => {
       <Paper component="footer" className={styles.footer}>
         {/* Is reversed in CSS */}
         <nav className={styles.footerNav}>
-          <a href={wizardAppConfig.documentationLink}>
+          <a target="_blank" href={wizardAppConfig.documentationLink}>
             <FontAwesomeIcon icon="book" /> Documentation
           </a>
-          <a href={wizardAppConfig.dataplatformLink}>
+          <a target="_blank" href={wizardAppConfig.dataplatformLink}>
             <FontAwesomeIcon icon="database" /> Dataplatform
           </a>
-          <a href={wizardAppConfig.repositoryLink}>
+          <a target="_blank" href={wizardAppConfig.repositoryLink}>
             <FontAwesomeIcon icon={["fab", "github"]} /> Github
           </a>
         </nav>

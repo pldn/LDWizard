@@ -94,7 +94,10 @@ const TokenForm: React.FC<Props> = () => {
                       return (
                         <>
                           {idx !== 0 && (idx === wizardConfig.triplyDbInstances.length - 1 ? " or " : ", ")}
-                          <a href={`${reference.link}${reference.link.endsWith("/") ? "" : "/"}me/-/settings/tokens`}>
+                          <a
+                            href={`${reference.link}${reference.link.endsWith("/") ? "" : "/"}me/-/settings/tokens`}
+                            target="_blank"
+                          >
                             {reference.label}
                           </a>
                         </>
