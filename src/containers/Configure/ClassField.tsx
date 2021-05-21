@@ -73,8 +73,9 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           </div>
         );
       }}
+      blurOnSelect
       getOptionLabel={(value: any) => (typeof value === "string" ? value : value.iri)}
-      onChange={(_event, newValue: AutocompleteSuggestion | null) => {
+      onChange={(event, newValue: AutocompleteSuggestion | null) => {
         if (!newValue) return;
         if (typeof newValue === "string") {
           setClassValue(newValue);
