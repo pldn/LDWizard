@@ -26,15 +26,18 @@ import { unparse as serializeCsv } from "papaparse";
 import * as styles from "./style.scss";
 import { Matrix } from "../../Definitions";
 import { getFileBaseName } from "../../utils/helpers";
+import Asset from "@triply/triplydb/lib/Asset";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
 }
-async function uploadAsset(ds: Dataset, file: File) {
+async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
   try {
-    // const currentAssets = await ds.getAssets().toArray();
-    // const existingAsset = currentAssets.find((asset) => asset.getInfo().assetName === file.name);
-    await ds.uploadAsset(file, file.name);
+    if (asset) {
+      asset.addVersion(file);
+    } else {
+      await ds.uploadAsset(file, file.name);
+    }
   } catch (e) {
     if (
       // No difference detected API side
@@ -43,6 +46,9 @@ async function uploadAsset(ds: Dataset, file: File) {
       e.message.indexOf("No response or upload already finished") >= 0
     ) {
       // Ignore this, the file is already an assets and hasn't changed since the last time
+    } else if (e.message.indexOf("an asset with that name already exists") >= 0) {
+      // Asset already exists
+      await uploadAsset(ds, file, await ds.getAsset(file.name));
     } else {
       throw e;
     }
