@@ -31,9 +31,12 @@ const AddDataset: React.FC<Props> = ({}) => {
   const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
   const [newDatasetName, setNewDatasetName] = React.useState("");
   const [datasetCreationError, setDatasetCreationError] = React.useState<string>();
+  const [creatingDs, setCreatingDs] = React.useState(false);
 
-  const createNewDataset = async () => {
+  const createNewDataset = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     if (newDatasetName.length === 0) return;
+    setCreatingDs(true);
     try {
       const currentAccount = await App.get(token).getAccount(selectedAccount?.accountName);
       const newDataset = await currentAccount.addDataset({ name: newDatasetName });
@@ -44,6 +47,8 @@ const AddDataset: React.FC<Props> = ({}) => {
     } catch (e) {
       console.error(e);
       setDatasetCreationError(e.message);
+    } finally {
+      setCreatingDs(false);
     }
   };
   return (
@@ -59,6 +64,7 @@ const AddDataset: React.FC<Props> = ({}) => {
           <form id="addDatasetForm">
             <TextField
               value={newDatasetName}
+              disabled={creatingDs}
               onChange={(event) => {
                 setNewDatasetName(event.currentTarget.value), setDatasetCreationError(undefined);
               }}
@@ -72,12 +78,13 @@ const AddDataset: React.FC<Props> = ({}) => {
             type="submit"
             form="addDatasetForm"
             color="primary"
-            disabled={!!datasetCreationError || newDatasetName.length === 0}
+            disabled={creatingDs || !!datasetCreationError || newDatasetName.length === 0}
             onClick={createNewDataset}
           >
             Create dataset
           </Button>
           <Button
+            disabled={creatingDs}
             onClick={() => {
               setCreateDialogOpen(false), setDatasetCreationError(undefined);
             }}
