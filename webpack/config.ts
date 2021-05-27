@@ -91,6 +91,9 @@ export const genericConfig: webpack.Configuration = {
             loader: "ts-loader",
             options: {
               configFile: path.resolve(__dirname, `../tsconfig-build.json`),
+              compilerOptions: {
+                rootDir: process.cwd(),
+              },
             },
           },
         ],
