@@ -126,7 +126,7 @@ describe("Ratt - applyTransformation", function () {
         type: "ratt",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
-      expect(result).to.contain("http://blaat/id/0");
+      expect(result).to.contain("http://blaat/id/1");
     });
   });
 });

@@ -147,12 +147,12 @@
     {
       "compression": "none",
       "path": "lib/LDWizard-base.min.js",
-      "maxSize": "1.06 mB"
+      "maxSize": "1.50 mB"
     },
     {
       "compression": "none",
       "path": "lib/LDWizard-base.min.css",
-      "maxSize": "10 kB"
+      "maxSize": "25 kB"
     }
   ]
 }
