@@ -89,7 +89,6 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
-  const [iriPrefix, setIriPrefix] = React.useState(selectedColumn?.iriPrefix ?? undefined);
 
   // Async call for results effect
   React.useEffect(() => {
@@ -116,12 +115,9 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
       const columnConfiguration = [...state.columnConfiguration];
       // Objects in recoil arrays are read-only
       const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
-      const processedIriPrefix = iriPrefix !== undefined ? iriPrefix.trim() : undefined;
-
       columnConfiguration[selectedHeader] = {
         columnName: columnConfiguration[selectedHeader].columnName,
         propertyIri: processedPropertyIri,
-        iriPrefix: processedIriPrefix,
         columnRefinement: selectedRefinement,
       };
       return {
@@ -219,9 +215,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
               </div>
               {selectedColumn && (
                 <TransformationSelector
+                  selectedColumn={selectedHeader}
                   selectedTransformation={selectedRefinement}
-                  iriPrefix={iriPrefix}
-                  onIriPrefixChange={setIriPrefix}
                   onTransformationChange={setSelectedTransformation}
                 />
               )}

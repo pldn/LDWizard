@@ -111,8 +111,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
         {
           predicate: namedNode("rr:objectMap"),
           object: writer.blank(
-            header.iriPrefix !== undefined
-              ? header.iriPrefix === ""
+            header.columnRefinement?.type === "to-iri"
+              ? header.columnRefinement.data.iriPrefix === ""
                 ? [
                     {
                       predicate: namedNode("rml:reference"),
@@ -130,7 +130,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     },
                     {
                       predicate: namedNode("rr:template"),
-                      object: literal(`${header.iriPrefix}{${header.columnName}}`),
+                      object: literal(`${header.columnRefinement.data.iriPrefix}{${header.columnName}}`),
                     },
                   ]
               : header.columnRefinement

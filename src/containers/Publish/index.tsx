@@ -31,19 +31,27 @@ const Publish: React.FC<Props> = ({}) => {
       if (parsedCsv && transformationConfig.columnConfiguration.some((config) => !!config.columnRefinement)) {
         tempRefinedCsv = parsedCsv;
         for (const column of transformationConfig.columnConfiguration) {
-          if (column.columnRefinement === undefined || column.iriPrefix !== undefined) continue;
+          if (column.columnRefinement === undefined || column.columnRefinement.type === "to-iri") continue;
           const columnIdx: number = tempRefinedCsv[0].indexOf(column.columnName);
           tempRefinedCsv = await Promise.all(
             tempRefinedCsv.map(async (row, rowIdx) => {
               let toInject = undefined;
               if (rowIdx === 0) {
                 toInject = column.columnName + "-refined";
-              } else {
-                toInject =
-                  column.columnRefinement &&
-                  wizardAppConfig.refinementOptions
-                    .find((config) => config.label === column.columnRefinement)
-                    ?.transformation(row[columnIdx]);
+              } else if (column.columnRefinement) {
+                const refinement = wizardAppConfig.refinementOptions.find(
+                  (config) => config.label === column.columnRefinement?.label
+                );
+                if (!refinement) throw new Error(`Unknown transformation: ${column.columnRefinement.label}`);
+                if (refinement?.type === "single" && column.columnRefinement.type === "single") {
+                  toInject = refinement.transformation(row[columnIdx]);
+                } else if (refinement?.type === "double-column" && column.columnRefinement.type === "double-column") {
+                  toInject = refinement.transformation(
+                    row[columnIdx],
+                    // Rows might have been added, refer back to the original CSV
+                    parsedCsv[rowIdx][column.columnRefinement.data.secondColumnIdx]
+                  );
+                }
               }
               return new Array(...row.slice(0, columnIdx + 1), (await toInject) || "", ...row.slice(columnIdx + 1));
             })

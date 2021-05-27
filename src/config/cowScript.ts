@@ -50,13 +50,13 @@ async function getCowTransformationScript(configuration: TransformationConfigura
       columnConfig.columnName === (configuration.key && configuration.columnConfiguration[configuration.key].columnName)
     )
       continue;
-    if (columnConfig.iriPrefix !== undefined) {
+    if (columnConfig.columnRefinement?.type === "to-iri") {
       columns.push({
         "@id": `${baseIri}column/${columnConfig.columnName}`,
         name: columnConfig.columnName,
         propertyUrl:
           columnConfig.propertyIri ?? `${getBasePredicateIri(baseIri)}${cleanCsvValue(columnConfig.columnName)}`,
-        valueUrl: `${columnConfig.iriPrefix}{${columnConfig.columnName}}`,
+        valueUrl: `${columnConfig.columnRefinement.data.iriPrefix}{${columnConfig.columnName}}`,
       });
     } else if (columnConfig.columnRefinement) {
       columns.push({

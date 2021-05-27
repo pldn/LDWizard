@@ -12,24 +12,25 @@ import * as React from "react";
 import HintWrapper from "../../components/HintWrapper";
 import * as styles from "./style.scss";
 import config from "../../config";
+import { ColumnRefinementSetting } from "../../Definitions";
+import { useRecoilValue } from "recoil";
+import { transformationConfigState } from "../../state";
 interface Props {
-  selectedTransformation: string | undefined;
-  iriPrefix: string | undefined;
-  onTransformationChange: (newTransformation: string | undefined) => void;
-  onIriPrefixChange: (iriPrefix: string | undefined) => void;
+  selectedColumn: number;
+  selectedTransformation: ColumnRefinementSetting | undefined;
+  onTransformationChange: (newTransformation: ColumnRefinementSetting | undefined) => void;
 }
-const IRI_TRANSFORMATION = "IRI_PREFIX_TRANSFORMATION";
 const TransformationSelector: React.FC<Props> = ({
+  selectedColumn,
   selectedTransformation,
-  iriPrefix,
   onTransformationChange,
-  onIriPrefixChange,
 }) => {
+  const transformationConfig = useRecoilValue(transformationConfigState);
   const transformationText =
-    (selectedTransformation &&
-      config.refinementOptions.find((refinementOption) => refinementOption.label === selectedTransformation)
-        ?.description) ||
-    undefined;
+    selectedTransformation &&
+    config.refinementOptions.find((refinementOption) => refinementOption.label === selectedTransformation.label)
+      ?.description;
+  // Only render a checkbox when the "to-iri" transformation is the only transformation
   if (Object.keys(config.refinementOptions).length === 0) {
     return (
       <div className={styles.columnConfigSection}>
@@ -41,14 +42,16 @@ const TransformationSelector: React.FC<Props> = ({
           <FormControlLabel
             control={
               <Checkbox
-                checked={selectedTransformation === IRI_TRANSFORMATION}
+                checked={selectedTransformation && selectedTransformation.type === "to-iri"}
                 onChange={(_input, checked) => {
                   if (checked) {
-                    onTransformationChange(IRI_TRANSFORMATION);
-                    onIriPrefixChange(config.defaultBaseIri);
+                    onTransformationChange({
+                      label: "to-iri",
+                      type: "to-iri",
+                      data: { iriPrefix: config.defaultBaseIri },
+                    });
                   } else {
                     onTransformationChange(undefined);
-                    onIriPrefixChange(undefined);
                   }
                 }}
               />
@@ -56,13 +59,18 @@ const TransformationSelector: React.FC<Props> = ({
             label={<Typography variant="body2">Convert to IRI</Typography>}
           />
         </HintWrapper>
-        {selectedTransformation === IRI_TRANSFORMATION && (
+        {selectedTransformation && selectedTransformation.type === "to-iri" && (
           <div className={styles.indent}>
             <HintWrapper hint="This prefix will be prepended to all values in this column.">
               <TextField
                 label="Prefix"
-                value={iriPrefix}
-                onChange={(event) => onIriPrefixChange(event.target.value)}
+                value={selectedTransformation.data.iriPrefix}
+                onChange={(event) =>
+                  onTransformationChange({
+                    ...selectedTransformation,
+                    data: { iriPrefix: event.target.value },
+                  })
+                }
                 InputLabelProps={{ shrink: true }}
                 fullWidth
               />
@@ -72,6 +80,7 @@ const TransformationSelector: React.FC<Props> = ({
       </div>
     );
   } else {
+    const noOtherColumns = transformationConfig.columnConfiguration.length <= 1;
     return (
       <div className={styles.columnConfigSection}>
         <Typography variant="subtitle1">Value refinement</Typography>
@@ -83,27 +92,52 @@ const TransformationSelector: React.FC<Props> = ({
             <InputLabel shrink>Refinement selector</InputLabel>
             <Select
               displayEmpty
-              value={selectedTransformation || ""}
+              value={selectedTransformation?.label || ""}
               onChange={(event) => {
-                if (event.target.value === "") {
-                  onTransformationChange(undefined);
-                  if (iriPrefix !== undefined) onIriPrefixChange(undefined);
-                } else if (event.target.value === IRI_TRANSFORMATION) {
-                  onTransformationChange(IRI_TRANSFORMATION);
-                  onIriPrefixChange(iriPrefix || config.defaultBaseIri);
-                } else if (typeof event.target.value === "string") {
-                  onTransformationChange(event.target.value);
-                  if (iriPrefix !== undefined) onIriPrefixChange(undefined);
+                if (event.target.value === "") return onTransformationChange(undefined);
+                if (event.target.value === "to-iri")
+                  return onTransformationChange({
+                    label: "to-iri",
+                    type: "to-iri",
+                    data: { iriPrefix: config.defaultBaseIri },
+                  });
+                const selectedTransformation = config.refinementOptions.find((ref) => ref.label === event.target.value);
+                if (selectedTransformation) {
+                  if (selectedTransformation.type === "single") {
+                    onTransformationChange({
+                      label: selectedTransformation.label,
+                      type: "single",
+                    });
+                  } else if (selectedTransformation.type === "double-column") {
+                    onTransformationChange({
+                      label: selectedTransformation.label,
+                      type: "double-column",
+                      data: {
+                        secondColumnIdx:
+                          // Don't do transformations with the same column
+                          selectedColumn === 0 ? 1 : 0,
+                      },
+                    });
+                  }
                 }
               }}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={IRI_TRANSFORMATION}>IRI Prefix transformation</MenuItem>
+              <MenuItem value="to-iri">IRI Prefix transformation</MenuItem>
               {config.refinementOptions.map((refinementConfig) => (
-                <MenuItem key={refinementConfig.label} value={refinementConfig.label}>
+                <MenuItem
+                  key={refinementConfig.label}
+                  value={refinementConfig.label}
+                  disabled={refinementConfig.type === "double-column" && noOtherColumns}
+                >
                   {refinementConfig.label}
+                  {refinementConfig.type === "double-column" && noOtherColumns && (
+                    <Typography variant="caption" className={styles.duplicateWarning}>
+                      Not enough columns are available
+                    </Typography>
+                  )}
                 </MenuItem>
               ))}
             </Select>
@@ -114,16 +148,55 @@ const TransformationSelector: React.FC<Props> = ({
             <Typography paragraph>{transformationText}</Typography>
           </div>
         )}
-        {selectedTransformation === IRI_TRANSFORMATION && (
+        {selectedTransformation && selectedTransformation.type === "to-iri" && (
           <div className={styles.indent}>
             <HintWrapper hint="This prefix will be prepended to all values in this column.">
               <TextField
                 label="Prefix"
-                value={iriPrefix}
-                onChange={(event) => onIriPrefixChange(event.currentTarget.value)}
+                value={selectedTransformation.data.iriPrefix}
+                onChange={(event) =>
+                  onTransformationChange({
+                    ...selectedTransformation,
+                    data: { iriPrefix: event.target.value.trim() },
+                  })
+                }
                 InputLabelProps={{ shrink: true }}
                 fullWidth
               />
+            </HintWrapper>
+          </div>
+        )}
+        {selectedTransformation && selectedTransformation.type === "double-column" && (
+          <div className={styles.indent}>
+            <HintWrapper hint="Select another column to perform this transformation with.">
+              <FormControl className={styles.selector}>
+                <InputLabel shrink>Second column</InputLabel>
+                <Select
+                  label="Prefix"
+                  value={selectedTransformation.data.secondColumnIdx}
+                  onChange={(event) =>
+                    onTransformationChange({
+                      ...selectedTransformation,
+                      data: { secondColumnIdx: event.target.value as number },
+                    })
+                  }
+                >
+                  {transformationConfig.columnConfiguration.map((config, idx) => (
+                    <MenuItem
+                      key={config.columnName}
+                      value={idx}
+                      disabled={idx === transformationConfig.key || idx === selectedColumn}
+                    >
+                      {config.columnName}
+                      {idx === selectedColumn && (
+                        <Typography variant="caption" className={styles.duplicateWarning}>
+                          This column is currently selected
+                        </Typography>
+                      )}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </HintWrapper>
           </div>
         )}

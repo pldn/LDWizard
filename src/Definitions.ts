@@ -10,9 +10,8 @@ export type TransformationOutput = string;
 export type AutocompleteSuggestion = string | Rdf.NamedNode | { iri: string; description?: string };
 export type ColumnConfiguration = {
   columnName: string;
-  columnRefinement?: string | undefined;
+  columnRefinement?: ColumnRefinementSetting | undefined;
   propertyIri?: string;
-  iriPrefix?: string;
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -99,9 +98,51 @@ export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promis
 /**
  * Interface used for defining refinement option
  */
-export interface ColumnRefinement {
+
+export type ColumnRefinementType = "single" | "double-column" | "to-iri";
+
+/**
+ * Define transformation scripts in configuration
+ */
+export interface BaseColumnRefinement {
   label: string;
   description: string;
+  type: ColumnRefinementType;
+  transformation: unknown;
+}
+export interface SingleColumnRefinement extends BaseColumnRefinement {
+  type: "single";
   transformation: (value: string) => Promise<string | undefined>;
 }
+export interface DoubleColumnRefinement extends BaseColumnRefinement {
+  type: "double-column";
+  transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
+}
+
+export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement;
+
 export type ColumnRefinements = ColumnRefinement[];
+
+/**
+ * Use internally to store additional data needed for transformation
+ */
+
+interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type"> {
+  data?: unknown;
+}
+interface SingleColumnRefinementSetting extends BaseColumnRefinementSetting {
+  type: "single";
+  data?: never;
+}
+interface DoubleColumnRefinementSetting extends BaseColumnRefinementSetting {
+  type: "double-column";
+  data: { secondColumnIdx: number };
+}
+interface ToIriColumnRefinementSetting extends BaseColumnRefinementSetting {
+  type: "to-iri";
+  data: { iriPrefix: string };
+}
+export type ColumnRefinementSetting =
+  | SingleColumnRefinementSetting
+  | DoubleColumnRefinementSetting
+  | ToIriColumnRefinementSetting;
