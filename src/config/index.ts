@@ -21,6 +21,7 @@ import config from "./wizardConfigDefaults";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
+import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
 
 export type TriplyDbReference = {
@@ -54,6 +55,8 @@ export interface WizardAppConfig {
   applyTransformation: ApplyTransformation;
   refinementOptions: ColumnRefinements;
   exampleCsv: string | undefined;
+
+  newDatasetAccessLevel: DatasetAccessLevel;
 }
 export type PublishElement = "download" | "triplyDB";
 
@@ -117,6 +120,8 @@ export const wizardAppConfig: WizardAppConfig = {
    * RefinementOptions
    */
   refinementOptions: config.columnRefinements || [],
+
+  newDatasetAccessLevel: config.newDatasetAccessLevel || "private",
 };
 
 export default wizardAppConfig;

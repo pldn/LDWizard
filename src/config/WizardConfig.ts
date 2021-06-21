@@ -61,4 +61,6 @@ export default interface WizardConfig {
    */
   columnRefinements?: ColumnRefinement[];
   exampleCSV?: string;
+
+  newDatasetAccessLevel?: "private" | "internal" | "public";
 }

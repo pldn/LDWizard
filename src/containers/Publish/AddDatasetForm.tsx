@@ -18,6 +18,7 @@ import {
   currentTokenState,
 } from "../../state/clientJs";
 import App from "@triply/triplydb";
+import { wizardAppConfig } from "../../config";
 interface Props {}
 
 const AddDataset: React.FC<Props> = ({}) => {
@@ -39,7 +40,10 @@ const AddDataset: React.FC<Props> = ({}) => {
     setCreatingDs(true);
     try {
       const currentAccount = await App.get(token).getAccount(selectedAccount?.accountName);
-      const newDataset = await currentAccount.addDataset({ name: newDatasetName });
+      const accountInfo = await currentAccount.getInfo();
+      const isLightUser = accountInfo.type === "user" && accountInfo.role === "light";
+      const datasetAccessLevel = isLightUser ? "public" : wizardAppConfig.newDatasetAccessLevel;
+      const newDataset = await currentAccount.addDataset({ name: newDatasetName, accessLevel: datasetAccessLevel });
       const datasetInfo = await newDataset.getInfo();
       setDatasets([datasetInfo]);
       setSelectedDataset(datasets.length);
