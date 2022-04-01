@@ -8,7 +8,7 @@ export type TriplyDbReference = {
   label: string;
   link: string;
 };
-export type ColumnRefinementType = "single" | "double-column";
+export type ColumnRefinementType = "single" | "double-column" | "single-param";
 
 export interface BaseColumnRefinement {
   label: string;
@@ -24,7 +24,11 @@ export interface DoubleColumnRefinement extends BaseColumnRefinement {
   type: "double-column";
   transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
 }
-export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement;
+export interface SingleColumnParamRefinement extends BaseColumnRefinement {
+  type: "single-param";
+  transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
+}
+export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
 export default interface WizardConfig {
   /**
    * Branding

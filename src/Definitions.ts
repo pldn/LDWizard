@@ -99,7 +99,7 @@ export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promis
  * Interface used for defining refinement option
  */
 
-export type ColumnRefinementType = "single" | "double-column" | "to-iri";
+export type ColumnRefinementType = "single" | "double-column" | "to-iri" | "single-param";
 
 /**
  * Define transformation scripts in configuration
@@ -118,8 +118,12 @@ export interface DoubleColumnRefinement extends BaseColumnRefinement {
   type: "double-column";
   transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
 }
+export interface SingleColumnParamRefinement extends BaseColumnRefinement {
+  type: "single-param";
+  transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
+}
 
-export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement;
+export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
 
 export type ColumnRefinements = ColumnRefinement[];
 
@@ -138,6 +142,10 @@ interface DoubleColumnRefinementSetting extends BaseColumnRefinementSetting {
   type: "double-column";
   data: { secondColumnIdx: number };
 }
+interface SingleColumnParamRefinementSetting extends BaseColumnRefinementSetting {
+  type: "single-param";
+  data: { iriPrefix: string };
+}
 interface ToIriColumnRefinementSetting extends BaseColumnRefinementSetting {
   type: "to-iri";
   data: { iriPrefix: string };
@@ -145,4 +153,5 @@ interface ToIriColumnRefinementSetting extends BaseColumnRefinementSetting {
 export type ColumnRefinementSetting =
   | SingleColumnRefinementSetting
   | DoubleColumnRefinementSetting
+  | SingleColumnParamRefinementSetting
   | ToIriColumnRefinementSetting;

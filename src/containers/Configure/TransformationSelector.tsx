@@ -118,6 +118,12 @@ const TransformationSelector: React.FC<Props> = ({
                           selectedColumn === 0 ? 1 : 0,
                       },
                     });
+                  } else if (selectedTransformation.type === "single-param") {
+                    onTransformationChange({
+                      label: selectedTransformation.label,
+                      type: "single-param",
+                      data: { iriPrefix: config.defaultBaseIri },
+                    });
                   }
                 }
               }}
@@ -197,6 +203,24 @@ const TransformationSelector: React.FC<Props> = ({
                   ))}
                 </Select>
               </FormControl>
+            </HintWrapper>
+          </div>
+        )}
+        {selectedTransformation && selectedTransformation.type === "single-param" && (
+          <div className={styles.indent}>
+            <HintWrapper hint="Provide the parameter for the refinement.">
+              <TextField
+                label="Prefix"
+                value={selectedTransformation.data.iriPrefix}
+                onChange={(event) =>
+                  onTransformationChange({
+                    ...selectedTransformation,
+                    data: { iriPrefix: event.target.value.trim() },
+                  })
+                }
+                InputLabelProps={{ shrink: true }}
+                fullWidth
+              />
             </HintWrapper>
           </div>
         )}

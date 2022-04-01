@@ -57,7 +57,14 @@ const Publish: React.FC<Props> = ({}) => {
                     // Rows might have been added, refer back to the original CSV
                     parsedCsv[rowIdx][column.columnRefinement.data.secondColumnIdx]
                   );
+                } else if (refinement?.type === "single-param" && column.columnRefinement.type === "single-param") {
+                  toInject = refinement.transformation(
+                    row[columnIdx],
+                    // Rows might have been added, refer back to the original CSV
+                    column.columnRefinement.data.iriPrefix
+                  );
                 }
+                // || column.columnRefinement.type === "single-param"
               }
               return new Array(...row.slice(0, columnIdx + 1), (await toInject) || "", ...row.slice(columnIdx + 1));
             })
@@ -67,6 +74,7 @@ const Publish: React.FC<Props> = ({}) => {
       }
       // Transformation
       if (parsedCsv) {
+        // Transformation done here for double-column single-param etc
         const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,
