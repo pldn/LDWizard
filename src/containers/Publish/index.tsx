@@ -147,6 +147,16 @@ const Publish: React.FC<Props> = ({}) => {
         <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
           Next
         </Button>
+        <Button
+          className={styles.actionButtons}
+          onClick={() => {
+            if (confirm("All progress will be lost, are you sure?")) {
+              window.location.replace("");
+            }
+          }}
+        >
+          Restart
+        </Button>
       </Box>
     </>
   );

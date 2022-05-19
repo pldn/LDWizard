@@ -123,6 +123,17 @@ const Upload: React.FC<Props> = ({}) => {
         >
           Next
         </Button>
+        <Button
+          className={styles.actionButtons}
+          disabled={!parsedSource}
+          onClick={() => {
+            if (confirm("All progress will be lost, are you sure?")) {
+              window.location.replace("");
+            }
+          }}
+        >
+          Restart
+        </Button>
       </Box>
     </>
   );
