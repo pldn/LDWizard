@@ -23,11 +23,17 @@ const ResourceClassField: React.FC<Props> = ({}) => {
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
 
-  const confirmClassUri = () => {
+  const updateClassValue = (newClassValue: string) => {
+    setClassValue(newClassValue);
+    confirmClassUri(newClassValue);
+  };
+
+  const confirmClassUri = (newClassValue: string) => {
     setTransformationConfig((state) => {
       return {
         ...state,
-        resourceClass: classValue.length > 0 ? classValue.trim() : "http://www.w3.org/2000/01/rdf-schema#Resource",
+        resourceClass:
+          newClassValue.length > 0 ? newClassValue.trim() : "http://www.w3.org/2000/01/rdf-schema#Resource",
       };
     });
   };
@@ -78,13 +84,12 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       onChange={(event, newValue: AutocompleteSuggestion | null) => {
         if (!newValue) return;
         if (typeof newValue === "string") {
-          setClassValue(newValue);
+          updateClassValue(newValue);
         } else if ("iri" in newValue) {
-          setClassValue(newValue.iri);
+          updateClassValue(newValue.iri);
         } else {
-          setClassValue(newValue.value);
+          updateClassValue(newValue.value);
         }
-        confirmClassUri();
       }}
       disableClearable
       renderInput={(props) => (
@@ -100,16 +105,15 @@ const ResourceClassField: React.FC<Props> = ({}) => {
             onChange={(event) => {
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
               if (prefixInfo.prefixLabel) {
-                setClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
+                updateClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
               } else {
-                setClassValue(event.currentTarget.value);
+                updateClassValue(event.currentTarget.value);
               }
             }}
             label={"Resource class IRI"}
             fullWidth
             type="url"
             inputMode="url"
-            onBlur={confirmClassUri}
             placeholder="http://www.w3.org/2000/01/rdf-schema#Resource"
           />
         </HintWrapper>
