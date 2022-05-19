@@ -1,4 +1,6 @@
-const CLASS_SEARCH_QUERY = (term: string) => `prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+const CLASS_SEARCH_QUERY = (term: string) => `prefix owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select distinct ?iri ?description {
   {
     # Support both OWL and RDFS classes.
@@ -32,6 +34,7 @@ select distinct ?iri ?description {
 limit 10`;
 
 const PREDICATE_SEARCH_CONFIG = (term: string) => `prefix owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 select distinct ?iri ?description {
   {
