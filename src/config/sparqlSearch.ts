@@ -97,10 +97,23 @@ async function getAutocompleteResults(
   const query = type === "class" ? CLASS_SEARCH_QUERY : PREDICATE_SEARCH_CONFIG;
   const request = new URL(location);
   request.search = `query=${encodeURI(query(searchTerm))}`;
-  const result = await fetch(request.toString());
+  const headers = new Headers();
+  headers.append("Accept", "application/sparql-results+json;q=0.9,application/json;q=0.8,*/*;q=0.7");
+  const result = await fetch(request.toString(), { method: "GET", headers: headers });
   if (result.ok) {
-    const json: SparqlResult[] = await result.json();
-    return json;
+    const json: any = await result.json();
+    const sparqlResults: SparqlResult[] = [];
+    // Convert standard SPARQL results JSON to a simpler object
+    for (const row of json.results.bindings) {
+      const rowResults: any = {};
+      for (const variable of Object.keys(row)) {
+        if (row[variable].value) {
+          rowResults[variable] = row[variable].value;
+        }
+      }
+      sparqlResults.push(rowResults);
+    }
+    return sparqlResults;
   }
   return [];
 }
