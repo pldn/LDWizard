@@ -31,6 +31,10 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
     downloadRef.current.click();
   };
   if (!source) return null;
+
+  const rdfFileName =
+    typeof source == "object" && "name" in source ? getFileBaseName(source.name) + ".nt" : "result.nt";
+
   return (
     <Card variant="outlined">
       <CardHeader
@@ -83,7 +87,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             </CardContent>
             <CardActions>
               <Button
-                onClick={() => downloadFile(transformationResult, "result.nt", "application/n-triples")}
+                onClick={() => downloadFile(transformationResult, rdfFileName, "application/n-triples")}
                 component="span"
                 variant="contained"
                 color="primary"
