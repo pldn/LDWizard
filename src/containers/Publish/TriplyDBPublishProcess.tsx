@@ -1,14 +1,6 @@
 import * as React from "react";
 import { useRecoilValue } from "recoil";
-import {
-  Button,
-  DialogTitle,
-  Dialog,
-  DialogContent,
-  CircularProgress,
-  Typography,
-  IconButton,
-} from "@material-ui/core";
+import { Button, DialogTitle, Dialog, DialogContent, CircularProgress, Typography, IconButton } from "@mui/material";
 import {
   currentDatasetSelector,
   currentTokenState,
@@ -17,7 +9,7 @@ import {
 } from "../../state/clientJs";
 import { matrixState, sourceState, transformationConfigState } from "../../state";
 import { wizardAppConfig } from "../../config";
-import { AlertTitle, Alert } from "@material-ui/lab";
+import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import App from "@triply/triplydb";
 import Dataset from "@triply/triplydb/lib/Dataset";
@@ -40,13 +32,14 @@ async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
     }
   } catch (e) {
     if (
+      e instanceof Error &&
       // No difference detected API side
-      e.message.indexOf("Uploaded file is identical to the most recent version") >= 0 ||
-      // No difference detected Client side
-      e.message.indexOf("No response or upload already finished") >= 0
+      (e.message.indexOf("Uploaded file is identical to the most recent version") >= 0 ||
+        // No difference detected Client side
+        e.message.indexOf("No response or upload already finished") >= 0)
     ) {
       // Ignore this, the file is already an assets and hasn't changed since the last time
-    } else if (e.message.indexOf("an asset with that name already exists") >= 0) {
+    } else if (e instanceof Error && e.message.indexOf("an asset with that name already exists") >= 0) {
       // Asset already exists
       await uploadAsset(ds, file, await ds.getAsset(file.name));
     } else {
@@ -86,9 +79,9 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
     setProcessDialogOpen(true);
     try {
       // We need to get a mutable object as we create a local job
-      const ds = await App.get(token).getDataset(selectedAccount.accountName, selectedDataset?.name);
+      const ds = await (await App.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
       setProcessText("Uploading results");
-      await ds.importFromFiles(stringToFile(transformationResult, "results.nt", "application/n-triples"));
+      await ds.importFromFiles([stringToFile(transformationResult, "results.nt", "application/n-triples")]);
       setProcessText("Uploading scripts");
 
       const rattScript = await wizardAppConfig.getTransformationScript(transformationConfig, "ratt");
@@ -131,7 +124,11 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
       }
       setProcessFinished(true);
     } catch (e) {
-      setProcessError(e.message);
+      if (e instanceof Error) {
+        setProcessError(e.message);
+      } else {
+        setProcessError("Unknown error, see the developer toolbar for more information");
+      }
       console.error(e);
     } finally {
       setProcessDialogOpen(false);
@@ -145,7 +142,7 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
           className={styles.processAlert}
           severity={"error"}
           action={
-            <IconButton onClick={() => setProcessError(undefined)}>
+            <IconButton onClick={() => setProcessError(undefined)} size="large">
               <FontAwesomeIcon icon="times" />
             </IconButton>
           }

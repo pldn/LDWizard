@@ -1,7 +1,7 @@
 import React from "react";
 import * as styles from "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Container, Paper } from "@material-ui/core";
+import { Button, Container, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
 import * as mdStyles from "./markdownStyle.scss";
 

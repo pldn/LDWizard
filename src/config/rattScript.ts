@@ -17,9 +17,10 @@ import * as RDF from "rdf-js";
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "ratt" && Array.isArray(opts.source)) {
     const app = new Ratt({
+      defaultGraph: "",
       prefixes: {
-        baseDefIri: getBasePredicateIri(opts.config.baseIri.toString()),
-        baseInstanceIri: getBaseIdentifierIri(opts.config.baseIri.toString()),
+        baseDefIri: Ratt.prefixer(getBasePredicateIri(opts.config.baseIri.toString())),
+        baseInstanceIri: Ratt.prefixer(getBaseIdentifierIri(opts.config.baseIri.toString())),
       },
     });
 
@@ -49,7 +50,7 @@ const applyTransformation: ApplyTransformation = async (opts) => {
             object = ctx.store.literal(ctx.record[col]);
           } catch (e) {
             // Create a nicely formatted error letting the user know that his CSV has empty values
-            if (e.expected === "non-empty-string") {
+            if ((e as any)?.expected === "non-empty-string") {
               continue;
             }
             throw e;

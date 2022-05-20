@@ -1,14 +1,5 @@
 import * as React from "react";
-import {
-  Box,
-  Dialog,
-  TextField,
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
-} from "@material-ui/core";
+import { Box, Dialog, TextField, Button, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -18,7 +9,6 @@ import {
   currentTokenState,
 } from "../../state/clientJs";
 import App from "@triply/triplydb";
-import { wizardAppConfig } from "../../config";
 interface Props {}
 
 const AddDataset: React.FC<Props> = ({}) => {
@@ -40,17 +30,16 @@ const AddDataset: React.FC<Props> = ({}) => {
     setCreatingDs(true);
     try {
       const currentAccount = await App.get(token).getAccount(selectedAccount?.accountName);
-      const accountInfo = await currentAccount.getInfo();
-      const isLightUser = accountInfo.type === "user" && accountInfo.role === "light";
-      const datasetAccessLevel = isLightUser ? "public" : wizardAppConfig.newDatasetAccessLevel;
-      const newDataset = await currentAccount.addDataset({ name: newDatasetName, accessLevel: datasetAccessLevel });
+      const newDataset = await currentAccount.addDataset(newDatasetName);
       const datasetInfo = await newDataset.getInfo();
       setDatasets([datasetInfo]);
       setSelectedDataset(datasets.length);
       setCreateDialogOpen(false);
     } catch (e) {
       console.error(e);
-      setDatasetCreationError(e.message);
+      if (e instanceof Error) {
+        setDatasetCreationError(e.message);
+      }
     } finally {
       setCreatingDs(false);
     }
@@ -97,7 +86,7 @@ const AddDataset: React.FC<Props> = ({}) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <IconButton onClick={() => setCreateDialogOpen(true)} title="Create a new dataset">
+      <IconButton onClick={() => setCreateDialogOpen(true)} title="Create a new dataset" size="large">
         <FontAwesomeIcon icon="plus" size="sm" />
       </IconButton>
     </Box>

@@ -14,8 +14,8 @@ import {
   AccordionDetails,
   Typography,
   TableHead,
-} from "@material-ui/core";
-import { Redirect, useHistory } from "react-router-dom";
+} from "@mui/material";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "../../state";
 import * as styles from "./style.scss";
@@ -23,7 +23,7 @@ import BaseIriField from "./BaseIriField";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon";
 import TableHeaders from "./InteractiveTableHeaders";
 import ResourceClassField from "./ClassField";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
 import ScrollCopier from "../../components/ScrollCopier";
 interface Props {}
@@ -40,15 +40,16 @@ const useCanScroll = () => {
 
 const Configure: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
-  const history = useHistory();
+  const navigate = useNavigate();
   const canScroll = useCanScroll();
   const tableRef = React.useRef<HTMLDivElement>(null);
+  const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
   const confirmConfiguration = () => {
-    history.push(`/${Step + 1}`);
+    navigate(`/${Step + 1}`);
   };
 
   if (!parsedCsv) {
-    return <Redirect to="/1" />;
+    return <Navigate to="/1" />;
   }
   return (
     <>
@@ -70,7 +71,7 @@ const Configure: React.FC<Props> = ({}) => {
       </Container>
       {canScroll && (
         <Container>
-          <a href={`#${Step}#navigationButtons`}>
+          <a href="#navigationButtons" onClick={() => navigationButtonsRef.current?.scrollIntoView()}>
             <FontAwesomeIcon icon={["fas", "long-arrow-alt-down"]} /> Scroll to bottom
           </a>
         </Container>
@@ -105,8 +106,8 @@ const Configure: React.FC<Props> = ({}) => {
           </Table>
         </TableContainer>
       </Paper>
-      <Box id={`${Step}#navigationButtons`}>
-        <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>
+      <Box id="#navigationButtons" ref={navigationButtonsRef}>
+        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
         <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>

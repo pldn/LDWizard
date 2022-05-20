@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./style.scss";
-import { Box, Container, Button, Typography } from "@material-ui/core";
-import { useHistory, Redirect } from "react-router-dom";
+import { Box, Container, Button, Typography } from "@mui/material";
+import { useNavigate, Navigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { matrixState, sourceState, transformationConfigState } from "../../state";
 import TriplyDBUpload from "./TriplyDBPublishForm";
-import { Skeleton, Alert } from "@material-ui/lab";
+import { Skeleton, Alert } from "@mui/material";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import { currentTokenState } from "../../state/clientJs";
 import DownloadResults from "./DownloadResults";
@@ -19,13 +19,19 @@ const Publish: React.FC<Props> = ({}) => {
   const source = useRecoilValue(sourceState);
   const transformationConfig = useRecoilValue(transformationConfigState);
   const setCurrentToken = useSetRecoilState(currentTokenState);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [transformationResult, setTransformationResult] = React.useState<string>();
   const [transformationError, setTransformationError] = React.useState<string>();
   React.useEffect(() => {
     const transformFunction = async () => {
       setTransformationResult(undefined);
       setTransformationError(undefined);
+      await new Promise<void>((resolve) => {
+        // Make sure that the first render is done before we start the transformation
+        setTimeout(() => {
+          resolve();
+        });
+      });
       // Refinement
       let tempRefinedCsv: Matrix | undefined = undefined;
       if (parsedCsv && transformationConfig.columnConfiguration.some((config) => !!config.columnRefinement)) {
@@ -75,7 +81,7 @@ const Publish: React.FC<Props> = ({}) => {
   }, [transformationConfig, parsedCsv]);
 
   if (!source || !parsedCsv) {
-    return <Redirect to="/1" />;
+    return <Navigate to="/1" />;
   }
   if (transformationError) {
     return (
@@ -89,7 +95,7 @@ const Publish: React.FC<Props> = ({}) => {
           </Alert>
         </Container>
         <Box>
-          <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>
+          <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
             Back
           </Button>
           <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
@@ -125,7 +131,7 @@ const Publish: React.FC<Props> = ({}) => {
           }
         }}
       >
-        <React.Suspense fallback={<Skeleton variant="rect" height={200} />}>
+        <React.Suspense fallback={<Skeleton variant="rectangular" height={200} />}>
           <TriplyDBUpload transformationResult={transformationResult} refinedCsv={refinedCsv} />
         </React.Suspense>
       </ErrorBoundary>
@@ -141,7 +147,7 @@ const Publish: React.FC<Props> = ({}) => {
         })}
       </Container>
       <Box>
-        <Button className={styles.actionButtons} onClick={() => history.push(`/${Step - 1}`)}>
+        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
         <Button className={styles.actionButtons} variant="contained" color="primary" disabled>

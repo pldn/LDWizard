@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FormControl, InputLabel, Select, Avatar, MenuItem } from "@material-ui/core";
+import { FormControl, InputLabel, Select, Avatar, MenuItem } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as styles from "./style.scss";
 import { currentDsIdState, userDatasetsState } from "../../state/clientJs";
@@ -26,7 +26,7 @@ const AccountSelector: React.FC<Props> = () => {
           datasets.map((dataset, idx) => {
             const displayedName = dataset.displayName || dataset.name;
             return (
-              <MenuItem key={dataset.name} value={idx} className={styles.menuItem}>
+              <MenuItem key={dataset.owner.accountName + dataset.name} value={idx} className={styles.menuItem}>
                 <Avatar alt={displayedName} src={dataset.avatarUrl} className={styles.avatar}>
                   {displayedName?.charAt(0)}
                 </Avatar>

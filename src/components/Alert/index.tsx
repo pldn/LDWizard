@@ -14,6 +14,7 @@ export interface AlertProps {
   warning?: boolean;
   info?: boolean;
   success?: boolean;
+  children?: React.ReactNode;
 }
 import * as styles from "./style.scss";
 

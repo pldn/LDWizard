@@ -47,4 +47,5 @@ export default interface WizardConfig {
   getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
   columnRefinements?: ColumnRefinement[];
   exampleCSV?: string;
+  newDatasetAccessLevel?: "private" | "internal" | "public";
 }

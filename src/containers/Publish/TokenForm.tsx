@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextField, Button, Typography, Checkbox, FormControlLabel, IconButton } from "@material-ui/core";
+import { TextField, Button, Typography, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import * as style from "./style.scss";
 import { currentTokenState, accountsInfoQuery } from "../../state/clientJs";
@@ -29,22 +29,26 @@ const TokenForm: React.FC<Props> = () => {
     try {
       const app = App.get(currentTokenValue);
       // Lets check if the endpoint is configured correctly
-      await app.getApiInfo();
+      await app.getInfo();
       if (shouldStoreToken) localStorage.setItem("token", currentTokenValue);
       setToken(currentTokenValue);
     } catch (e) {
-      // This is when the api cannot be found, this means either an old token or that the API is down
-      if (e.message === "info is null") {
-        setTokenError("This token cannot be use please create a new one");
-      } else if (e.message === "Invalid token") {
-        // Invalid formatted token
-        setTokenError(e.message);
-      } else if (e.message.indexOf("401: Token does not exist.") >= 0) {
-        // Deleted token
-        setTokenError("Token no longer exists");
-        setToken("");
-        setCurrentTokenValue("");
-        localStorage.removeItem("token");
+      if (e instanceof Error) {
+        // This is when the api cannot be found, this means either an old token or that the API is down
+        if (e.message === "info is null") {
+          setTokenError("This token cannot be use please create a new one");
+        } else if (e.message === "Invalid token") {
+          // Invalid formatted token
+          setTokenError(e.message);
+        } else if (e.message.indexOf("401: Token does not exist.") >= 0) {
+          // Deleted token
+          setTokenError("Token no longer exists");
+          setToken("");
+          setCurrentTokenValue("");
+          localStorage.removeItem("token");
+        } else {
+          throw e;
+        }
       } else {
         throw e;
       }
@@ -61,6 +65,7 @@ const TokenForm: React.FC<Props> = () => {
               localStorage.removeItem("token");
               setToken("");
             }}
+            size="large"
           >
             <FontAwesomeIcon icon="times" size="sm" />
           </IconButton>

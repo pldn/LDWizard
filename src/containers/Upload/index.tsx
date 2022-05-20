@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./style.scss";
-import { Button, Box, Typography } from "@material-ui/core";
+import { Button, Box, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { sourceState, matrixState, transformationConfigState } from "../../state";
 import config from "../../config";
@@ -29,7 +29,7 @@ const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) =
   });
 };
 const Upload: React.FC<Props> = ({}) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
@@ -60,7 +60,7 @@ const Upload: React.FC<Props> = ({}) => {
             }),
           };
         });
-        history.push(`/${Step + 1}`);
+        navigate(`/${Step + 1}`);
       })
       .catch((e) => {
         setError(e.message);
@@ -119,7 +119,7 @@ const Upload: React.FC<Props> = ({}) => {
           variant="contained"
           color="primary"
           disabled={!parsedSource}
-          onClick={() => history.push(`/${Step + 1}`)}
+          onClick={() => navigate(`/${Step + 1}`)}
         >
           Next
         </Button>

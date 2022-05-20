@@ -153,7 +153,9 @@ export const genericConfig: webpack.Configuration = {
         use: ["source-map-loader"],
         exclude: [
           // These packages have issues with their sourcemaps
-          path.resolve(__dirname, `../node_modules/rdf-data-factory`),
+          isDev
+            ? path.resolve(__dirname, `../node_modules/rdf-data-factory`)
+            : path.resolve(__dirname, "../node_modules"),
         ],
         enforce: "pre",
       },
@@ -227,8 +229,11 @@ const config: webpack.Configuration = {
   },
   node: {
     fs: "empty",
+    net: "empty",
+    tls: "empty",
+    path: "empty",
   },
-  externals: { "fs-extra": "fs-extra" },
+  externals: { "fs-extra": "fs-extra", "find-up": "find-up", table: "table" },
 };
 
 export default config;

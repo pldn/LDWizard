@@ -3,7 +3,7 @@ import * as React from "react";
 import { useRecoilState } from "recoil";
 import { transformationConfigState } from "../../state";
 
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import HintWrapper from "../../components/HintWrapper";
 import * as styles from "./style.scss";
 

@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Card, CardHeader, CardContent, Box, CardActions, Avatar, Typography } from "@material-ui/core";
+import { Card, CardHeader, CardContent, Box, CardActions, Avatar, Typography } from "@mui/material";
 import TokenForm from "./TokenForm";
 import DatasetSelector from "./DatasetSelector";
 import { useRecoilState, useRecoilValue } from "recoil";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import AccountSelector from "./AccountSelector";
-import { Skeleton } from "@material-ui/lab";
+import { Skeleton } from "@mui/material";
 import { currentTokenState, apiInfoState } from "../../state/clientJs";
 import AddDataset from "./AddDatasetForm";
 import * as styles from "./style.scss";
@@ -45,10 +45,10 @@ const TriplyDBUpload: React.FC<Props> = ({ transformationResult, refinedCsv }) =
           </ErrorBoundary>
           {token.length > 0 && (
             <ErrorBoundary key={token}>
-              <React.Suspense fallback={<Skeleton variant="rect" height={50} width={200} />}>
+              <React.Suspense fallback={<Skeleton variant="rectangular" height={50} width={200} />}>
                 <AccountSelector />
               </React.Suspense>
-              <React.Suspense fallback={<Skeleton variant="rect" height={50} width={200} />}>
+              <React.Suspense fallback={<Skeleton variant="rectangular" height={50} width={200} />}>
                 <Box className={styles.datasetSelector}>
                   <DatasetSelector />
                   <AddDataset />
@@ -58,7 +58,7 @@ const TriplyDBUpload: React.FC<Props> = ({ transformationResult, refinedCsv }) =
           )}
         </CardContent>
         <CardActions>
-          <React.Suspense fallback={<Skeleton variant="rect" />}>
+          <React.Suspense fallback={<Skeleton variant="rectangular" />}>
             <TriplyDBPublishProcess transformationResult={transformationResult} refinedCsv={refinedCsv} />
           </React.Suspense>
         </CardActions>

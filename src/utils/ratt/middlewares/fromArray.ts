@@ -1,4 +1,4 @@
-import { Middleware, Store } from "@triply/ratt";
+import { Middleware } from "@triply/ratt";
 
 export default function fromArray(input: string[][]): Middleware {
   const header = input[0];
@@ -16,7 +16,7 @@ export default function fromArray(input: string[][]): Middleware {
           resultObject["" + colId] = val;
         }
       }
-      await next(resultObject, new Store());
+      await next(resultObject);
     }
   };
 }

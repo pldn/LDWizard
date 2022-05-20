@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, matrixState } from "../../state";
-import { FormControl, InputLabel, Select, MenuItem, Typography } from "@material-ui/core";
+import { FormControl, InputLabel, Select, MenuItem, Typography } from "@mui/material";
 import HintWrapper from "../../components/HintWrapper";
 
 import { some } from "lodash";
@@ -68,7 +68,7 @@ const ColumnSelector: React.FC<Props> = () => {
             displayEmpty
             defaultValue={-1}
             value={transformationConfig.key ?? -1}
-            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+            onChange={(event) => {
               if (typeof event.target.value === "number") selectKeyColumn(event.target.value);
             }}
           >

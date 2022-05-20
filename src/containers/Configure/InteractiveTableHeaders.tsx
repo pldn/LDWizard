@@ -12,11 +12,11 @@ import {
   Button,
   ButtonBase,
   TextField,
-} from "@material-ui/core";
+  Autocomplete,
+} from "@mui/material";
 import * as styles from "./style.scss";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state";
-import { Autocomplete } from "@material-ui/lab";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 import getClassName from "classnames";
 import HintWrapper from "../../components/HintWrapper";
@@ -101,7 +101,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
         setAutocompleteSuggestions(results);
       } catch (e) {
         console.error(e);
-        setAutocompleteError(e.message);
+        setAutocompleteError(e instanceof Error ? e.message : "Unknown error");
         setAutocompleteSuggestions([]);
       }
     };
@@ -144,7 +144,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                   freeSolo
                   options={autocompleteSuggestions}
                   value={propertyIri}
-                  renderOption={(option: AutocompleteSuggestion) => {
+                  renderOption={(_props, option: AutocompleteSuggestion) => {
                     let titleString: string;
                     let description: string | undefined;
                     if (typeof option === "string") {
@@ -190,7 +190,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                       <TextField
                         {...props}
                         autoFocus
-                        label="property URI"
+                        label="Property URI"
                         error={!!autocompleteError}
                         helperText={autocompleteError || getPrefixed(propertyIri, prefixes)}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(

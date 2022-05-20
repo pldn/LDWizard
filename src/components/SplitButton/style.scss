@@ -1,4 +1,4 @@
-button.mainButton {
+button.mainButton:global(.MuiButton-root) {
   min-width: 200px;
 }
 .popper {

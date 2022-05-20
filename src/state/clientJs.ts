@@ -30,7 +30,9 @@ export const accountsInfoQuery = selector({
     const account = await clientJs.getAccount();
     const accountInfo = await account.getInfo();
     const organizations = await Promise.all(
-      (await account.asUser().getOrganizations()).map(async (org) => {
+      (
+        await (await account.asUser()).getOrganizations()
+      ).map(async (org) => {
         return await org.getInfo();
       })
     );
@@ -40,25 +42,29 @@ export const accountsInfoQuery = selector({
 
 const datasetsOfAccountQuery = selectorFamily({
   key: "datasetOfAccountQuery",
-  get: (currentAccountState: number) => async ({ get }) => {
-    const selectedAccount = get(accountsInfoQuery)[currentAccountState];
-    if (!selectedAccount) return [];
-    const account = await App.get(get(currentTokenState)).getAccount(selectedAccount.accountName);
-    const datasets = await account.getDatasets().toArray();
-    const retrievedDatasets = await Promise.all(
-      datasets.map(async (ds) => {
-        return await ds.getInfo();
-      })
-    );
-    return retrievedDatasets;
-  },
+  get:
+    (currentAccountState: number) =>
+    async ({ get }) => {
+      const selectedAccount = get(accountsInfoQuery)[currentAccountState];
+      if (!selectedAccount) return [];
+      const account = await App.get(get(currentTokenState)).getAccount(selectedAccount.accountName);
+      const datasets = await account.getDatasets().toArray();
+      const retrievedDatasets = await Promise.all(
+        datasets.map(async (ds) => {
+          return await ds.getInfo();
+        })
+      );
+      return retrievedDatasets;
+    },
 });
 const apiInfoQuery = selectorFamily({
   key: "apiInfoQuery",
-  get: (token?: string) => async ({}) => {
-    if (!token) return undefined;
-    return await App.get(token).getApiInfo();
-  },
+  get:
+    (token?: string) =>
+    async ({}) => {
+      if (!token) return undefined;
+      return await App.get(token).getInfo();
+    },
 });
 
 export const apiInfoState = selector({

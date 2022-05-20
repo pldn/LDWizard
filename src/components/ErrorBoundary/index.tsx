@@ -1,9 +1,10 @@
 import * as React from "react";
 import Alert from "../Alert";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import * as styles from "./style.scss";
 interface Props {
   resetAction?: (errorText: string) => void;
+  children: React.ReactNode;
 }
 interface State {
   hasError: boolean | string;

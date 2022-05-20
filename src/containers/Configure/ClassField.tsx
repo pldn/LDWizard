@@ -5,8 +5,8 @@ import { transformationConfigState, prefixState } from "../../state";
 
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 
-import { Autocomplete } from "@material-ui/lab";
-import { Typography, TextField } from "@material-ui/core";
+import { Autocomplete } from "@mui/material";
+import { Typography, TextField } from "@mui/material";
 import HintWrapper from "../../components/HintWrapper";
 
 import * as styles from "./style.scss";
@@ -46,7 +46,11 @@ const ResourceClassField: React.FC<Props> = ({}) => {
         setAutocompleteSuggestions(results);
       } catch (e) {
         console.error(e);
-        setAutocompleteError(e.message);
+        if (e instanceof Error) {
+          setAutocompleteError(e.message);
+        } else {
+          setAutocompleteError("Unknown error");
+        }
         setAutocompleteSuggestions([]);
       }
     };
@@ -59,7 +63,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       options={autocompleteSuggestions}
       className={styles.baseIriField}
       value={classValue}
-      renderOption={(option: AutocompleteSuggestion) => {
+      renderOption={(_props, option: AutocompleteSuggestion) => {
         let titleString: string;
         let description: string | undefined;
         if (typeof option === "string") {

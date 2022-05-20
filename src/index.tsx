@@ -1,13 +1,13 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./containers/App";
 import ContextProviders from "./ContextProviders";
 import registerIcons from "./utils/FaIcons";
 
 registerIcons();
-ReactDOM.render(
+const root = createRoot(document.getElementById("app")!);
+root.render(
   <ContextProviders>
     <App />
-  </ContextProviders>,
-  document.getElementById("app")
+  </ContextProviders>
 );

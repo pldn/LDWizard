@@ -17,7 +17,7 @@ export interface ISvgProps {
   imgStyle?: React.CSSProperties;
 }
 
-const Svg: React.StatelessComponent<ISvgProps> = (props: ISvgProps) => {
+const Svg: React.FC<ISvgProps> = (props: ISvgProps) => {
   const { className, src, style, imgStyle, innerClassName } = props;
 
   const classNames: { [className: string]: boolean } = {

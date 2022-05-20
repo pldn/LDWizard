@@ -3,17 +3,26 @@
  * So, just add them here, and include it in our index file
  */
 import React, { useEffect } from "react";
-import { HashRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import wizardConfig from "./config";
-const theme = createMuiTheme({
+
+const theme = createTheme({
   palette: {
     primary: { main: wizardConfig.primaryColor },
     secondary: { main: wizardConfig.secondaryColor },
   },
+  components: {
+    MuiTextField: {
+      defaultProps: { variant: "standard" },
+    },
+    MuiFormControl: {
+      defaultProps: { variant: "standard" },
+    },
+  },
 });
-const ContextProviders: React.FC = ({ children }) => {
+const ContextProviders: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   useEffect(() => {
     document.documentElement.style.setProperty("--primary", wizardConfig.primaryColor);
     document.documentElement.style.setProperty("--secondary", wizardConfig.secondaryColor);
@@ -23,11 +32,13 @@ const ContextProviders: React.FC = ({ children }) => {
     document.head.appendChild(favIcon);
   }, []);
   return (
-    <HashRouter hashType="noslash">
+    <MemoryRouter>
       <RecoilRoot>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </StyledEngineProvider>
       </RecoilRoot>
-    </HashRouter>
+    </MemoryRouter>
   );
 };
 export default ContextProviders;

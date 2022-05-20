@@ -1,13 +1,12 @@
 import React from "react";
-import { Paper } from "@material-ui/core";
+import { Paper, Skeleton } from "@mui/material";
 import Upload, { Step as UploadStep } from "../Upload";
 // import Transform, { Step as TransformStep } from "../Transform";
 import Configure, { Step as ConfigureStep } from "../Configure";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Publish, { Step as ExportStep } from "../Publish";
 import Steps from "./Steps";
 import ErrorBoundary from "../../components/ErrorBoundary";
-import { Skeleton } from "@material-ui/lab";
 interface Props {}
 
 const Wizard: React.FC<Props> = () => {
@@ -15,20 +14,19 @@ const Wizard: React.FC<Props> = () => {
     <Paper elevation={2} square>
       <Steps />
       <ErrorBoundary>
-        <Switch>
-          <Route exact path={`/${UploadStep}`}>
-            <Upload />
-          </Route>
-          <Route exact path={`/${ConfigureStep}`}>
-            <React.Suspense fallback={<Skeleton width="100%" height="500px" />}>
-              <Configure />
-            </React.Suspense>
-          </Route>
-          <Route exact path={`/${ExportStep}`}>
-            <Publish />
-          </Route>
-          <Redirect to={`/${UploadStep}`} />
-        </Switch>
+        <Routes>
+          <Route path={`${UploadStep}`} element={<Upload />} />
+          <Route
+            path={`${ConfigureStep}`}
+            element={
+              <React.Suspense fallback={<Skeleton width="100%" height="500px" />}>
+                <Configure />
+              </React.Suspense>
+            }
+          />
+          <Route path={`${ExportStep}`} element={<Publish />} />
+          <Route path="*" element={<Navigate to={`${UploadStep}`} />} />
+        </Routes>
       </ErrorBoundary>
     </Paper>
   );

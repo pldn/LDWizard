@@ -1,11 +1,12 @@
 import * as React from "react";
-import { IconButton, Popover, Container, Typography, Box } from "@material-ui/core";
+import { IconButton, Popover, Container, Typography, Box } from "@mui/material";
 import FontAwesomeIcon from "../FontAwesomeIcon";
 import * as styles from "./style.scss";
 import getClassName from "classnames";
 interface Props {
   hint: string;
   className?: string;
+  children: React.ReactElement;
 }
 
 const HintWrapper: React.FC<Props> = ({ hint, className, children }) => {

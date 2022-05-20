@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Container, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@material-ui/core";
+import { Container, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@mui/material";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon";
 import SplitButton from "../../components/SplitButton";
 import { Matrix, TransformationType } from "../../Definitions";

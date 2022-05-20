@@ -7,7 +7,7 @@ import {
   Select,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import * as React from "react";
 import HintWrapper from "../../components/HintWrapper";
 import * as styles from "./style.scss";
