@@ -144,7 +144,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                   freeSolo
                   options={autocompleteSuggestions}
                   value={propertyIri}
-                  renderOption={(_props, option: AutocompleteSuggestion) => {
+                  renderOption={(props, option: AutocompleteSuggestion) => {
                     let titleString: string;
                     let description: string | undefined;
                     if (typeof option === "string") {
@@ -156,8 +156,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                       titleString = option.value;
                     }
                     return (
-                      <div>
-                        <Typography>{getPrefixed(titleString, prefixes) || titleString}</Typography>
+                      <li {...props}>
+                        <Typography sx={{ mr: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>
                         {description && (
                           <Typography
                             dangerouslySetInnerHTML={{
@@ -167,7 +167,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                             className={styles.hint}
                           />
                         )}
-                      </div>
+                      </li>
                     );
                   }}
                   getOptionLabel={(value: any) =>

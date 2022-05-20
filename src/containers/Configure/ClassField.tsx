@@ -63,7 +63,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       options={autocompleteSuggestions}
       className={styles.baseIriField}
       value={classValue}
-      renderOption={(_props, option: AutocompleteSuggestion) => {
+      renderOption={(props, option: AutocompleteSuggestion) => {
         let titleString: string;
         let description: string | undefined;
         if (typeof option === "string") {
@@ -75,12 +75,12 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           titleString = option.value;
         }
         return (
-          <div>
-            <Typography>{getPrefixed(titleString, prefixes) || titleString}</Typography>
+          <li {...props}>
+            <Typography sx={{ mx: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>
             {description && (
               <Typography dangerouslySetInnerHTML={{ __html: description }} variant="caption" className={styles.hint} />
             )}
-          </div>
+          </li>
         );
       }}
       blurOnSelect
