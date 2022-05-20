@@ -122,9 +122,12 @@ const Publish: React.FC<Props> = ({}) => {
     );
   }
   const publishOptions: { [P in PublishElement]: React.ReactElement } = {
-    download: <DownloadResults refinedCsv={refinedCsv} transformationResult={transformationResult} />,
+    download: (
+      <DownloadResults refinedCsv={refinedCsv} transformationResult={transformationResult} key="Download-to-browser" />
+    ),
     triplyDB: (
       <ErrorBoundary
+        key="Publish-triplyDB"
         resetAction={(errorText: string) => {
           // Token is valid, but CORS fails, expect api not to be up
           if (

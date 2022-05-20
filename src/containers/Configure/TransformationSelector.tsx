@@ -42,7 +42,7 @@ const TransformationSelector: React.FC<Props> = ({
           <FormControlLabel
             control={
               <Checkbox
-                checked={selectedTransformation && selectedTransformation.type === "to-iri"}
+                checked={selectedTransformation?.type === "to-iri"}
                 onChange={(_input, checked) => {
                   if (checked) {
                     onTransformationChange({

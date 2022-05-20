@@ -19,30 +19,17 @@ const ResourceClassField: React.FC<Props> = ({}) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const prefixes = useRecoilValue(prefixState);
   //   Create an intermediate value here, to stop it from re-rendering
-  const [classValue, setClassValue] = React.useState<string>(transformationConfig.resourceClass);
+  const [selectedClassValue, setSelectedClassValue] = React.useState<string | undefined>(undefined);
+  const [writtenClassValue, setWrittenClassValue] = React.useState<string>(transformationConfig.resourceClass);
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
 
-  const updateClassValue = (newClassValue: string) => {
-    setClassValue(newClassValue);
-    confirmClassUri(newClassValue);
-  };
-
-  const confirmClassUri = (newClassValue: string) => {
-    setTransformationConfig((state) => {
-      return {
-        ...state,
-        resourceClass:
-          newClassValue.length > 0 ? newClassValue.trim() : "http://www.w3.org/2000/01/rdf-schema#Resource",
-      };
-    });
-  };
   // Async call for results effect
   React.useEffect(() => {
     const asyncCall = async () => {
       setAutocompleteError(undefined);
       try {
-        const results = await wizardAppConfig.getClassSuggestions(classValue || "Resource");
+        const results = await wizardAppConfig.getClassSuggestions(writtenClassValue || "Resource");
         setAutocompleteSuggestions(results);
       } catch (e) {
         console.error(e);
@@ -55,14 +42,25 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       }
     };
     asyncCall();
-  }, [transformationConfig, classValue]);
+  }, [transformationConfig, writtenClassValue]);
+
+  // Update the global configuration when the user selects a class
+  React.useEffect(() => {
+    setTransformationConfig((state) => {
+      return {
+        ...state,
+        resourceClass:
+          selectedClassValue || writtenClassValue.trim() || "http://www.w3.org/2000/01/rdf-schema#Resource",
+      };
+    });
+  }, [selectedClassValue, setTransformationConfig, writtenClassValue]);
 
   return (
     <Autocomplete
       freeSolo
       options={autocompleteSuggestions}
       className={styles.baseIriField}
-      value={classValue}
+      value={selectedClassValue || writtenClassValue}
       renderOption={(props, option: AutocompleteSuggestion) => {
         let titleString: string;
         let description: string | undefined;
@@ -87,13 +85,15 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       getOptionLabel={(value: any) => (typeof value === "string" ? value : value.iri)}
       onChange={(event, newValue: AutocompleteSuggestion | null) => {
         if (!newValue) return;
+        let newValueString: string;
         if (typeof newValue === "string") {
-          updateClassValue(newValue);
+          newValueString = newValue;
         } else if ("iri" in newValue) {
-          updateClassValue(newValue.iri);
+          newValueString = newValue.iri;
         } else {
-          updateClassValue(newValue.value);
+          newValueString = newValue.value;
         }
+        setSelectedClassValue(newValueString);
       }}
       disableClearable
       renderInput={(props) => (
@@ -103,15 +103,16 @@ const ResourceClassField: React.FC<Props> = ({}) => {
             InputLabelProps={{
               shrink: true,
             }}
-            value={classValue}
-            helperText={autocompleteError || getPrefixed(classValue, prefixes) || classValue || ""}
+            value={writtenClassValue}
+            helperText={autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || ""}
             error={!!autocompleteError}
             onChange={(event) => {
+              setSelectedClassValue(undefined);
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
               if (prefixInfo.prefixLabel) {
-                updateClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
+                setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
               } else {
-                updateClassValue(event.currentTarget.value);
+                setWrittenClassValue(event.currentTarget.value);
               }
             }}
             label={"Resource class IRI"}
