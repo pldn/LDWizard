@@ -26,7 +26,7 @@ export interface SingleColumnParamRefinement extends BaseColumnRefinement {
   type: "single-param";
   transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
 }
-export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
+export declare type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
 export default interface WizardConfig {
   appName?: string;
   dataplatformLink?: string;
