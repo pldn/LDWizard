@@ -19,8 +19,8 @@ The LD Wizard project delivers the following products:
   <dd>A specific configuration of the LD Wizard by the University of Maastricht for transforming BioLink tables.</dd>
   <dt><a href="https://labs.kadaster.nl/demonstrators/geodatawizard/" target="_blank">GeoData Wizard</a></dt>
   <dd>A specific application of the LD Wizard configured for linking Dutch geo data to the BAG and BRT.</dd>
-  <dt><a href="docs/design.md">LD Wizard Design</a></dt>
-  <dd>A detailed design document that consolidates the requirements, limitations and structural components for the LD Wizard approach.
+  <dt><a href="https://hulc.triply.cc/">Clariah Wizard</a></dt>
+  <dd>A specific application of the LD Wizard configured for use in the Clariah research infrastructure for the humanities.</dd>
 </dl>
 
 ## 2. Create your own LD Wizard!
