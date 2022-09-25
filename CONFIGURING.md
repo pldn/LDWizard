@@ -1,4 +1,4 @@
-# CONFIGURING
+# Configuring
 
 In this document you can find all necessary guidance to create your own LD Wizard application. 
 
