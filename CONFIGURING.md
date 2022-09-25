@@ -4,7 +4,7 @@ In this document you can find all necessary guidance to create your own LD Wizar
 
 We encourage new users who are working in other domains to create new LDWizard variants that can be used to create and publish linked data more easily using e.g. the vocabularies that are relevant for their domain. Working this way we expect that a large family of LDWizard applications can evolve towards the future (and create and publish more and more linkable and reusable linked data that can be seamlessly used in new, innovative end user applications). 
 
-## Configuring your own LDWizard
+## 1. Configuring your own LDWizard
 
 You can create your own LD Wizard application by following these steps:
 
@@ -51,7 +51,7 @@ You can create your own LD Wizard application by following these steps:
 
 Your LD Wizard application can now be found inside the `lib/` directory.
 
-### Run locally
+### 1a. Run locally
 
 You can upload your LD Wizard application to an online location and use it there. But you can also run the application locally by starting an HTTP server. If you do not yet have an HTTP server installed, run the following command:
 
@@ -68,7 +68,7 @@ http-server .
 
 Open <http://localhost:8080> in a web browser.
 
-### Configuration options
+### 1b. Configuration options
 
 You can customize your LD Wizard application by adding the following configuration options to your configuration file (`config.ts`).
 
@@ -90,7 +90,7 @@ You can customize your LD Wizard application by adding the following configurati
 | `repositoryLink`        | `string`                                             | <https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core>                                                                             | Link to the specific LD Wizard configuration.                                                                                                              |
 | `newDatasetAccessLevel` | `"public" \| "internal" \| "private"`                | `"private"`                                                                                                                             | The access level to use for new datasets                                                                                                                   |
 
-### Building your own Docker container
+### 1c. Building your own Docker container
 
 You can create a Docker container for your LD Wizard application by running the following command:
 
@@ -98,11 +98,11 @@ You can create a Docker container for your LD Wizard application by running the 
 docker build -f ./docker/Dockerfile -t "my-tag" --build-arg CONFIG_FILE=config.ts
 ```
 
-## Explanation of backend services
+## 2. Explanation of backend services
 
 LD Wizard runs entirely within the web browser, making it a client-side application. In order to give the user sugesstions about their data, LD Wizard sends/reveives requests to/from external linked data services. This section describes some of the external services that can be used by LD Wizard.
 
-### Suggestions with SPARQL
+### 2a. Suggestions with SPARQL
 
 When `classConfig` and/or `predicateConfig` are set to `sparql`, LD Wizard uses one or two SPARQL endpoints to retrieve suggestions for classes and properties, respectively. The SPARQL queries that are used can be found [in the LD Wizard Core repository](https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core/blob/master/src/config/sparqlSearch.ts).
 
@@ -113,7 +113,7 @@ These queries support class and property descriptions that follow linked data st
 - Use [`rdfs:label`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23label) for human-readable labels.
 - Use [`rdfs:comment`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23comment) for human-readable descriptions.
 
-### Suggestions with ElasticSearch
+### 2b. Suggestions with ElasticSearch
 
 When `classConfig` and/or `preficateConfig` are set to `elastic`, LD Wizard uses generic ElasticSearch text queries to retrieve suggestions for classes and properties. The ElasticSearch queries that are used can be found [in the LD Wizard Core repository](https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core/blob/master/src/config/elasticSearch.ts).
 
@@ -121,7 +121,7 @@ These queries support class and property descriptions that follow linked data st
 
 In order to create an ElasticSearch service that can be queried in this way, your linked dataset must be indexed as a collection of JSON files. The most standards-compatible way of doing this is to create one [JSON-LD](https://www.w3.org/TR/json-ld11/) file per non-trivial node. A JSON-LD file contains the [Concise Bounded Description (CBD)](https://www.w3.org/Submission/CBD/) for a particular node. Trivial nodes are nodes that are already included in the CBD (e.g., blank nodes). These trivial nodes should not be indexed separately.
 
-### IRI prefix completion
+### 2c. IRI prefix completion
 
 There is not currently a strandard way of exposing IRI prefixes in RDF. However, there is [an initiative](https://github.com/w3c/sparql-12/issues/134) to potentially add this feature to a future version of SPARQL.
 
