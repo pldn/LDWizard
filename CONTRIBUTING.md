@@ -44,10 +44,13 @@ Perform the following steps in order to develop LD Wizard Core locally:
 
 4. Visit <http://localhost:4000> in a web browser.
 
-### Publish a new version
-
-The following command publishes a new version of the LD Wizard Core:
+5. Publish a new version of the LDWizard core via the following command.
 
 ```sh
 yarn build && yarn publish
 ```
+
+### Write documentation
+
+Writing documentation follows the same process as writing code. Always accompany your code with good documentation for other developers.
+
