@@ -47,4 +47,4 @@ LD Wizard is an initiative of the following organizations and people:
 - [Dutch Digital Heritage Network (NDE)](https://www.netwerkdigitaalerfgoed.nl/en), Enno Meijers & Ivo Zandhuis.
 - [The Netherlands’ Cadastre, Land Registry and Mapping Agency (Kadaster)](https://www.kadaster.nl), Erwin Folmer.
 - [International Institute of Social History (IISH)](https://iisg.amsterdam/en) and [Clariah](https://www.clariah.nl), Richard Zijdeman.
-- [Triply](https://triply.cc), Gerwin Bosch, Thomas de Groot, Laurens Rietveld & Wouter Beek.
+- [Triply](https://triply.cc), Gerwin Bosch, Thomas de Groot, Mark Lindeman, Laurens Rietveld & Wouter Beek.
