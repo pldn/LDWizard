@@ -7,7 +7,7 @@ import HintWrapper from "../../components/HintWrapper";
 
 import { some } from "lodash";
 
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { Matrix, SelectKeyColumn } from "../../Definitions";
 
 interface Props {}

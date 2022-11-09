@@ -6,15 +6,14 @@ const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
 import autoprefixer from "autoprefixer";
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-import OptimizeCSSAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
-import svgoConfig from "@triply/utils/lib/svgo";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash";
 import { Renderer as MarkdownRenderer } from "marked";
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
-const plugins: webpack.Plugin[] = [
+const plugins: webpack.WebpackPluginInstance[] = [
   new webpack.DefinePlugin({
     __DEVELOPMENT__: isDev,
   }),
@@ -23,7 +22,7 @@ const plugins: webpack.Plugin[] = [
 if (isDev) {
   plugins.push(new ReactRefreshWebpackPlugin());
   //ignore these, to avoid infinite loops while watching
-  plugins.push(new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]));
+  plugins.push(new webpack.WatchIgnorePlugin({ paths: [/\.js$/, /\.d\.ts$/] }));
 } else {
   plugins.push(
     new MiniCssExtractPlugin({
@@ -40,6 +39,8 @@ plugins.push(
   })
 );
 
+plugins.push(new webpack.ProvidePlugin({ Buffer: ["buffer", "Buffer"] }));
+
 if (analyzeBundle) plugins.push(new BundleAnalyzerPlugin());
 
 export const genericConfig: webpack.Configuration = {
@@ -50,14 +51,7 @@ export const genericConfig: webpack.Configuration = {
   optimization: {
     minimize: true, //If you're debugging the production build, set this to false
     //that'll speed up the build process quite a bit
-    minimizer: isDev
-      ? []
-      : [
-          new TerserPlugin({
-            sourceMap: true,
-          }),
-          new OptimizeCSSAssetsPlugin({}),
-        ],
+    minimizer: isDev ? [] : [new TerserPlugin({}), new CssMinimizerPlugin({})],
   },
   performance: {
     maxEntrypointSize: 3000000,
@@ -69,7 +63,7 @@ export const genericConfig: webpack.Configuration = {
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
       {
         test: /\.tsx?$/,
-        loader: [
+        rules: [
           {
             loader: "babel-loader",
             options: {
@@ -119,11 +113,7 @@ export const genericConfig: webpack.Configuration = {
       },
       {
         test: /\.(woff2?|ttf)$/,
-        loader: "url-loader",
-        options: {
-          emitFile: true,
-          limit: 1000,
-        },
+        type: "asset",
       },
       {
         test: /\.txt$/,
@@ -143,7 +133,7 @@ export const genericConfig: webpack.Configuration = {
           },
           {
             loader: "postcss-loader",
-            options: { plugins: [autoprefixer()] },
+            options: { postcssOptions: { plugins: [autoprefixer()] } },
           },
           "sass-loader",
         ],
@@ -154,29 +144,23 @@ export const genericConfig: webpack.Configuration = {
         exclude: [
           // These packages have issues with their sourcemaps
           isDev
-            ? path.resolve(__dirname, `../node_modules/rdf-data-factory`)
+            ? path.resolve(__dirname, "../node_modules/rdf-data-factory")
             : path.resolve(__dirname, "../node_modules"),
+          path.resolve(__dirname, "../node_modules/@triply/utils"),
         ],
         enforce: "pre",
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 1000,
-              emitFile: true,
-              mimetype: "image/svg+xml",
-            },
-          },
-          {
-            loader: "svgo-loader",
-            options: svgoConfig(),
-          },
-        ],
+        test: /\.svg$/i,
+        type: 'asset',
+        resourceQuery: { not: [/react/] }, // exclude react component if *.svg?url
       },
       {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        resourceQuery: /react/, // *.svg?url
+        use: ['@svgr/webpack'],
+      },      {
         test: /\.css$/,
         use: [
           isDev ? "style-loader" : MiniCssExtractPlugin.loader,
@@ -186,7 +170,7 @@ export const genericConfig: webpack.Configuration = {
             //Remove background image. We're often including css from node_modules, and
             //libs like leaflet have a url reference to a png in their css
             //Dont want this in there, to avoid external deps
-            options: { plugins: () => [bgImage({ mode: "cutter" })] },
+            options: { postcssOptions: { plugins: () => [bgImage({ mode: "cutter" })] } },
           },
         ],
       },
@@ -213,6 +197,22 @@ export const genericConfig: webpack.Configuration = {
   },
   resolve: {
     extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
+    modules: ["node_modules", path.resolve("./src")],
+    fallback: {
+      fs: false,
+      net: false,
+      tls: false,
+      path: false,
+      zlib: false,
+      os: false,
+      url: path.resolve(__dirname, "/node_modules/url/url.js"),
+      crypto: false, //possible polyfill
+      assert: false, //possible polyfill
+      stream: require.resolve("stream-browserify"),
+      buffer: require.resolve("buffer"),
+      events: false,
+      "find-up": false,
+    },
   },
   plugins: plugins,
 };
@@ -225,15 +225,19 @@ const config: webpack.Configuration = {
     libraryTarget: "umd",
   },
   entry: {
+    config: [path.resolve(__dirname, "./runtimeConfig.ts")],
     "LDWizard-base": [path.resolve(__dirname, "./../src/index.tsx")],
   },
-  node: {
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
-    path: "empty",
+  externals: {
+    pumpify: "pumpify",
+    "fs-extra": "fs-extra",
+    "find-up": "find-up",
+    table: "table",
+    "global-agent": "global-agent",
+    "get-current-line": "get-current-line",
+    querystring: "querystring",
   },
-  externals: { "fs-extra": "fs-extra", "find-up": "find-up", table: "table" },
+  ignoreWarnings: [/Failed to parse source map/],
 };
 
 export default config;

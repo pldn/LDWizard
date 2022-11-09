@@ -18,6 +18,10 @@ declare module "*.svg" {
   const content: string;
   export = content;
 }
+declare module "*.svg?react" {
+  const content: any;
+  export = content;
+}
 declare module "*.txt" {
   const content: string;
   export = content;

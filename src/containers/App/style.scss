@@ -28,12 +28,12 @@ body {
     display: flex;
     flex-direction: column;
   }
-  .LDWizardImg svg {
+  .LDWizardImg {
     height: 5rem;
-    :global(.primary) {
+    :global(.LDWizard_svg__primary) {
       fill: $pallette-primary;
     }
-    :global(.secondary) {
+    :global(.LDWizard_svg__secondary) {
       fill: $pallette-secondary;
     }
   }

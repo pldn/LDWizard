@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "lib": ["ES6", "dom"],
+    "esModuleInterop": true,
 
     "strict": true,
     "allowSyntheticDefaultImports": true,
@@ -14,6 +16,7 @@
     "rootDir": ".",
     "jsx": "react"
   },
-  "include": ["./typings-custom/main.d.ts", "./src/**/*", "./webpack/**/*"],
+  "include": ["./src/**/*", "./webpack/**/*"],
+  "files":["./typings-custom/main.d.ts"],
   "compileOnSave": false
 }

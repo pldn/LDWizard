@@ -1,7 +1,7 @@
 import * as React from "react";
 import Alert from "../Alert";
 import { Button } from "@mui/material";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 interface Props {
   resetAction?: (errorText: string) => void;
   children: React.ReactNode;

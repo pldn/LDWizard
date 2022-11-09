@@ -1,13 +1,16 @@
-FROM node:14-alpine as build
+FROM node:16-alpine as build
 RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3
 RUN npm install --quiet node-gyp -g
 WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn 
+COPY .yarn ./.yarn
+COPY .yarnrc.yml ./
+RUN yarn
 COPY . .
+
 ARG CONFIG_FILE
-RUN yarn exec ldwizard-build ${CONFIG_FILE}
+RUN yarn ldwizard-build ${CONFIG_FILE}
 FROM nginx:stable-alpine
 COPY --from=build /app/lib /usr/share/nginx/html
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf

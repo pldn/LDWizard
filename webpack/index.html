@@ -1,15 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>LDWizard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,es6"></script>
-
-</head>
-<body>
-  <div class="container">
-    <div id="app"></div>
-  </div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>LDWizard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,es6"></script>
+    <script>
+      // Mocking process env
+      window.process = { env: {} };
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="app"></div>
+    </div>
+  </body>
 </html>

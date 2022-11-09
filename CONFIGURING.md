@@ -1,8 +1,8 @@
 # Configuring
 
-In this document you can find all necessary guidance to create your own LD Wizard application. 
+In this document you can find all necessary guidance to create your own LD Wizard application.
 
-We encourage new users who are working in other domains to create new LDWizard variants that can be used to create and publish linked data more easily using e.g. the vocabularies that are relevant for their domain. Working this way we expect that a large family of LDWizard applications can evolve towards the future (and create and publish more and more linkable and reusable linked data that can be seamlessly used in new, innovative end user applications). 
+We encourage new users who are working in other domains to create new LDWizard variants that can be used to create and publish linked data more easily using e.g. the vocabularies that are relevant for their domain. Working this way we expect that a large family of LDWizard applications can evolve towards the future (and create and publish more and more linkable and reusable linked data that can be seamlessly used in new, innovative end user applications).
 
 ## 1. Configuring your own LDWizard
 
@@ -14,7 +14,7 @@ You can create your own LD Wizard application by following these steps:
    websites for installation on other operating systems.
 
    ```sh
-   curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
    sudo apt update
@@ -28,22 +28,29 @@ You can create your own LD Wizard application by following these steps:
    cd my-wizard
    ```
 
-3. Add the LD Wizard dependency:
+3. Create a `.yarnrc` file
+
+   ```yarnrc
+   --ignore-engines true
+   ```
+
+4. Add the LD Wizard dependency:
 
    ```sh
    yarn add @pldn/ldwizard
    ```
 
-4. Create a configuration file called `config.ts` and enter the following content:
+5. Create a configuration file called `config.ts` and enter the following content:
 
    ```ts
    // This is a template file
    import WizardConfig from "@pldn/ldwizard/types/WizardConfig";
    const wizardConfig: WizardConfig = {};
-   export default wizardConfig;
+
+   window.config = wizardConfig;
    ```
 
-5. Run the following command to build your application:
+6. Run the following command to build your application:
 
    ```sh
    yarn exec ldwizard-build config.ts
@@ -95,7 +102,7 @@ You can customize your LD Wizard application by adding the following configurati
 You can create a Docker container for your LD Wizard application by running the following command:
 
 ```sh
-docker build -f ./docker/Dockerfile -t "my-tag" --build-arg CONFIG_FILE=config.ts
+docker build . -f ./docker/Dockerfile -t "my-tag" --build-arg CONFIG_FILE=config.ts
 ```
 
 ## 2. Explanation of backend services

@@ -17,12 +17,18 @@ import {
   getClassSuggestions as getSparqlClassSuggestions,
   getPropertySuggestions as getSparqlPropertySuggestions,
 } from "./sparqlSearch";
-import config from "./wizardConfigDefaults";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
 import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models";
+import WizardConfig from "./WizardConfig";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
+
+declare global {
+  interface Window {
+    wizardConfig: WizardConfig;
+  }
+}
 
 export type TriplyDbReference = {
   label: string;
@@ -59,6 +65,8 @@ export interface WizardAppConfig {
   newDatasetAccessLevel: DatasetAccessLevel;
 }
 export type PublishElement = "download" | "triplyDB";
+
+const config = window.wizardConfig;
 
 export const wizardAppConfig: WizardAppConfig = {
   /**

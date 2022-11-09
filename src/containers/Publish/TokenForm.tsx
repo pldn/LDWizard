@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TextField, Button, Typography, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
-import * as style from "./style.scss";
+import style from "./style.scss";
 import { currentTokenState, accountsInfoQuery } from "../../state/clientJs";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import App from "@triply/triplydb";

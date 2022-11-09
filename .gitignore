@@ -5,3 +5,12 @@ lerna-debug.log
 yarn-error.log
 /test
 .npmrc
+
+# Based on https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -1,13 +1,14 @@
 import React from "react";
 import Wizard from "../Wizard";
 import { AppBar, Toolbar, Typography, Container, Paper } from "@mui/material";
-import LDWizardImg from "!raw-loader!./LDWizard.svg";
-import * as styles from "./style.scss";
+import LDWizardImg from "./LDWizard.svg?react";
+import styles from "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { wizardAppConfig } from "../../config";
 import { Link, Route, Routes } from "react-router-dom";
 import WelcomePage from "./WelcomePage";
 require("../../theme/global.scss");
+
 interface Props {}
 const App: React.FC<Props> = () => {
   return (
@@ -47,7 +48,7 @@ const App: React.FC<Props> = () => {
             <FontAwesomeIcon icon={["fab", "github"]} /> Github
           </a>
         </nav>
-        <div className={styles.LDWizardImg} dangerouslySetInnerHTML={{ __html: LDWizardImg }} />
+        <LDWizardImg aria-label="" className={styles.LDWizardImg} />
       </Paper>
     </div>
   );

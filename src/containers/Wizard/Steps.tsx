@@ -14,8 +14,7 @@ import styles from "./style.scss";
 const Steps: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const currentStep = +location.pathname[1];
-
+  const currentStep = location.pathname[1] !== undefined ? +location.pathname[1] : 1;
   const parsedCsv = useRecoilValue(matrixState);
   return (
     <Container sx={{ py: 2 }}>

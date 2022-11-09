@@ -5,7 +5,7 @@ import { transformationConfigState } from "../../state";
 
 import { TextField } from "@mui/material";
 import HintWrapper from "../../components/HintWrapper";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 
 interface Props {}
 

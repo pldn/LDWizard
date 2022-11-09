@@ -1,4 +1,4 @@
-import * as Rdf from "rdf-js";
+import Rdf from "rdf-js";
 /**
  * General definitions
  */

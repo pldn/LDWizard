@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 process.env.NODE_ENV = "production";
-import program from "commander";
+import { program } from "commander";
 import webpack from "webpack";
 import client from "./config";
 import * as path from "path";
@@ -15,15 +15,8 @@ program.action(async () => {
   }
   const webpackConfig = client;
   console.info("Config found at", path.resolve(process.cwd(), config));
-  webpackConfig.plugins = [
-    new webpack.NormalModuleReplacementPlugin(
-      /src\/config\/wizardConfigDefaults\.ts/,
-      path.resolve(process.cwd(), config)
-    ),
-    ...(webpackConfig.plugins || []),
-  ];
+  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), config);
   const compiler = webpack(webpackConfig);
-
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");
   await new Promise<void>((resolve, reject) => {
@@ -35,7 +28,7 @@ program.action(async () => {
         console.info(stats.toString(webpackConfig.stats));
         return resolve();
       }
-      console.error(stats.toJson().errors[0]);
+      console.error(stats.toJson().errors?.[0]);
       return reject(`Failed to compile LD-Wizard`);
     });
     compiler.run(() => {});

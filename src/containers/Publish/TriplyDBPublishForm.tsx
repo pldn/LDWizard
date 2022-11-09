@@ -8,7 +8,7 @@ import AccountSelector from "./AccountSelector";
 import { Skeleton } from "@mui/material";
 import { currentTokenState, apiInfoState } from "../../state/clientJs";
 import AddDataset from "./AddDatasetForm";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import TriplyDBPublishProcess from "./TriplyDBPublishProcess";
 import { Matrix } from "../../Definitions";
 // ClientJS Recoil state

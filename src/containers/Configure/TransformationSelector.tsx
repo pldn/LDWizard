@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import HintWrapper from "../../components/HintWrapper";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import config from "../../config";
 import { ColumnRefinementSetting } from "../../Definitions";
 import { useRecoilValue } from "recoil";

@@ -16,7 +16,7 @@ export interface AlertProps {
   success?: boolean;
   children?: React.ReactNode;
 }
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 
 const Alert: React.FC<AlertProps> = ({
   transparent,

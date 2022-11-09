@@ -9,7 +9,7 @@ import { Autocomplete } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
 import HintWrapper from "../../components/HintWrapper";
 
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
 

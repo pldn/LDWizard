@@ -14,7 +14,7 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";

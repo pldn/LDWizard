@@ -18,7 +18,7 @@ import {
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "../../state";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import BaseIriField from "./BaseIriField";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon";
 import TableHeaders from "./InteractiveTableHeaders";

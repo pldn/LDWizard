@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ButtonGroup, Button, Box, Popper, ClickAwayListener, MenuList, MenuItem, Paper } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 interface Props<T = string> {
   onActionSelected: (actionKey: T) => void;
   actions: T[];

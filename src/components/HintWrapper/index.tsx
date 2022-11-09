@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IconButton, Popover, Container, Typography, Box } from "@mui/material";
 import FontAwesomeIcon from "../FontAwesomeIcon";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import getClassName from "classnames";
 interface Props {
   hint: string;

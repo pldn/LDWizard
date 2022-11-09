@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FormControl, InputLabel, Select, Avatar, MenuItem } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { accountsInfoQuery, currentUserIdState } from "../../state/clientJs";
 export interface Props {}
 

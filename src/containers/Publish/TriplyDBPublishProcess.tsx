@@ -15,7 +15,7 @@ import App from "@triply/triplydb";
 import Dataset from "@triply/triplydb/lib/Dataset";
 import { unparse as serializeCsv } from "papaparse";
 
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { Matrix } from "../../Definitions";
 import { getFileBaseName } from "../../utils/helpers";
 import Asset from "@triply/triplydb/lib/Asset";

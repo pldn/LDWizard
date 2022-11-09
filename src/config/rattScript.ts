@@ -4,7 +4,7 @@ import { ApplyTransformation } from "../Definitions";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
 import fromArray from "../utils/ratt/middlewares/fromArray";
 import { NamedNode } from "n3";
-import * as RDF from "rdf-js";
+import RDF from "rdf-js";
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data. See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
  * When making changes to this file make sure to copy the result to `/src/utils/ratt/applyTransformation.txt`

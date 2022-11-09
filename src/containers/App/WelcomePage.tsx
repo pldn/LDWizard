@@ -1,9 +1,9 @@
 import React from "react";
-import * as styles from "./style.scss";
+import styles from "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Container, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
-import * as mdStyles from "./markdownStyle.scss";
+import mdStyles from "./markdownStyle.scss";
 
 interface Props {
   content: string;
