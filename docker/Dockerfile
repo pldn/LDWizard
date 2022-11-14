@@ -4,11 +4,10 @@ RUN npm install --quiet node-gyp -g
 WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
-COPY .yarn ./.yarn
-COPY .yarnrc.yml ./
+COPY .yarnrc ./
 RUN yarn
 COPY . .
-
+RUN yarn build
 ARG CONFIG_FILE
 RUN yarn ldwizard-build ${CONFIG_FILE}
 FROM nginx:stable-alpine

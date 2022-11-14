@@ -99,11 +99,13 @@ You can customize your LD Wizard application by adding the following configurati
 
 ### 1c. Building your own Docker container
 
-You can create a Docker container for your LD Wizard application by running the following command:
+You can create a Docker container for your LD Wizard application by running the following command (this assumes that you have a LDWizard configuration file called `./config.ts` in the root of this repository):
 
 ```sh
-docker build . -f ./docker/Dockerfile -t "my-tag" --build-arg CONFIG_FILE=config.ts
+docker build -f ./docker/Dockerfile -t "my-tag" --build-arg CONFIG_FILE=config.ts .
 ```
+
+This container includes the LDWizard web assets (images, javascript and css), hosted via NGINX on port 80.
 
 ## 2. Explanation of backend services
 
