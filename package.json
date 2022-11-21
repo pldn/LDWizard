@@ -95,7 +95,7 @@
     "concurrently": "^7.5.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
-    "eslint": "^8.27.0",
+    "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^27.1.4",
     "eslint-plugin-lodash": "^7.4.0",
