@@ -6,7 +6,14 @@ LD Wizard is a framework for creating end-user focused Graphical User Interfaces
 
 ## 1. LD Wizard Project
 
-The LD Wizard project delivers the following products:
+The LD Wizard project has delivered the following LDWizard core product:
+
+<dl>
+  <dt><a href="https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core" target="_blank">LD Wizard Core</a></dt>
+  <dd>A separate repository where the LD Wizard Core codebase is developed and maintained.</dd>
+</dl>  
+
+From which the following LDWizard variants have been configured (so far):
 
 <dl>
   <dt><a href="https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard" target="_blank">Cultural Heritage Wizard</a></dt>
@@ -46,3 +53,4 @@ LD Wizard is an initiative of the following organizations and people:
 - [The Netherlands’ Cadastre, Land Registry and Mapping Agency (Kadaster)](https://www.kadaster.nl), Erwin Folmer.
 - [International Institute of Social History (IISH)](https://iisg.amsterdam/en) and [Clariah](https://www.clariah.nl), Richard Zijdeman.
 - [Triply](https://triply.cc), Gerwin Bosch, Thomas de Groot, Mark Lindeman, Laurens Rietveld & Wouter Beek.
+- [Platform Linked Data Netherlands (PLDN)](https://www.pldn.nl), Pieter van Everdingen
