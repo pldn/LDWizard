@@ -2,7 +2,7 @@ import Rdf from "rdf-js";
 /**
  * General definitions
  */
-export type TransformationType = "ratt" | "cow" | "rml";
+export type TransformationType = "ratt" | "cow" | "rml" | "rocketrml";
 export type Matrix = Array<Array<string>>;
 export type Source = File | string;
 export type TransformationScript = string | {};
