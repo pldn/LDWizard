@@ -79,6 +79,7 @@ const Publish: React.FC<Props> = ({}) => {
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,
           type: "ratt",
+          // type: "rocketrml",
         });
         setTransformationResult(transformationResult);
       }

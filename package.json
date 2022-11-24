@@ -126,6 +126,7 @@
     "react-refresh": "^0.14.0",
     "react-router-dom": "^6.4.3",
     "recoil": "^0.7.6",
+    "rocketrml": "^2.1.0",
     "sass-loader": "^13.1.0",
     "source-map-loader": "^4.0.1",
     "source-map-support": "^0.5.21",
@@ -141,7 +142,8 @@
     "webpack-build-notifier": "^2.3.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "xpath-iterator": "git+https://abc@github.com/ThibaultGerrier/XpathIterator#647ba7c2973b3feadcc010f83f7086fe043e0810"
   },
   "husky": {
     "hooks": {
