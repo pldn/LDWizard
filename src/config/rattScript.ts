@@ -1,10 +1,14 @@
 import Ratt from "@triply/ratt";
 import toNtriplesString from "../utils/ratt/middlewares/toNtriplesString";
 import { ApplyTransformation } from "../Definitions";
-import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import getRmlTransformationScript from "./rmlScript";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, matrixToCsv } from "../utils/helpers";
 import fromArray from "../utils/ratt/middlewares/fromArray";
 import { NamedNode } from "n3";
 import RDF from "rdf-js";
+import parser from "rocketrml";
+// const parser = require('rocketrml');
+
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data. See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
  * When making changes to this file make sure to copy the result to `/src/utils/ratt/applyTransformation.txt`
@@ -16,6 +20,30 @@ import RDF from "rdf-js";
  */
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "ratt" && Array.isArray(opts.source)) {
+
+    // TODO: use RocketRML to generate RDF instead of RATT
+    const rmlMappings = await getRmlTransformationScript(opts.config)
+    console.log(rmlMappings.toString());
+    console.log(matrixToCsv(opts.source))
+
+    const inputFiles={
+      [opts.config.sourceFileName]: matrixToCsv(opts.source),
+    };
+    console.log(inputFiles)
+
+    const options = {
+      toRDF: true,
+      verbose: true,
+      xmlPerformanceMode: false,
+      replace: false,
+      // xpathLib: "fontoxpath",
+    };
+
+    // const result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
+    const result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options);
+    console.log(result);
+
+
     const app = new Ratt({
       defaultGraph: "",
       prefixes: {
