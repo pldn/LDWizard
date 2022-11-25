@@ -100,11 +100,11 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             <CardHeader title="Download script" avatar={<FontAwesomeIcon icon="file-code" />} />
             <CardContent className={styles.downloadContent}>
               Download a script that you can use to run the transformation yourself. The following script languages are
-              supported: RATT, CoW, RML.
+              supported: RML, CoW.
             </CardContent>
             <CardActions>
               <SplitButton
-                actions={["rml", "cow", "ratt"]}
+                actions={["rml", "cow"]}
                 getButtonlabel={(selectedOption) => `Download ${selectedOption}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
@@ -115,9 +115,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                         // Removes extension from filename
                         typeof source !== "string" ? source.name.replace(/\.[^/.]+$/, "") : undefined;
                       if (typeof file === "string") {
-                        if (result === "ratt") {
-                          downloadFile(file, `${fileBase ? fileBase + "." : ""}convert.ts`, "text/x-typescript");
-                        } else if (result === "cow") {
+                        if (result === "cow") {
                           const fileName =
                             typeof source === "string"
                               ? `convert.csv-metadata.json`

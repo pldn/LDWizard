@@ -33,6 +33,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             object: literal(
               usesRefinedSource
                 ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                // ? getFileBaseName(configuration.sourceFileName) + "-emriched.csv"
                 : configuration.sourceFileName
             ),
           },
