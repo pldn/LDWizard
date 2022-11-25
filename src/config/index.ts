@@ -7,7 +7,7 @@ import {
 } from "../Definitions";
 import getRattTransformationScript from "../utils/ratt/getTransformation";
 import getCowTransformationScript from "./cowScript";
-import applyTransformation from "./rattScript";
+import applyTransformation from "./rocketrmlScript";
 import getRmlTransformationScript from "./rmlScript";
 import {
   getClassSuggestions as getElasticClassSuggestions,
