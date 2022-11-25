@@ -84,18 +84,11 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
       await ds.importFromFiles([stringToFile(transformationResult, "results.nt", "application/n-triples")]);
       setProcessText("Uploading scripts");
 
-      const rattScript = await wizardAppConfig.getTransformationScript(transformationConfig, "ratt");
       const cowScript = await wizardAppConfig.getTransformationScript(transformationConfig, "cow");
       const rmlScript = await wizardAppConfig.getTransformationScript(transformationConfig, "rml");
       // We need to check if we are overwriting or uploading new assets
       // Removes extension from filename
       const fileBase = typeof source !== "string" ? source.name.replace(/\.[^/.]+$/, "") : undefined;
-      if (typeof rattScript === "string") {
-        await uploadAsset(
-          ds,
-          stringToFile(rattScript, `${fileBase ? fileBase + "." : ""}convert.ts`, "text/x-typescript")
-        );
-      }
       if (typeof cowScript === "string") {
         const fileName =
           typeof source === "string"

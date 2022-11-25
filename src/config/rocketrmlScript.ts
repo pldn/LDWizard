@@ -5,12 +5,10 @@ import parser from "rocketrml";
 
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data.
- * See `/src/utils/ratt/getTransformation.ts` to get the transformation script itself
- * When making changes to this file make sure to copy the result to `/src/utils/ratt/applyTransformation.txt`
  */
 
 /**
- * Applies the transformation using RATT
+ * Applies the transformation using RocketRML
  * @param opts
  */
 const applyTransformation: ApplyTransformation = async (opts) => {
@@ -22,7 +20,7 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     };
     const options = {
       toRDF: true,
-      verbose: true,
+      verbose: false,
       xmlPerformanceMode: false,
       replace: false,
       // xpathLib: "fontoxpath",
