@@ -13,7 +13,6 @@ import parser from "rocketrml";
  */
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "rml" && Array.isArray(opts.source)) {
-    // Use RocketRML to generate RDF from RML mappings
     const rmlMappings = await getRmlTransformationScript(opts.config)
     const inputFiles={
       [opts.config.sourceFileName]: matrixToCsv(opts.source),
@@ -23,7 +22,6 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       verbose: false,
       xmlPerformanceMode: false,
       replace: false,
-      // xpathLib: "fontoxpath",
     };
     const result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
     return result

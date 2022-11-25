@@ -29,9 +29,13 @@ export function getFileBaseName(fileName: string) {
 }
 
 export function matrixToCsv(matrix: Matrix) {
-  const lineArray: any[] = [];
-  matrix.forEach((infoArray, index) => {
-    lineArray.push(infoArray.join(","));
+  let lineArray: any[] = [];
+  matrix.forEach((infoArray, i1) => {
+    const lineEscaped: any[] = []
+    infoArray.forEach((cell, i2) => {
+      lineEscaped.push(cell.replace('"', '""'))
+    })
+    lineArray.push(lineEscaped.join('","'));
   });
-  return lineArray.join("\n");
+  return '"' + lineArray.join('"\n"') + '"';
 }
