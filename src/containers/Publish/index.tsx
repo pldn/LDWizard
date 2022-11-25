@@ -78,8 +78,7 @@ const Publish: React.FC<Props> = ({}) => {
         const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,
-          type: "ratt",
-          // type: "rocketrml",
+          type: "rml",
         });
         setTransformationResult(transformationResult);
       }
