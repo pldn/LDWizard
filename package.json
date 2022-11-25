@@ -126,7 +126,7 @@
     "react-refresh": "^0.14.0",
     "react-router-dom": "^6.4.3",
     "recoil": "^0.7.6",
-    "rocketrml": "^2.1.0",
+    "rocketrml": "https://github.com/vemonet/RocketRML#no-cpp-xml-parser",
     "sass-loader": "^13.1.0",
     "source-map-loader": "^4.0.1",
     "source-map-support": "^0.5.21",

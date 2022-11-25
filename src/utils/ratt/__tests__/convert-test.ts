@@ -1,5 +1,5 @@
 import * as chai from "chai";
-import applyTransformation from "../../../config/rattScript";
+import applyTransformation from "../../../config/rocketrmlScript";
 var expect = chai.expect;
 
 describe("Ratt - applyTransformation", function () {
@@ -18,7 +18,7 @@ describe("Ratt - applyTransformation", function () {
         ["a", "b"],
         ["c", "d"],
       ],
-      type: "ratt",
+      type: "rml",
     });
     expect(result.trim().split("\n")).to.have.lengthOf(3);
   });
@@ -38,7 +38,7 @@ describe("Ratt - applyTransformation", function () {
           ["a", "a space"],
           ["c", "d"],
         ],
-        type: "ratt",
+        type: "rml",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
       expect(result).to.contain("a_space");
@@ -58,7 +58,7 @@ describe("Ratt - applyTransformation", function () {
           ["a", "b"],
           ["c", "d"],
         ],
-        type: "ratt",
+        type: "rml",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
       expect(result).to.contain("http://iri");
@@ -80,7 +80,7 @@ describe("Ratt - applyTransformation", function () {
           ["a", "b"],
           ["c", "d"],
         ],
-        type: "ratt",
+        type: "rml",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
       expect(result).to.contain("<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://schaap/>");
@@ -103,7 +103,7 @@ describe("Ratt - applyTransformation", function () {
           ["a", "b"],
           ["c", "d"],
         ],
-        type: "ratt",
+        type: "rml",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(2);
       expect(result).to.contain("http://blaat/id/c");
@@ -123,7 +123,7 @@ describe("Ratt - applyTransformation", function () {
           ["a", "b"],
           ["c", "d"],
         ],
-        type: "ratt",
+        type: "rml",
       });
       expect(result.trim().split("\n")).to.have.lengthOf(3);
       expect(result).to.contain("http://blaat/id/1");
