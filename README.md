@@ -6,7 +6,7 @@ LD Wizard is a framework for creating end-user focused Graphical User Interfaces
 
 ## 1. LD Wizard Project
 
-So far, the following LDWizard variants have been configured from the LDWiazrd Core:
+So far, the following LDWizard variants have been configured from the LDWizard Core:
 
 <dl>
   <dt><a href="https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard" target="_blank">Cultural Heritage Wizard</a></dt>
