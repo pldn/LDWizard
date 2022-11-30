@@ -34,8 +34,8 @@ The LD Wizard project uses the following guidance documents for the LD Wizard de
   <dd>Describes how to develop local LD Wizard code.</dd>
   <dt><a href="https://www.pldn.nl/wiki/Bounty_Program">BOUNTY_PROGRAM</a></dt>
   <dd>Describes how organizations can place bounties and how developers can solve bounties and also gives an overview of the current bounty issues.</dd>
-  <dt><a href="https://docs.google.com/document/d/1VPZEa0mV8ETHyMosYE-e7hSYKpiQ1xGF/edit?usp=sharing&ouid=105962322691429075892&rtpof=true&sd=true" target="_blank">GOVERNANCE (draft version)</a></dt>
-  <dd>Describes the community roles and governance structure, incl. the gatekeeper role.</dd>
+  <dt><a href="https://github.com/pldn/LDWizard/blob/main/GOVERNANCE.md" target="_blank">GOVERNANCE</a></dt>
+  <dd>Describes our lightweight governance structure incl. the gatekeeper role.</dd>
 </dl>
 
 ## 3. Attribution
