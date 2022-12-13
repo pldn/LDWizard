@@ -8,18 +8,12 @@ We encourage new users who are working in other domains to create new LDWizard v
 
 You can create your own LD Wizard application by following these steps:
 
-1. Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com).
+1. Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com). The Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/). Once you have installed Node.js, use the npm package manager that comes bundled with Node.js to install Yarn, the package manager for LDWizard:
 
-   On Ubuntu this is done with the following commands. Check the project
-   websites for installation on other operating systems.
-
-   ```sh
-   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-   sudo apt update
-   sudo apt install nodejs yarn
+   ```bash
+   npm install --global yarn
    ```
+
 
 2. Create a directory for your application:
 
