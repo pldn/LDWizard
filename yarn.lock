@@ -7142,9 +7142,10 @@ roarr@^2.15.3:
     semver-compare "^1.0.0"
     sprintf-js "^1.1.2"
 
-"rocketrml@https://github.com/semantifyit/RocketRML#master":
-  version "2.1.1"
-  resolved "https://github.com/semantifyit/RocketRML#90943b8ef3b257c342bd8d19817f17e32fb396d9"
+rocketrml@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/rocketrml/-/rocketrml-2.1.2.tgz#2d9081fe604fb1528db88413db1eab753ead0fdc"
+  integrity sha512-sq+/qVwudjgz2XbiWzCTK8NkVzS4qOrpmtZDvb3FD95ejDGuWPF20HbiJUnkSrj4T4dNWmr9DPMWfR7WMSZKvQ==
   dependencies:
     "@xmldom/xmldom" "^0.8.6"
     csv-parse "^5.3.3"
