@@ -12,12 +12,18 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash";
 import { Renderer as MarkdownRenderer } from "marked";
+
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
 const plugins: webpack.WebpackPluginInstance[] = [
   new webpack.DefinePlugin({
     __DEVELOPMENT__: isDev,
   }),
 ];
+
+// Ignore optional dependency from RocketRML
+plugins.push(
+  new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u })
+)
 
 if (isDev) {
   plugins.push(new ReactRefreshWebpackPlugin());
