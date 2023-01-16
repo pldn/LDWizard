@@ -5,9 +5,8 @@ import {
   GetTransformationScript,
   ColumnRefinements,
 } from "../Definitions";
-import getRattTransformationScript from "../utils/ratt/getTransformation";
 import getCowTransformationScript from "./cowScript";
-import applyTransformation from "./rattScript";
+import applyTransformation from "./rocketrmlScript";
 import getRmlTransformationScript from "./rmlScript";
 import {
   getClassSuggestions as getElasticClassSuggestions,
@@ -116,8 +115,6 @@ export const wizardAppConfig: WizardAppConfig = {
     switch (type) {
       case "cow":
         return getCowTransformationScript(config);
-      case "ratt":
-        return getRattTransformationScript(config);
       case "rml":
         return getRmlTransformationScript(config);
       default:

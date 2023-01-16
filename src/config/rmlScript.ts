@@ -32,7 +32,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             predicate: namedNode("csvw:url"),
             object: literal(
               usesRefinedSource
-                ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                // ? getFileBaseName(configuration.sourceFileName) + "-emriched.csv"
                 : configuration.sourceFileName
             ),
           },

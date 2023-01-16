@@ -5,8 +5,8 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
-      args: 
+      args:
         CONFIG_FILE: ./webpack/runtimeConfig.ts
 
     ports:
-      - "4000:80" 
+      - "4000:80"

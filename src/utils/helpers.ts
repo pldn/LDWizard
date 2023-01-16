@@ -1,3 +1,5 @@
+import { Matrix } from "../Definitions";
+
 /**
  * Transforms a header into a valid part of an IRI
  * - Replaces spaces with underscores
@@ -24,4 +26,16 @@ export function getBaseIdentifierIri(baseIri: string) {
 }
 export function getFileBaseName(fileName: string) {
   return fileName.split(".")[0];
+}
+
+export function matrixToCsv(matrix: Matrix) {
+  let lineArray: any[] = [];
+  matrix.forEach((infoArray, i1) => {
+    const lineEscaped: any[] = []
+    infoArray.forEach((cell, i2) => {
+      lineEscaped.push(cell.replace('"', '""'))
+    })
+    lineArray.push(lineEscaped.join('","'));
+  });
+  return '"' + lineArray.join('"\n"') + '"';
 }

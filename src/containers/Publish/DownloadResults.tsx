@@ -99,37 +99,28 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
           <Card variant="outlined" className={styles.downloadSegment}>
             <CardHeader title="Download script" avatar={<FontAwesomeIcon icon="file-code" />} />
             <CardContent className={styles.downloadContent}>
-              Download a script that you can use to run the transformation yourself. The following script languages are
-              supported: RATT, CoW, RML.
+              Download the RML mappings that you can use to run the transformation yourself.
             </CardContent>
             <CardActions>
-              <SplitButton
-                actions={["rml", "cow", "ratt"]}
-                getButtonlabel={(selectedOption) => `Download ${selectedOption}`}
-                getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
-                onActionSelected={(result) =>
+              <Button
+                onClick={() =>
                   wizardAppConfig
-                    .getTransformationScript(transformationConfig, result as TransformationType)
+                    .getTransformationScript(transformationConfig, "rml")
                     .then((file) => {
                       const fileBase =
                         // Removes extension from filename
                         typeof source !== "string" ? source.name.replace(/\.[^/.]+$/, "") : undefined;
                       if (typeof file === "string") {
-                        if (result === "ratt") {
-                          downloadFile(file, `${fileBase ? fileBase + "." : ""}convert.ts`, "text/x-typescript");
-                        } else if (result === "cow") {
-                          const fileName =
-                            typeof source === "string"
-                              ? `convert.csv-metadata.json`
-                              : `${refinedCsv ? fileBase + "-enriched.csv" : source?.name}-metadata.json`;
-                          downloadFile(file, fileName, "application/json+ld");
-                        } else if (result === "rml") {
-                          downloadFile(file, `${fileBase || "rules"}.rml.ttl`, "text/turtle");
-                        }
+                        downloadFile(file, `${fileBase || "rules"}.rml.ttl`, "text/turtle");
                       }
                     })
                 }
-              />
+                component="span"
+                variant="contained"
+                color="primary"
+              >
+                Download RML
+              </Button>
             </CardActions>
           </Card>
         </Container>
