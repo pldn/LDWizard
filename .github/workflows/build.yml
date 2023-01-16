@@ -2,7 +2,16 @@ name: Build
 
 on:
   push:
+    branches: [ "main" ]
+    paths:
+    - "*.json"
+    - "yarn.lock"
+    - "src/**"
+    - "webpack/**"
+    - "docker/**"
+    - ".github/workflows/build.yml"
   pull_request:
+    branches: [ "main" ]
   workflow_call:
   workflow_dispatch:
 
