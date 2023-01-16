@@ -1,4 +1,4 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { IconDefinition, library } from "@fortawesome/fontawesome-svg-core";
 
 /**
  * When adding an icon, first import that icon, and then make sure that icon is added to the lib (bottom of this file) as well
@@ -27,27 +27,27 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export default function registerIcons() {
   library.add(
-    faBook,
-    faCaretDown,
+    faBook as IconDefinition,
+    faCaretDown as IconDefinition,
     faCircle,
-    faCircleSolid,
-    faDatabase,
-    faDownload,
-    faExclamationTriangle,
+    faCircleSolid as IconDefinition,
+    faDatabase as IconDefinition,
+    faDownload as IconDefinition,
+    faExclamationTriangle as IconDefinition,
     faGithub,
-    faPlay,
-    faInfo,
-    faInfoCircle,
+    faPlay as IconDefinition,
+    faInfo as IconDefinition,
+    faInfoCircle as IconDefinition,
     faFile,
     faFileArchive,
     faFileCode,
-    faFileCsv,
-    faLongArrowAltDown,
-    faPlus,
-    faTimes,
+    faFileCsv as IconDefinition,
+    faLongArrowAltDown as IconDefinition,
+    faPlus as IconDefinition,
+    faTimes as IconDefinition,
     faThumbsUp,
-    faThumbsUpSolid,
-    faUpload
+    faThumbsUpSolid as IconDefinition,
+    faUpload as IconDefinition
   );
 }
 declare module "@fortawesome/fontawesome-svg-core" {
