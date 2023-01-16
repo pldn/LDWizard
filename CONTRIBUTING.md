@@ -1,5 +1,7 @@
 # Contributing
 
+[![Build](https://github.com/pldn/LDWizard/actions/workflows/build.yml/badge.svg)](https://github.com/pldn/LDWizard/actions/workflows/build.yml)
+
 Welcome to our LDWizard Community and many thanks for taking the time to contribute!.
 
 In this document you find guidance on how you can contribute to our community activities by Developing local LDWizard code.
