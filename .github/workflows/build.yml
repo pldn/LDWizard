@@ -54,4 +54,4 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build . -f ./docker/Dockerfile -t ldwizard
+        docker build . -f ./docker/Dockerfile -t ldwizard --build-arg CONFIG_FILE=webpack/runtimeConfig.ts
