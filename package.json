@@ -112,7 +112,7 @@
     "mini-css-extract-plugin": "^2.6.1",
     "mocha": "^10.1.0",
     "n3": "^1.16.2",
-    "node-sass": "^7.0.3",
+    "node-sass": "^8.0.0",
     "object-assign": "^4.1.1",
     "papaparse": "^5.3.2",
     "postcss": "^8.4.18",
