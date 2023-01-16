@@ -21,9 +21,7 @@ const plugins: webpack.WebpackPluginInstance[] = [
 ];
 
 // Ignore optional dependency from RocketRML
-plugins.push(
-  new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u })
-)
+plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u }));
 
 if (isDev) {
   plugins.push(new ReactRefreshWebpackPlugin());
@@ -158,15 +156,16 @@ export const genericConfig: webpack.Configuration = {
       },
       {
         test: /\.svg$/i,
-        type: 'asset',
+        type: "asset",
         resourceQuery: { not: [/react/] }, // exclude react component if *.svg?url
       },
       {
         test: /\.svg$/i,
         issuer: /\.[jt]sx?$/,
         resourceQuery: /react/, // *.svg?url
-        use: ['@svgr/webpack'],
-      },      {
+        use: ["@svgr/webpack"],
+      },
+      {
         test: /\.css$/,
         use: [
           isDev ? "style-loader" : MiniCssExtractPlugin.loader,
@@ -206,18 +205,10 @@ export const genericConfig: webpack.Configuration = {
     modules: ["node_modules", path.resolve("./src")],
     fallback: {
       fs: false,
-      net: false,
-      tls: false,
       path: false,
       zlib: false,
       os: false,
       url: path.resolve(__dirname, "/node_modules/url/url.js"),
-      crypto: false, //possible polyfill
-      assert: false, //possible polyfill
-      stream: require.resolve("stream-browserify"),
-      buffer: require.resolve("buffer"),
-      events: false,
-      "find-up": false,
     },
   },
   plugins: plugins,
@@ -237,10 +228,7 @@ const config: webpack.Configuration = {
   externals: {
     pumpify: "pumpify",
     "fs-extra": "fs-extra",
-    "find-up": "find-up",
-    table: "table",
     "global-agent": "global-agent",
-    "get-current-line": "get-current-line",
     querystring: "querystring",
   },
   ignoreWarnings: [/Failed to parse source map/],
