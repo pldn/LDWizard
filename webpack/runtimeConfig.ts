@@ -1,6 +1,6 @@
 /**
  * This file is a placeHolder to be used during development. The LDWizard-build script will replace the config file
- * It uses a detailed LDWizard config with column refinments
+ * It uses a detailed LDWizard config with column refinments and using the LOV to propose classes and predicates
  */
 //ts-ignores needed due to differing ts-configs in webpack vs src directory
 //@ts-ignore
