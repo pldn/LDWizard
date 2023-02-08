@@ -72,5 +72,7 @@ export default interface WizardConfig {
 
   newDatasetAccessLevel?: "private" | "internal" | "public";
 
-  shaclShapes?: ShaclShapeSetting[]
+  shaclShapes?: ShaclShapeSetting[],
+
+  requireShaclShape?: boolean
 }

@@ -11,22 +11,24 @@ interface Props {}
 
 const ShaclShapeField: React.FC<Props> = ({}) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
-
   const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[])
 
-  // Async call for results effect
   React.useEffect(() => {
       wizardAppConfig.getShaclShapes(transformationConfig.resourceClass).then(shaclShapeMetas => {
         setShaclShapeMetas(shaclShapeMetas)
+        if (wizardAppConfig.requireShaclShape && !transformationConfig.shaclShape && shaclShapeMetas.length) {
+          setTransformationConfig((state) => ({ ...state, shaclShape: shaclShapeMetas[0].iri }));
+        }
       })
   }, [transformationConfig]);
 
-  return (
+  return shaclShapeMetas.length ? (
     <div className={styles.keyColumnWrapper}>
       <HintWrapper hint="The SHACL shape will limit which property URIs you can select.">
         <FormControl className={styles.shaclShapeSelector}>
           <InputLabel shrink={true}>SHACL shape</InputLabel>
           <Select
+            required={wizardAppConfig.requireShaclShape}
             displayEmpty
             defaultValue={""}
             value={transformationConfig.shaclShape ? transformationConfig.shaclShape : ''}
@@ -35,7 +37,7 @@ const ShaclShapeField: React.FC<Props> = ({}) => {
               setTransformationConfig((state) => ({ ...state, shaclShape }));
             }}
           >
-            <MenuItem value={""}>No SHACL shape</MenuItem>
+            {!wizardAppConfig.requireShaclShape ? (<MenuItem value={""}>No SHACL shape</MenuItem>) : null}
             {shaclShapeMetas.map((shaclShapeMeta) => (
               <MenuItem key={shaclShapeMeta.iri} value={shaclShapeMeta.iri}>
                 {shaclShapeMeta.iri}
@@ -45,7 +47,6 @@ const ShaclShapeField: React.FC<Props> = ({}) => {
         </FormControl>
       </HintWrapper>
     </div>
-
-  );
+  ) : null;
 };
 export default ShaclShapeField;

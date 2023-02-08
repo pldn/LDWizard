@@ -26,6 +26,7 @@ export interface TransformationConfiguration {
   resourceClass: string;
   /** SHACL shape */
   shaclShape: string,
+  requireShaclShape: boolean,
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;
@@ -167,5 +168,6 @@ export type ShaclShapeMeta = {
   iri: string,
   description: string,
   store: Rdf.Store,
-  targetClasses: string[]
+  targetClasses: string[],
+  properties: { [key: string]: any }[]
 };

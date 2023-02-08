@@ -1,8 +1,23 @@
 import { ShaclShapeMeta, ShaclShapeSetting } from "../Definitions";
-import { Parser, Store, DataFactory } from "n3";
+import { Parser, Store, DataFactory, Term } from "n3";
 const { namedNode } = DataFactory;
 
-export default async function (shaclShapeSettings: ShaclShapeSetting[]) {
+const cache: Map<any, ShaclShapeMeta[]> = new Map()
+
+const resolveValue = (value: Term, store: Store): any => {
+  if (value.termType === 'BlankNode') {
+    const connectedQuads = store.getQuads(namedNode(value.id), null, null, null)
+    return connectedQuads
+      .flatMap(quad => resolveValue(quad.object, store))
+      .filter(item => !['http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'].includes(item))
+  }
+
+  return value.value
+}
+
+export default async function (shaclShapeSettings: ShaclShapeSetting[]): Promise<ShaclShapeMeta[]> {
+  if (cache.has(shaclShapeSettings)) return cache.get(shaclShapeSettings)!
+
   const promises = shaclShapeSettings.map(async shaclShapeSetting => {
     const shaclFileResponse = await fetch(shaclShapeSetting.url)
 
@@ -23,8 +38,23 @@ export default async function (shaclShapeSettings: ShaclShapeSetting[]) {
 
     const targetClasses = store.getQuads(iri, namedNode("http://www.w3.org/ns/shacl#targetClass"), null, null).map(quad => quad.object.value)
 
-    return { iri, description, store, targetClasses } as ShaclShapeMeta
+    const properties = store.getQuads(null, namedNode("http://www.w3.org/ns/shacl#property"), null, null)
+      .map(propertyQuad => {
+        const property: { [key: string]: any } = {}
+        const subProperties = store.getQuads(propertyQuad.object, null, null, null)
+        
+        for (const subProperty of subProperties) {
+          const subPropertyName = subProperty.predicate.value.includes("http://www.w3.org/ns/shacl#") ? subProperty.predicate.value.split(/\/|#/g).pop()! : subProperty.predicate.value
+          property[subPropertyName] = resolveValue(subProperty.object, store)
+        }
+
+        return property
+      })
+
+    return { iri, description, store, targetClasses, properties } as ShaclShapeMeta
   })
 
-  return Promise.all(promises)
+  const shaclShapeMetas = await Promise.all(promises)
+  cache.set(shaclShapeSettings, shaclShapeMetas)
+  return shaclShapeMetas
 }

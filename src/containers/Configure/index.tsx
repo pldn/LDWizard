@@ -26,6 +26,7 @@ import ResourceClassField from "./ClassField";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
 import ShaclShapeField from "./ShaclShapeField";
+import ShaclShapeInformation from "./ShaclShapeInformation";
 import ScrollCopier from "../../components/ScrollCopier";
 interface Props {}
 
@@ -61,12 +62,15 @@ const Configure: React.FC<Props> = ({}) => {
             <ResourceClassField />
           </React.Suspense>
         </Box>
+        <Box className={styles.normalSettings}>
+          <ShaclShapeField />
+        </Box>
+        <ShaclShapeInformation />
         <Accordion variant="outlined" square className={styles.accordion}>
           <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
             <Typography>Advanced</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <ShaclShapeField />
             <BaseIriField />
           </AccordionDetails>
         </Accordion>

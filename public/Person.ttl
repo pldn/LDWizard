@@ -13,7 +13,7 @@ self:Philosopher
     sh:targetClass schema:Person ;
 
     sh:property [
-        sh:path rdfs:label ;
+        sh:path schema:givenName ;
         sh:datatype rdf:langString ; 
         sh:languageIn ( "en" "nl" ) ;
         sh:minCount 1 ;
@@ -21,7 +21,7 @@ self:Philosopher
     ] ;
 
     sh:property [
-        sh:path dbo:thumbnail ;
+        sh:path schema:familyName ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
     ] ;
@@ -45,21 +45,21 @@ self:Philosopher
         sh:maxCount 1 ;
     ] .
 
-self:Location
-    a sh:NodeShape ;
+# self:Location
+#     a sh:NodeShape ;
 
-    sh:targetClass <http://dbpedia.org/ontology/Location> ;
+#     sh:targetClass <http://dbpedia.org/ontology/Location> ;
 
-    # sh:property [
-    #     sh:path rdf:type ;
-    #     sh:minCount 1 ;
-    #     sh:maxCount 1 ;
-    # ] ;
+#     # sh:property [
+#     #     sh:path rdf:type ;
+#     #     sh:minCount 1 ;
+#     #     sh:maxCount 1 ;
+#     # ] ;
 
-    sh:property [
-        sh:path rdfs:label ;
-        sh:datatype rdf:langString ;
-        sh:languageIn ( "de" "fr" ) ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-    ] .
+#     sh:property [
+#         sh:path rdfs:label ;
+#         sh:datatype rdf:langString ;
+#         sh:languageIn ( "de" "fr" ) ;
+#         sh:minCount 1 ;
+#         sh:maxCount 1 ;
+#     ] .

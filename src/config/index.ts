@@ -50,6 +50,7 @@ export interface WizardAppConfig {
   dataplatformLink: string;
   homepageMarkdown: string | undefined;
   triplyDbInstances: TriplyDbReference[];
+  requireShaclShape: boolean,
   /**
    * App functions
    */
@@ -65,7 +66,7 @@ export interface WizardAppConfig {
 
   newDatasetAccessLevel: DatasetAccessLevel;
 
-  getShaclShapes: (resourceClass: string) => Promise<ShaclShapeMeta[]>
+  getShaclShapes: (resourceClass?: string) => Promise<ShaclShapeMeta[]>
 
 }
 export type PublishElement = "download" | "triplyDB";
@@ -93,13 +94,23 @@ export const wizardAppConfig: WizardAppConfig = {
   defaultBaseIri: config.defaultBaseIri || "https://data.netwerkdigitaalerfgoed.nl/",
   exampleCsv: config.exampleCSV || undefined,
 
+  requireShaclShape: !!config.requireShaclShape,
+
   /**
    * Search and IRI Processing
    */
-  getClassSuggestions: (term) =>
-    config.classConfig?.method === "elastic"
-      ? getElasticClassSuggestions(term, config.classConfig.endpoint)
-      : getSparqlClassSuggestions(term, config.classConfig?.endpoint || defaultEndpoint),
+  getClassSuggestions: async (term) => {
+    const suggestions = await (config.classConfig?.method === "elastic"
+    ? getElasticClassSuggestions(term, config.classConfig.endpoint)
+    : getSparqlClassSuggestions(term, config.classConfig?.endpoint || defaultEndpoint))
+
+    if (config.requireShaclShape) {
+      const allowedIris = (await wizardAppConfig.getShaclShapes()).flatMap(shaclShapeMeta => shaclShapeMeta.targetClasses)
+      return suggestions.filter(suggestion => allowedIris.includes(suggestion.iri))
+    }
+
+    return suggestions
+  },
   getPropertySuggestions: (term) =>
     config.predicateConfig?.method === "elastic"
       ? getElasticPropertySuggestions(term, config.predicateConfig.endpoint)
@@ -133,10 +144,11 @@ export const wizardAppConfig: WizardAppConfig = {
 
   newDatasetAccessLevel: config.newDatasetAccessLevel || "private",
 
-  getShaclShapes: async (resourceClass: string) => {
+  getShaclShapes: async (resourceClass?: string) => {
     const shaclShapeMetas = await getShaclShapes(config.shaclShapes ?? [])
 
-    const filteredShaclShapeMetas = shaclShapeMetas.filter(shaclShapeMeta => shaclShapeMeta.targetClasses.includes(resourceClass))
+    const filteredShaclShapeMetas = shaclShapeMetas
+      .filter(shaclShapeMeta => resourceClass ? shaclShapeMeta.targetClasses.includes(resourceClass) : true)
 
     return filteredShaclShapeMetas
   },
