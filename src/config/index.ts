@@ -4,6 +4,7 @@ import {
   GetPropertySuggestions,
   GetTransformationScript,
   ColumnRefinements,
+  ShaclShapeMeta
 } from "../Definitions";
 import getCowTransformationScript from "./cowScript";
 import applyTransformation from "./rocketrmlScript";
@@ -16,6 +17,7 @@ import {
   getClassSuggestions as getSparqlClassSuggestions,
   getPropertySuggestions as getSparqlPropertySuggestions,
 } from "./sparqlSearch";
+import getShaclShapes from "./shaclShapes";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
@@ -62,6 +64,9 @@ export interface WizardAppConfig {
   exampleCsv: string | undefined;
 
   newDatasetAccessLevel: DatasetAccessLevel;
+
+  getShaclShapes: (resourceClass: string) => Promise<ShaclShapeMeta[]>
+
 }
 export type PublishElement = "download" | "triplyDB";
 
@@ -127,6 +132,14 @@ export const wizardAppConfig: WizardAppConfig = {
   refinementOptions: config.columnRefinements || [],
 
   newDatasetAccessLevel: config.newDatasetAccessLevel || "private",
+
+  getShaclShapes: async (resourceClass: string) => {
+    const shaclShapeMetas = await getShaclShapes(config.shaclShapes ?? [])
+
+    const filteredShaclShapeMetas = shaclShapeMetas.filter(shaclShapeMeta => shaclShapeMeta.targetClasses.includes(resourceClass))
+
+    return filteredShaclShapeMetas
+  },
 };
 
 export default wizardAppConfig;

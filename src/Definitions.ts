@@ -24,6 +24,8 @@ export interface TransformationConfiguration {
   sourceFileName: string;
   /** Class URI applied to each row */
   resourceClass: string;
+  /** SHACL shape */
+  shaclShape: string,
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;
@@ -155,3 +157,15 @@ export type ColumnRefinementSetting =
   | DoubleColumnRefinementSetting
   | SingleColumnParamRefinementSetting
   | ToIriColumnRefinementSetting;
+
+export type ShaclShapeSetting = {
+  url: string,
+  targetShape?: string
+};
+
+export type ShaclShapeMeta = {
+  iri: string,
+  description: string,
+  store: Rdf.Store,
+  targetClasses: string[]
+};

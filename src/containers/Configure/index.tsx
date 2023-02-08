@@ -25,6 +25,7 @@ import TableHeaders from "./InteractiveTableHeaders";
 import ResourceClassField from "./ClassField";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
+import ShaclShapeField from "./ShaclShapeField";
 import ScrollCopier from "../../components/ScrollCopier";
 interface Props {}
 
@@ -65,6 +66,7 @@ const Configure: React.FC<Props> = ({}) => {
             <Typography>Advanced</Typography>
           </AccordionSummary>
           <AccordionDetails>
+            <ShaclShapeField />
             <BaseIriField />
           </AccordionDetails>
         </Accordion>

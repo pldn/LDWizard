@@ -158,5 +158,8 @@
       "path": "lib/LDWizard-base.min.css",
       "maxSize": "25 kB"
     }
-  ]
+  ],
+  "devDependencies": {
+    "@types/n3": "^1.10.4"
+  }
 }
