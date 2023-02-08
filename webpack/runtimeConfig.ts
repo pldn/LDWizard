@@ -1,7 +1,13 @@
 /**
  * This file is a placeHolder to be used during development. The LDWizard-build script will replace the config file
  */
-window.wizardConfig = {};
+window.wizardConfig = {
+    requireShaclShape: true,
+    shaclShapes: [{
+        url: '/Person.ttl',
+        targetShape: 'http://pldn.nl/ldwizard/Philosopher'
+    }]
+};
 
 // NOTE: Example of detailed LDWizard config with column refinments
 // const wizardConfig = {

@@ -67,7 +67,6 @@ export interface WizardAppConfig {
   newDatasetAccessLevel: DatasetAccessLevel;
 
   getShaclShapes: (resourceClass?: string) => Promise<ShaclShapeMeta[]>
-
 }
 export type PublishElement = "download" | "triplyDB";
 
@@ -151,7 +150,7 @@ export const wizardAppConfig: WizardAppConfig = {
       .filter(shaclShapeMeta => resourceClass ? shaclShapeMeta.targetClasses.includes(resourceClass) : true)
 
     return filteredShaclShapeMetas
-  },
+  }
 };
 
 export default wizardAppConfig;

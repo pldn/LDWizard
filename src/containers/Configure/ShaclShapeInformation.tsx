@@ -32,23 +32,25 @@ const ShaclShapeInformation: React.FC<Props> = ({}) => {
 
   const shaclShapeMeta = shaclShapeMetas.find(shaclShapeMeta => shaclShapeMeta.iri === transformationConfig.shaclShape)
 
+  const requiredProperties = shaclShapeMeta?.properties.filter(property => property.minCount && parseInt(property.minCount)) ?? []
+  const optionalProperties = shaclShapeMeta?.properties.filter(property => !(property.minCount && parseInt(property.minCount))) ?? []
+
   return transformationConfig.shaclShape ? (
     <Accordion variant="outlined" square className={`${styles.accordion} ${styles.normalSettings}`}>
     <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
-      <Typography>SHACL requirements</Typography>
+      <Typography>SHACL information</Typography>
     </AccordionSummary>
     <AccordionDetails>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Property URI</TableCell>
-              <TableCell>Required</TableCell>
-              <TableCell>Validates</TableCell>
+              <TableCell><strong>Required property URI</strong></TableCell>
+              <TableCell align="right"><strong>Added</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {shaclShapeMeta?.properties.map((property) => {
+            {requiredProperties.map((property) => {
               const required = property.minCount && parseInt(property.minCount)
               const isFound = transformationConfig.columnConfiguration.some(column => column.propertyIri === property.path)
 
@@ -57,10 +59,7 @@ const ShaclShapeInformation: React.FC<Props> = ({}) => {
                   <TableCell component="td" scope="row">
                     {property.path}
                   </TableCell>
-                  <TableCell component="td" scope="row">
-                    <FontAwesomeIcon icon={["fas", required ? "check" : "minus"]} />
-                  </TableCell>
-                  <TableCell component="td" scope="row">
+                  <TableCell component="td" scope="row" align="right">
                   <FontAwesomeIcon icon={["fas", required && isFound || !required ? "check" : "times"]} />
                   </TableCell>
                 </TableRow>
@@ -69,6 +68,34 @@ const ShaclShapeInformation: React.FC<Props> = ({}) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <br />
+      <TableContainer>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Optional property URI</strong></TableCell>
+              <TableCell align="right"><strong>Added</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {optionalProperties.map((property) => {
+              const isFound = transformationConfig.columnConfiguration.some(column => column.propertyIri === property.path)
+
+              return (
+                <TableRow key={property.path}>
+                  <TableCell component="td" scope="row">
+                    {property.path}
+                  </TableCell>
+                  <TableCell component="td" scope="row" align="right">
+                    <FontAwesomeIcon icon={["fas", isFound ? "check" : "minus"]} />
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
     </AccordionDetails>
   </Accordion>
   ) : null

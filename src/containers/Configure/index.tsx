@@ -28,6 +28,8 @@ import ColumnSelector from "./ColumnSelector";
 import ShaclShapeField from "./ShaclShapeField";
 import ShaclShapeInformation from "./ShaclShapeInformation";
 import ScrollCopier from "../../components/ScrollCopier";
+import ShaclValidates from '../../components/ShaclValidates';
+
 interface Props {}
 
 export const Step = 2;
@@ -42,12 +44,13 @@ const useCanScroll = () => {
 
 const Configure: React.FC<Props> = ({}) => {
   const parsedCsv = useRecoilValue(matrixState);
+
   const navigate = useNavigate();
   const canScroll = useCanScroll();
   const tableRef = React.useRef<HTMLDivElement>(null);
   const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
   const confirmConfiguration = () => {
-    navigate(`/${Step + 1}`);
+    if (parsedCsv) navigate(`/${Step + 1}`);
   };
 
   if (!parsedCsv) {
@@ -116,9 +119,13 @@ const Configure: React.FC<Props> = ({}) => {
         <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
-        <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
-          Next
-        </Button>
+        <ShaclValidates 
+          yes={
+            <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>Next</Button>} 
+          no={
+            <Button className={styles.actionButtons} variant="contained" disabled color="primary">Next</Button>
+        } />
+        
         <Button
           className={styles.actionButtons}
           onClick={() => {

@@ -11,28 +11,45 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "../../state";
 import styles from "./style.scss";
+import ShaclValidates from '../../components/ShaclValidates';
+
 const Steps: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentStep = location.pathname[1] !== undefined ? +location.pathname[1] : 1;
   const parsedCsv = useRecoilValue(matrixState);
+  const publishDisabled = !parsedCsv
+
+  const yes = (<Step
+    className={styles.stepButton}
+    key={PublishStep}
+    disabled={!parsedCsv}
+    onClick={() => publishDisabled ? null : navigate(`/${PublishStep}`)}
+  >
+    <StepLabel>Publish</StepLabel>
+  </Step>)
+
+  const no = (<Step
+    className={styles.stepButton}
+    key={PublishStep}
+    disabled
+    onClick={() => publishDisabled ? null : navigate(`/${PublishStep}`)}
+  >
+    <StepLabel>Publish</StepLabel>
+  </Step>)
+
   return (
     <Container sx={{ py: 2 }}>
-      <Stepper nonLinear activeStep={currentStep - 1}>
+      <Stepper activeStep={currentStep - 1}>
         <Step key={UploadStep} completed={!!parsedCsv}>
           <StepButton onClick={() => navigate(`/${UploadStep}`)}>Upload</StepButton>
         </Step>
         <Step key={ConfigureStep} disabled={!parsedCsv} completed={!!parsedCsv && currentStep > 2}>
           <StepButton onClick={() => navigate(`/${ConfigureStep}`)}>Configure</StepButton>
         </Step>
-        <Step
-          className={styles.stepButton}
-          key={PublishStep}
-          disabled={!parsedCsv}
-          onClick={() => navigate(`/${PublishStep}`)}
-        >
-          <StepLabel>Publish</StepLabel>
-        </Step>
+
+        <ShaclValidates yes={yes} no={no} />
+
       </Stepper>
     </Container>
   );
