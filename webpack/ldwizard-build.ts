@@ -6,6 +6,8 @@ import client from "./config";
 import * as path from "path";
 import * as fs from "fs";
 
+// @phil script we call when using the yarn exec command
+// might want to change this approach since it's slow
 program.usage("[command] <configuration-file>");
 program.action(async () => {
   const config = program.args[0];
