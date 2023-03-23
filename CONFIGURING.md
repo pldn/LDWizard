@@ -41,7 +41,7 @@ You can create your own LD Wizard application by following these steps:
    import WizardConfig from "@pldn/ldwizard/types/WizardConfig";
    const wizardConfig: WizardConfig = {};
 
-   window.config = wizardConfig;
+   globalThis.config = wizardConfig;
    ```
 
 6. Run the following command to build your application:
