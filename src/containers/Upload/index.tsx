@@ -40,7 +40,7 @@ const Upload: React.FC<Props> = ({}) => {
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
   const handleCsvParse = (sourceFile: File) => {
-    setSource(sourceFile);
+    setSource(sourceFile); // @phil needed?
     setTransformationConfig((state) => {
       return { ...state, sourceFileName: sourceFile.name };
     });
