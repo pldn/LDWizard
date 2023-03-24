@@ -96,6 +96,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
         setSelectedClassValue(newValueString);
       }}
       disableClearable
+      // @here doesnt seem to validate the url 
       renderInput={(props) => (
         <HintWrapper hint="The resource class URI is used to describe the type of objects in each row">
           <TextField
@@ -107,7 +108,11 @@ const ResourceClassField: React.FC<Props> = ({}) => {
             helperText={autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || ""}
             error={!!autocompleteError}
             onChange={(event) => {
+              console.error(writtenClassValue)
               setSelectedClassValue(undefined);
+              //TODO validation of IRI before passing it
+              // validate(event.currentTarget.value)
+              console.info(event.currentTarget.value)
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);

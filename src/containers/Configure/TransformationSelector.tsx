@@ -34,6 +34,7 @@ const TransformationSelector: React.FC<Props> = ({
   if (Object.keys(config.refinementOptions).length === 0) {
     return (
       <div className={styles.columnConfigSection}>
+        {/* @here doesnt seem to validate the url  */}
         <Typography variant="subtitle1">Value configuration</Typography>
         <HintWrapper
           hint="When enabled, values in this column will be transformed to IRIs"

@@ -139,6 +139,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           {selectedHeader !== undefined && (
             <>
               <div className={styles.columnConfigSection}>
+                {/* @here seems to validate the url  */}
                 <Typography variant="subtitle1">Property configuration</Typography>
                 <Autocomplete
                   freeSolo
