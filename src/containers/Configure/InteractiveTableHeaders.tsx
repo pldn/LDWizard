@@ -166,7 +166,6 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     } else {
                       titleString = option.value;
                     }
-                    console.log('titleString: ', titleString)
                     return (
                       <li {...props}>
                         <Typography sx={{ mr: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>
@@ -189,10 +188,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
+                      setValidationState(true)
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
+                      setValidationState(true)
                     } else {
                       setPropertyIri(newValue.value);
+                      setValidationState(true)
                     }
                   }}
                   disableClearable
@@ -204,8 +206,6 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         autoFocus
                         label="Property URI"
                         error={!!autocompleteError || isValidUrl == false}
-                        // add check here
-                        
                         helperText={showHelperText()}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName

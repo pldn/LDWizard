@@ -65,7 +65,6 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       };
     });
   }, [selectedClassValue, setTransformationConfig, writtenClassValue]);
-  console.log('🪵  | file: ClassField.tsx:136 | selectedClassValue || writtenClassValue:', selectedClassValue, writtenClassValue)
   return (
     <Autocomplete
       freeSolo
@@ -105,6 +104,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
+        setValidationState(true)
       }}
       disableClearable
       renderInput={(props) => (

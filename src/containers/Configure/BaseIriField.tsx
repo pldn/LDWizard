@@ -29,7 +29,7 @@ const BaseIriField: React.FC<Props> = ({}) => {
       case true:
         return
       case false:
-        return "Invalid URL: " + `"`+transformationConfig.baseIri.toString()+ `"`
+        return "Invalid URL: " + `"`+ baseIriTemp.toString()+ `"`
     }
   }
 
