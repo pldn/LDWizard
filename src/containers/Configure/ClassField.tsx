@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state";
-
+import validator from "validator";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 
 import { Autocomplete } from "@mui/material";
@@ -18,17 +18,28 @@ interface Props {}
 const ResourceClassField: React.FC<Props> = ({}) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const prefixes = useRecoilValue(prefixState);
+  
   //   Create an intermediate value here, to stop it from re-rendering
   const [selectedClassValue, setSelectedClassValue] = React.useState<string | undefined>(undefined);
   const [writtenClassValue, setWrittenClassValue] = React.useState<string>(transformationConfig.resourceClass);
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-
+  const [isValidUrl, setValidationState] = React.useState<boolean>()
+  
+   function showHelperText(){
+    const result = autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || "" 
+    switch (isValidUrl) {
+      case true:
+        return
+      case false:
+        return "Invalid URL: " + `"`+result+ `"`
+    }
+  }
   // Async call for results effect
   React.useEffect(() => {
     const asyncCall = async () => {
       setAutocompleteError(undefined);
-      try {
+     try {
         const results = await wizardAppConfig.getClassSuggestions(writtenClassValue || "Resource");
         setAutocompleteSuggestions(results);
       } catch (e) {
@@ -54,7 +65,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       };
     });
   }, [selectedClassValue, setTransformationConfig, writtenClassValue]);
-
+  console.log('🪵  | file: ClassField.tsx:136 | selectedClassValue || writtenClassValue:', selectedClassValue, writtenClassValue)
   return (
     <Autocomplete
       freeSolo
@@ -96,7 +107,6 @@ const ResourceClassField: React.FC<Props> = ({}) => {
         setSelectedClassValue(newValueString);
       }}
       disableClearable
-      // @here doesnt seem to validate the url 
       renderInput={(props) => (
         <HintWrapper hint="The resource class URI is used to describe the type of objects in each row">
           <TextField
@@ -105,15 +115,14 @@ const ResourceClassField: React.FC<Props> = ({}) => {
               shrink: true,
             }}
             value={writtenClassValue}
-            helperText={autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || ""}
-            error={!!autocompleteError}
+            helperText={showHelperText()}
+            error={!!autocompleteError || isValidUrl == false}
             onChange={(event) => {
               console.error(writtenClassValue)
               setSelectedClassValue(undefined);
-              //TODO validation of IRI before passing it
-              // validate(event.currentTarget.value)
-              console.info(event.currentTarget.value)
-              const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
+              // URL validation
+              validator.isURL(event.currentTarget.value) == false ? setValidationState(false) : setValidationState(true)
+              const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes)
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
               } else {

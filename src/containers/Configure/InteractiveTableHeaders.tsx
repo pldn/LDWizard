@@ -24,6 +24,7 @@ import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
 import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers";
 import TransformationSelector from "./TransformationSelector";
+import validator from "validator";
 
 interface Props {}
 const TableHeaders: React.FC<Props> = ({}) => {
@@ -89,7 +90,17 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
-
+  const [isValidUrl, setValidationState] = React.useState<boolean>()
+  
+  function showHelperText(){
+    const result = autocompleteError || getPrefixed(propertyIri, prefixes) || propertyIri
+    switch (isValidUrl) {
+      case true:
+        return
+      case false:
+        return "Invalid URL: " + `"`+result+ `"`
+    }
+  }
   // Async call for results effect
   React.useEffect(() => {
     if (!selectedColumn) return;
@@ -139,7 +150,6 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           {selectedHeader !== undefined && (
             <>
               <div className={styles.columnConfigSection}>
-                {/* @here seems to validate the url  */}
                 <Typography variant="subtitle1">Property configuration</Typography>
                 <Autocomplete
                   freeSolo
@@ -156,6 +166,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     } else {
                       titleString = option.value;
                     }
+                    console.log('titleString: ', titleString)
                     return (
                       <li {...props}>
                         <Typography sx={{ mr: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>
@@ -192,8 +203,10 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         {...props}
                         autoFocus
                         label="Property URI"
-                        error={!!autocompleteError}
-                        helperText={autocompleteError || getPrefixed(propertyIri, prefixes)}
+                        error={!!autocompleteError || isValidUrl == false}
+                        // add check here
+                        
+                        helperText={showHelperText()}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName
                         )}`}
@@ -202,6 +215,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         inputMode="url"
                         fullWidth
                         onChange={(event) => {
+                          validator.isURL(event.currentTarget.value) == false ? setValidationState(false) : setValidationState(true)
                           const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
                           if (prefixInfo.prefixLabel) {
                             setPropertyIri(`${prefixInfo.iri}${prefixInfo.localName}`);
