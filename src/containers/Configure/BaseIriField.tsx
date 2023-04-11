@@ -15,7 +15,7 @@ const BaseIriField: React.FC<Props> = ({}) => {
 
   //   Create an intermediate value here, to stop it from re-rendering
   const [baseIriTemp, setValue] = React.useState(transformationConfig.baseIri.toString() || "");
-  const [isValidUrl, setValidationState] = React.useState<boolean>()
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
 
   const confirmBaseIri = () => {
     let baseIri = baseIriTemp.toString();
@@ -24,15 +24,6 @@ const BaseIriField: React.FC<Props> = ({}) => {
       return { ...state, baseIri: baseIri };
     });
   };
-  function showHelperText(){
-    switch (isValidUrl){
-      case true:
-        return
-      case false:
-        return "Invalid URL: " + `"`+ baseIriTemp.toString()+ `"`
-    }
-  }
-
   return (
     <HintWrapper hint="The base IRI is used as a base for generating IRIs out of your resources">
       <TextField
@@ -40,13 +31,12 @@ const BaseIriField: React.FC<Props> = ({}) => {
         value={baseIriTemp}
         onChange={(event) => {
           setValue(event.currentTarget.value)
-          // URL validation
-          validator.isURL(event.currentTarget.value) == false ? setValidationState(false) : setValidationState(true)
+          setIsValidUrl(validator.isURL(event.currentTarget.value))
         }}
         onEmptied={() => setValue("")}
-        helperText={showHelperText()}
+        helperText={isValidUrl ? "" : `Invalid URL:  '${baseIriTemp.toString()}'`}
         label={"Base IRI"}
-        error={isValidUrl == false}
+        error={!isValidUrl}
         fullWidth
         type="url"
         inputMode="url"

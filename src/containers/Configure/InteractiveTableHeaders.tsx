@@ -90,17 +90,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
-  const [isValidUrl, setValidationState] = React.useState<boolean>()
-  
-  function showHelperText(){
-    const result = autocompleteError || getPrefixed(propertyIri, prefixes) || propertyIri
-    switch (isValidUrl) {
-      case true:
-        return
-      case false:
-        return "Invalid URL: " + `"`+result+ `"`
-    }
-  }
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
+
   // Async call for results effect
   React.useEffect(() => {
     if (!selectedColumn) return;
@@ -188,13 +179,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
-                      setValidationState(true)
+                      setIsValidUrl(true)
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
-                      setValidationState(true)
+                      setIsValidUrl(true)
                     } else {
                       setPropertyIri(newValue.value);
-                      setValidationState(true)
+                      setIsValidUrl(true)
                     }
                   }}
                   disableClearable
@@ -205,8 +196,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         {...props}
                         autoFocus
                         label="Property URI"
-                        error={!!autocompleteError || isValidUrl == false}
-                        helperText={showHelperText()}
+                        error={!!autocompleteError || !isValidUrl}
+                        helperText={isValidUrl ? "" : `Invalid URL:  '${autocompleteError || getPrefixed(propertyIri, prefixes) || propertyIri}'`}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName
                         )}`}
@@ -215,7 +206,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         inputMode="url"
                         fullWidth
                         onChange={(event) => {
-                          validator.isURL(event.currentTarget.value) == false ? setValidationState(false) : setValidationState(true)
+                          setIsValidUrl(validator.isURL(event.currentTarget.value))
                           const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
                           if (prefixInfo.prefixLabel) {
                             setPropertyIri(`${prefixInfo.iri}${prefixInfo.localName}`);

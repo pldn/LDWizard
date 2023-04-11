@@ -24,17 +24,8 @@ const ResourceClassField: React.FC<Props> = ({}) => {
   const [writtenClassValue, setWrittenClassValue] = React.useState<string>(transformationConfig.resourceClass);
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-  const [isValidUrl, setValidationState] = React.useState<boolean>()
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
   
-   function showHelperText(){
-    const result = autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || "" 
-    switch (isValidUrl) {
-      case true:
-        return
-      case false:
-        return "Invalid URL: " + `"`+result+ `"`
-    }
-  }
   // Async call for results effect
   React.useEffect(() => {
     const asyncCall = async () => {
@@ -104,7 +95,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
-        setValidationState(true)
+        setIsValidUrl(true)
       }}
       disableClearable
       renderInput={(props) => (
@@ -115,13 +106,11 @@ const ResourceClassField: React.FC<Props> = ({}) => {
               shrink: true,
             }}
             value={writtenClassValue}
-            helperText={showHelperText()}
-            error={!!autocompleteError || isValidUrl == false}
+            helperText={isValidUrl ? "" : `Invalid URL:  '${autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || "" }'`}
+            error={!!autocompleteError || !isValidUrl}
             onChange={(event) => {
-              console.error(writtenClassValue)
               setSelectedClassValue(undefined);
-              // URL validation
-              validator.isURL(event.currentTarget.value) == false ? setValidationState(false) : setValidationState(true)
+              setIsValidUrl(validator.isURL(event.currentTarget.value))
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes)
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
