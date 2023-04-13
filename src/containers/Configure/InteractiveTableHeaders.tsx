@@ -179,13 +179,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
-                      setIsValidUrl(true)
+                      setIsValidUrl(validator.isURL(newValue))
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
-                      setIsValidUrl(true)
+                      setIsValidUrl(validator.isURL(newValue.iri))
                     } else {
                       setPropertyIri(newValue.value);
-                      setIsValidUrl(true)
+                      setIsValidUrl(validator.isURL(newValue.value))
                     }
                   }}
                   disableClearable

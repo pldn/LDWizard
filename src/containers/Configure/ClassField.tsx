@@ -95,7 +95,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
-        setIsValidUrl(true)
+        setIsValidUrl(validator.isURL(newValueString))
       }}
       disableClearable
       renderInput={(props) => (
