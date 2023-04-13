@@ -24,6 +24,7 @@ import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
 import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers";
 import TransformationSelector from "./TransformationSelector";
+import validator from "validator";
 
 interface Props {}
 const TableHeaders: React.FC<Props> = ({}) => {
@@ -89,6 +90,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>(true)
 
   // Async call for results effect
   React.useEffect(() => {
@@ -177,10 +179,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
+                      setIsValidUrl(validator.isURL(newValue))
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
+                      setIsValidUrl(validator.isURL(newValue.iri))
                     } else {
                       setPropertyIri(newValue.value);
+                      setIsValidUrl(validator.isURL(newValue.value))
                     }
                   }}
                   disableClearable
@@ -191,8 +196,8 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         {...props}
                         autoFocus
                         label="Property URI"
-                        error={!!autocompleteError}
-                        helperText={autocompleteError || getPrefixed(propertyIri, prefixes)}
+                        error={!!autocompleteError || !isValidUrl}
+                        helperText={isValidUrl ? "" : 'Invalid URL'}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName
                         )}`}
@@ -201,6 +206,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         inputMode="url"
                         fullWidth
                         onChange={(event) => {
+                          setIsValidUrl(validator.isURL(event.currentTarget.value))
                           const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
                           if (prefixInfo.prefixLabel) {
                             setPropertyIri(`${prefixInfo.iri}${prefixInfo.localName}`);
@@ -224,7 +230,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           )}
         </DialogContent>
         <DialogActions>
-          <Button className={styles.actionButtons} variant="contained" color="primary" type="submit">
+          <Button disabled={!isValidUrl} className={styles.actionButtons} variant="contained" color="primary" type="submit">
             Confirm
           </Button>
           <Button className={styles.actionButtons} onClick={onClose}>

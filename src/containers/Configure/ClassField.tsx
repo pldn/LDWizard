@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state";
-
+import validator from "validator";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 
 import { Autocomplete } from "@mui/material";
@@ -13,22 +13,26 @@ import styles from "./style.scss";
 import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
 
-interface Props {}
+interface Props {
+  isValidUrl: boolean,
+  setIsValidUrl: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const ResourceClassField: React.FC<Props> = ({}) => {
+const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const prefixes = useRecoilValue(prefixState);
+  
   //   Create an intermediate value here, to stop it from re-rendering
   const [selectedClassValue, setSelectedClassValue] = React.useState<string | undefined>(undefined);
   const [writtenClassValue, setWrittenClassValue] = React.useState<string>(transformationConfig.resourceClass);
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-
+  
   // Async call for results effect
   React.useEffect(() => {
     const asyncCall = async () => {
       setAutocompleteError(undefined);
-      try {
+     try {
         const results = await wizardAppConfig.getClassSuggestions(writtenClassValue || "Resource");
         setAutocompleteSuggestions(results);
       } catch (e) {
@@ -54,7 +58,6 @@ const ResourceClassField: React.FC<Props> = ({}) => {
       };
     });
   }, [selectedClassValue, setTransformationConfig, writtenClassValue]);
-
   return (
     <Autocomplete
       freeSolo
@@ -94,6 +97,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
+        setIsValidUrl(validator.isURL(newValueString))
       }}
       disableClearable
       renderInput={(props) => (
@@ -104,11 +108,12 @@ const ResourceClassField: React.FC<Props> = ({}) => {
               shrink: true,
             }}
             value={writtenClassValue}
-            helperText={autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || ""}
-            error={!!autocompleteError}
+            helperText={isValidUrl ? "" : 'Invalid URL'}
+            error={!!autocompleteError || !isValidUrl}
             onChange={(event) => {
               setSelectedClassValue(undefined);
-              const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
+              setIsValidUrl(validator.isURL(event.currentTarget.value))
+              const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes)
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
               } else {
