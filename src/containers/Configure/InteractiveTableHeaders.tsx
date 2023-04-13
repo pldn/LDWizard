@@ -90,7 +90,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
-  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>(true)
 
   // Async call for results effect
   React.useEffect(() => {
@@ -197,7 +197,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         autoFocus
                         label="Property URI"
                         error={!!autocompleteError || !isValidUrl}
-                        helperText={isValidUrl ? "" : `Invalid URL:  '${autocompleteError || getPrefixed(propertyIri, prefixes) || propertyIri}'`}
+                        helperText={isValidUrl ? "" : 'Invalid URL'}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
                           transformationConfig.columnConfiguration[selectedHeader].columnName
                         )}`}
@@ -230,7 +230,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           )}
         </DialogContent>
         <DialogActions>
-          <Button className={styles.actionButtons} variant="contained" color="primary" type="submit">
+          <Button disabled={!isValidUrl} className={styles.actionButtons} variant="contained" color="primary" type="submit">
             Confirm
           </Button>
           <Button className={styles.actionButtons} onClick={onClose}>

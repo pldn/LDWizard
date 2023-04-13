@@ -8,15 +8,16 @@ import HintWrapper from "../../components/HintWrapper";
 import styles from "./style.scss";
 import validator from "validator";
 
-interface Props {}
+interface Props {
+  isValidUrl: boolean,
+  setIsValidUrl: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const BaseIriField: React.FC<Props> = ({}) => {
+const BaseIriField: React.FC<Props> = ({isValidUrl, setIsValidUrl}) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
 
   //   Create an intermediate value here, to stop it from re-rendering
   const [baseIriTemp, setValue] = React.useState(transformationConfig.baseIri.toString() || "");
-  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
-
   const confirmBaseIri = () => {
     let baseIri = baseIriTemp.toString();
     if (!baseIri.endsWith("/") && !baseIri.endsWith("#")) baseIri = baseIri + "/";
@@ -34,7 +35,7 @@ const BaseIriField: React.FC<Props> = ({}) => {
           setIsValidUrl(validator.isURL(event.currentTarget.value))
         }}
         onEmptied={() => setValue("")}
-        helperText={isValidUrl ? "" : `Invalid URL:  '${baseIriTemp.toString()}'`}
+        helperText={isValidUrl ? "" : 'Invalid URL'}
         label={"Base IRI"}
         error={!isValidUrl}
         fullWidth

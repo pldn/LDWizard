@@ -44,6 +44,8 @@ const Configure: React.FC<Props> = ({}) => {
   const canScroll = useCanScroll();
   const tableRef = React.useRef<HTMLDivElement>(null);
   const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
+  const [isValidUrlRC, setIsValidUrlRC] = React.useState<boolean>(true)
+  const [isValidUrlBI, setIsValidUrlBI] = React.useState<boolean>(true)
   const confirmConfiguration = () => {
     navigate(`/${Step + 1}`);
   };
@@ -57,7 +59,7 @@ const Configure: React.FC<Props> = ({}) => {
         <Box className={styles.normalSettings}>
           <ColumnSelector />
           <React.Suspense fallback={<Skeleton width="500px" height="3rem" />}>
-            <ResourceClassField />
+            <ResourceClassField isValidUrl={isValidUrlRC} setIsValidUrl={setIsValidUrlRC} />
           </React.Suspense>
         </Box>
         <Accordion variant="outlined" square className={styles.accordion}>
@@ -65,7 +67,7 @@ const Configure: React.FC<Props> = ({}) => {
             <Typography>Advanced</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <BaseIriField />
+            <BaseIriField isValidUrl={isValidUrlBI} setIsValidUrl={setIsValidUrlBI} />
           </AccordionDetails>
         </Accordion>
       </Container>
@@ -110,7 +112,7 @@ const Configure: React.FC<Props> = ({}) => {
         <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
-        <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
+        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
           Next
         </Button>
         <Button

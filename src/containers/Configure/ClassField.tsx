@@ -13,9 +13,12 @@ import styles from "./style.scss";
 import { AutocompleteSuggestion } from "../../Definitions";
 import { wizardAppConfig } from "../../config";
 
-interface Props {}
+interface Props {
+  isValidUrl: boolean,
+  setIsValidUrl: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const ResourceClassField: React.FC<Props> = ({}) => {
+const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const prefixes = useRecoilValue(prefixState);
   
@@ -24,7 +27,6 @@ const ResourceClassField: React.FC<Props> = ({}) => {
   const [writtenClassValue, setWrittenClassValue] = React.useState<string>(transformationConfig.resourceClass);
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-  const [isValidUrl, setIsValidUrl] = React.useState<boolean>()
   
   // Async call for results effect
   React.useEffect(() => {
@@ -106,7 +108,7 @@ const ResourceClassField: React.FC<Props> = ({}) => {
               shrink: true,
             }}
             value={writtenClassValue}
-            helperText={isValidUrl ? "" : `Invalid URL:  '${autocompleteError || getPrefixed(writtenClassValue, prefixes) || writtenClassValue || "" }'`}
+            helperText={isValidUrl ? "" : 'Invalid URL'}
             error={!!autocompleteError || !isValidUrl}
             onChange={(event) => {
               setSelectedClassValue(undefined);
