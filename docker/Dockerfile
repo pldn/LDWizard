@@ -1,12 +1,13 @@
-FROM node:16-alpine as build
+FROM node:18-alpine as build
 
 RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3 git
 RUN npm install --quiet node-gyp -g
 WORKDIR /app
 
-COPY package.json ./
-COPY yarn.lock ./
-COPY .yarnrc ./
+COPY package.json ./app/
+COPY yarn.lock ./app/
+COPY .yarn ./app/
+COPY .yarnrc ./app/
 RUN yarn
 
 COPY . .
