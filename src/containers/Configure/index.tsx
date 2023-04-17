@@ -48,17 +48,16 @@ const Configure: React.FC<Props> = ({}) => {
   const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
   const [isValidUrlRC, setIsValidUrlRC] = React.useState<boolean>(true)
   const [isValidUrlBI, setIsValidUrlBI] = React.useState<boolean>(true)
-  const [currentPage, setCurrentPage] = React.useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [currentTablePage, setCurrentTablePage] = React.useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
 
-  const changePage = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
-    // Go to the next results page
-    setCurrentPage(page);
+  const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setCurrentTablePage(page);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowPerChangePage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+    setCurrentTablePage(0);
   };
 
   const confirmConfiguration = () => {
@@ -68,8 +67,7 @@ const Configure: React.FC<Props> = ({}) => {
   if (!parsedCsv) {
     return <Navigate to="/1" />;
   }
-  // const csvHeader = parsedCsv.slice(0,1)
-  const csvRows = parsedCsv.slice(1,)
+  const [_csvHeader, ...csvRows] = parsedCsv
   return (
     <>
       <Container className={styles.globalSettingsForm}>
@@ -113,7 +111,7 @@ const Configure: React.FC<Props> = ({}) => {
             </React.Suspense>
             <TableBody>
               {csvRows
-              .slice(currentPage * rowsPerPage, currentPage * rowsPerPage + rowsPerPage)
+              .slice(currentTablePage * rowsPerPage, currentTablePage * rowsPerPage + rowsPerPage)
               .map((row, rowIndex) => {
                 return (
                   <TableRow key={rowIndex}>
@@ -128,11 +126,11 @@ const Configure: React.FC<Props> = ({}) => {
           <TableFooter>
             <TablePagination
               count={csvRows.length}
-              onPageChange={changePage}
-              page={currentPage}
+              onPageChange={handlePageChange}
+              page={currentTablePage}
               rowsPerPage={rowsPerPage}
               component="div"
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              onRowsPerPageChange={handleRowPerChangePage}
             ></TablePagination>
           </TableFooter>
         </TableContainer>
