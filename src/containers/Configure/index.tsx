@@ -95,8 +95,8 @@ const Configure: React.FC<Props> = ({}) => {
       )}
       <Paper variant="outlined" square className={styles.tableWrapper}>
         <ScrollCopier scrollRef={tableRef} />
-        <TableContainer ref={tableRef}>
-          <Table>
+        <TableContainer ref={tableRef} sx={{transform: "rotateX(180deg)"}}>
+          <Table sx={{transform: "rotateX(180deg)"}}>
             <React.Suspense
               fallback={
                 <Skeleton
@@ -123,7 +123,7 @@ const Configure: React.FC<Props> = ({}) => {
               })}
             </TableBody>
           </Table>
-          <TableFooter>
+          <TableFooter sx={{transform: "rotateX(180deg)"}}>
             <TablePagination
               count={csvRows.length}
               onPageChange={handlePageChange}
