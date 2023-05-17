@@ -14,6 +14,8 @@ import {
   AccordionDetails,
   Typography,
   TableHead,
+  TableFooter,
+  TablePagination,
 } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -49,6 +51,20 @@ const Configure: React.FC<Props> = ({}) => {
   const canScroll = useCanScroll();
   const tableRef = React.useRef<HTMLDivElement>(null);
   const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
+  const [isValidUrlRC, setIsValidUrlRC] = React.useState<boolean>(true)
+  const [isValidUrlBI, setIsValidUrlBI] = React.useState<boolean>(true)
+  const [currentTablePage, setCurrentTablePage] = React.useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
+
+  const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setCurrentTablePage(page);
+  };
+
+  const handleRowPerChangePage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setCurrentTablePage(0);
+  };
+
   const confirmConfiguration = () => {
     if (parsedCsv) navigate(`/${Step + 1}`);
   };
@@ -56,13 +72,14 @@ const Configure: React.FC<Props> = ({}) => {
   if (!parsedCsv) {
     return <Navigate to="/1" />;
   }
+  const [_csvHeader, ...csvRows] = parsedCsv
   return (
     <>
       <Container className={styles.globalSettingsForm}>
         <Box className={styles.normalSettings}>
           <ColumnSelector />
           <React.Suspense fallback={<Skeleton width="500px" height="3rem" />}>
-            <ResourceClassField />
+            <ResourceClassField isValidUrl={isValidUrlRC} setIsValidUrl={setIsValidUrlRC} />
           </React.Suspense>
         </Box>
         <Box className={styles.normalSettings}>
@@ -74,7 +91,7 @@ const Configure: React.FC<Props> = ({}) => {
             <Typography>Advanced</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <BaseIriField />
+            <BaseIriField isValidUrl={isValidUrlBI} setIsValidUrl={setIsValidUrlBI} />
           </AccordionDetails>
         </Accordion>
       </Container>
@@ -102,7 +119,9 @@ const Configure: React.FC<Props> = ({}) => {
               <TableHeaders />
             </React.Suspense>
             <TableBody>
-              {parsedCsv.slice(1, 10).map((row, rowIndex) => {
+              {csvRows
+              .slice(currentTablePage * rowsPerPage, currentTablePage * rowsPerPage + rowsPerPage)
+              .map((row, rowIndex) => {
                 return (
                   <TableRow key={rowIndex}>
                     {row.map((cell, cellIndex) => (
@@ -113,6 +132,16 @@ const Configure: React.FC<Props> = ({}) => {
               })}
             </TableBody>
           </Table>
+          <TableFooter>
+            <TablePagination
+              count={csvRows.length}
+              onPageChange={handlePageChange}
+              page={currentTablePage}
+              rowsPerPage={rowsPerPage}
+              component="div"
+              onRowsPerPageChange={handleRowPerChangePage}
+            ></TablePagination>
+          </TableFooter>
         </TableContainer>
       </Paper>
       <Box id="#navigationButtons" ref={navigationButtonsRef}>
@@ -124,8 +153,10 @@ const Configure: React.FC<Props> = ({}) => {
             <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>Next</Button>} 
           no={
             <Button className={styles.actionButtons} variant="contained" disabled color="primary">Next</Button>
-        } />
-        
+        } />        
+        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
+          Next
+        </Button>
         <Button
           className={styles.actionButtons}
           onClick={() => {
