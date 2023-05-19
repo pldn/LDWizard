@@ -1,5 +1,5 @@
 import { ShaclShapeMeta, ShaclShapeSetting } from "../Definitions";
-import { Parser, Store, DataFactory, Term } from "n3";
+import { Parser, Store, DataFactory, Term, Quad } from "n3";
 const { namedNode } = DataFactory;
 
 const cache: Map<any, ShaclShapeMeta[]> = new Map()
@@ -15,16 +15,35 @@ const resolveValue = (value: Term, store: Store): any => {
   return value.value
 }
 
-export default async function (shaclShapeSettings: ShaclShapeSetting[]): Promise<ShaclShapeMeta[]> {
+const parse = async (turtle: string): Promise<{ quads: Array<Quad>, prefixes: { [key: string]: string } }> => {
+  const parser = new Parser()
+  const quads: Array<Quad> = []
+
+  return new Promise((resolve, reject) => {
+    parser.parse(turtle, (error: any, quad: Quad, prefixes: any) => {
+
+      if (error) reject(error)
+      if (quad) quads.push(quad)
+
+      if (prefixes) {
+        resolve({
+          prefixes,
+          quads: quads
+        })  
+      }
+    })  
+  })
+}
+
+export default async function getShaclShapes (shaclShapeSettings: ShaclShapeSetting[]): Promise<ShaclShapeMeta[]> {
   if (cache.has(shaclShapeSettings)) return cache.get(shaclShapeSettings)!
 
   const promises = shaclShapeSettings.map(async shaclShapeSetting => {
     const shaclFileResponse = await fetch(shaclShapeSetting.url)
 
     const shaclFileText = await shaclFileResponse.text()
-    const parser = new Parser()
-    const quads = await parser.parse(shaclFileText)
     const store = new Store()
+    const { prefixes, quads } = await parse(shaclFileText)
     store.addQuads(quads)
 
     const shapeClasses = store.getQuads(null, namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), namedNode("http://www.w3.org/ns/shacl#NodeShape"), null)
@@ -51,7 +70,7 @@ export default async function (shaclShapeSettings: ShaclShapeSetting[]): Promise
         return property
       })
 
-    return { iri, description, store, targetClasses, properties } as ShaclShapeMeta
+    return { iri, description, store, targetClasses, properties, prefixes } as ShaclShapeMeta
   })
 
   const shaclShapeMetas = await Promise.all(promises)

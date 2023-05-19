@@ -12,11 +12,11 @@ import * as React from "react";
 import HintWrapper from "../../components/HintWrapper";
 import styles from "./style.scss";
 import config from "../../config";
-import { ColumnRefinementSetting } from "../../Definitions";
+import { ColumnRefinementSetting, ColumnConfiguration } from "../../Definitions";
 import { useRecoilValue } from "recoil";
 import { transformationConfigState } from "../../state";
 interface Props {
-  selectedColumn: number;
+  selectedColumn: ColumnConfiguration;
   selectedTransformation: ColumnRefinementSetting | undefined;
   onTransformationChange: (newTransformation: ColumnRefinementSetting | undefined) => void;
 }
@@ -81,6 +81,8 @@ const TransformationSelector: React.FC<Props> = ({
     );
   } else {
     const noOtherColumns = transformationConfig.columnConfiguration.length <= 1;
+    const selectedColumnId = transformationConfig.columnConfiguration.indexOf(selectedColumn)
+
     return (
       <div className={styles.columnConfigSection}>
         <Typography variant="subtitle1">Value refinement</Typography>
@@ -109,13 +111,14 @@ const TransformationSelector: React.FC<Props> = ({
                       type: "single",
                     });
                   } else if (selectedTransformation.type === "double-column") {
+
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "double-column",
                       data: {
                         secondColumnIdx:
                           // Don't do transformations with the same column
-                          selectedColumn === 0 ? 1 : 0,
+                          selectedColumnId === 0 ? 1 : 0,
                       },
                     });
                   } else if (selectedTransformation.type === "single-param") {
@@ -191,10 +194,10 @@ const TransformationSelector: React.FC<Props> = ({
                     <MenuItem
                       key={config.columnName}
                       value={idx}
-                      disabled={idx === transformationConfig.key || idx === selectedColumn}
+                      disabled={idx === transformationConfig.key || idx === selectedColumnId}
                     >
                       {config.columnName}
-                      {idx === selectedColumn && (
+                      {idx === selectedColumnId && (
                         <Typography variant="caption" className={styles.duplicateWarning}>
                           This column is currently selected
                         </Typography>

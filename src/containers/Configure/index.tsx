@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Box,
   Table,
   TableContainer,
@@ -17,9 +16,8 @@ import {
   TableFooter,
   TablePagination,
 } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "../../state";
+import { matrixState, transformationConfigState } from "../../state";
 import styles from "./style.scss";
 import BaseIriField from "./BaseIriField";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon";
@@ -28,9 +26,8 @@ import ResourceClassField from "./ClassField";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
 import ShaclShapeField from "./ShaclShapeField";
-import ShaclShapeInformation from "./ShaclShapeInformation";
 import ScrollCopier from "../../components/ScrollCopier";
-import ShaclValidates from '../../components/ShaclValidates';
+import { csvRowsToShaclRows } from '../../utils/csvRowsToShaclRows';
 
 interface Props {}
 
@@ -45,9 +42,9 @@ const useCanScroll = () => {
 };
 
 const Configure: React.FC<Props> = ({}) => {
+  const transformationConfig = useRecoilValue(transformationConfigState);
+  const { shaclShape, requireShaclShape, columnConfiguration } = transformationConfig
   const parsedCsv = useRecoilValue(matrixState);
-
-  const navigate = useNavigate();
   const canScroll = useCanScroll();
   const tableRef = React.useRef<HTMLDivElement>(null);
   const navigationButtonsRef = React.useRef<HTMLDivElement>(null);
@@ -65,14 +62,14 @@ const Configure: React.FC<Props> = ({}) => {
     setCurrentTablePage(0);
   };
 
-  const confirmConfiguration = () => {
-    if (parsedCsv) navigate(`/${Step + 1}`);
-  };
+  if (!parsedCsv) throw new Error('Must have data')
 
-  if (!parsedCsv) {
-    return <Navigate to="/1" />;
+  let [_csvHeader, ...csvRows] = parsedCsv
+
+  if (shaclShape || requireShaclShape) {
+    csvRows = csvRowsToShaclRows(csvRows, columnConfiguration)
   }
-  const [_csvHeader, ...csvRows] = parsedCsv
+
   return (
     <>
       <Container className={styles.globalSettingsForm}>
@@ -85,7 +82,7 @@ const Configure: React.FC<Props> = ({}) => {
         <Box className={styles.normalSettings}>
           <ShaclShapeField />
         </Box>
-        <ShaclShapeInformation />
+        {/* <ShaclShapeInformation /> */}
         <Accordion variant="outlined" square className={styles.accordion}>
           <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
             <Typography>Advanced</Typography>
@@ -131,43 +128,24 @@ const Configure: React.FC<Props> = ({}) => {
                 );
               })}
             </TableBody>
-          </Table>
-          <TableFooter>
-            <TablePagination
-              count={csvRows.length}
-              onPageChange={handlePageChange}
-              page={currentTablePage}
-              rowsPerPage={rowsPerPage}
-              component="div"
-              onRowsPerPageChange={handleRowPerChangePage}
-            ></TablePagination>
+            <TableFooter>
+            <tr>
+              {/* https://stackoverflow.com/questions/398734/colspan-all-columns */}
+              <td colSpan={1000}>
+              <TablePagination
+                count={csvRows.length}
+                onPageChange={handlePageChange}
+                page={currentTablePage}
+                rowsPerPage={rowsPerPage}
+                component="div"
+                onRowsPerPageChange={handleRowPerChangePage}
+              ></TablePagination>
+              </td>
+            </tr>
           </TableFooter>
+          </Table>
         </TableContainer>
       </Paper>
-      <Box id="#navigationButtons" ref={navigationButtonsRef}>
-        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
-          Back
-        </Button>
-        <ShaclValidates 
-          yes={
-            <Button className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>Next</Button>} 
-          no={
-            <Button className={styles.actionButtons} variant="contained" disabled color="primary">Next</Button>
-        } />        
-        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

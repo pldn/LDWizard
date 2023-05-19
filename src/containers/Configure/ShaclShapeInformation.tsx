@@ -21,7 +21,7 @@ import FontAwesomeIcon from "../../components/FontAwesomeIcon";
 interface Props {}
 
 const ShaclShapeInformation: React.FC<Props> = ({}) => {
-  const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
+  const [transformationConfig, _setTransformationConfig] = useRecoilState(transformationConfigState);
 
   const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[])
 

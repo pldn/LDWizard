@@ -10,8 +10,10 @@ export type TransformationOutput = string;
 export type AutocompleteSuggestion = string | Rdf.NamedNode | { iri: string; description?: string };
 export type ColumnConfiguration = {
   columnName: string;
+  disabled?: boolean;
   columnRefinement?: ColumnRefinementSetting | undefined;
   propertyIri?: string;
+  shaclColumn?: boolean
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -169,5 +171,6 @@ export type ShaclShapeMeta = {
   description: string,
   store: Rdf.Store,
   targetClasses: string[],
+  prefixes: { [key: string]: string }
   properties: { [key: string]: any }[]
 };
