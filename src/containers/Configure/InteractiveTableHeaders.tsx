@@ -27,26 +27,18 @@ import TransformationSelector from "./TransformationSelector";
 import validator from "validator";
 import { configColumnsToShaclColumns } from '../../utils/csvRowsToShaclRows'
 
-interface Props {}
-const TableHeaders: React.FC<Props> = ({}) => {
+interface Props { shaclShapeMeta?: ShaclShapeMeta }
+const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const [selectedHeader, setSelectedHeader] = React.useState<ColumnConfiguration | undefined>();
   const prefixes = useRecoilValue(prefixState);
-  const { shaclShape, requireShaclShape } = transformationConfig
 
   let columns = transformationConfig.columnConfiguration
-
-  const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[])
-
-  if (shaclShapeMetas?.length && (shaclShape || requireShaclShape)) {
-    columns = configColumnsToShaclColumns(columns, shaclShapeMetas, transformationConfig, prefixes)
+   
+  if (shaclShapeMeta) {
+    columns = configColumnsToShaclColumns(columns, shaclShapeMeta, prefixes)
   }
 
-  React.useEffect(() => {
-    wizardAppConfig.getShaclShapes(transformationConfig.resourceClass)
-      .then(shaclShapeMetas => setShaclShapeMetas(shaclShapeMetas))
-  }, [transformationConfig]);
-    
   const dragStart = (columnConfig: ColumnConfiguration) => columnConfig.shaclColumn ? (event: any) => {
     event.dataTransfer.setData("application/ld-wizard", columnConfig.propertyIri);
     event.dataTransfer.effectAllowed = "move";

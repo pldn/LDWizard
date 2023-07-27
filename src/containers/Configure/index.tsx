@@ -28,6 +28,8 @@ import ColumnSelector from "./ColumnSelector";
 import ShaclShapeField from "./ShaclShapeField";
 import ScrollCopier from "../../components/ScrollCopier";
 import { csvRowsToShaclRows } from '../../utils/csvRowsToShaclRows';
+import { ShaclShapeMeta } from '../../Definitions';
+import { wizardAppConfig } from "../../config";
 
 interface Props {}
 
@@ -52,6 +54,7 @@ const Configure: React.FC<Props> = ({}) => {
   const [isValidUrlBI, setIsValidUrlBI] = React.useState<boolean>(true)
   const [currentTablePage, setCurrentTablePage] = React.useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
+  const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[])
 
   const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
     setCurrentTablePage(page);
@@ -62,12 +65,20 @@ const Configure: React.FC<Props> = ({}) => {
     setCurrentTablePage(0);
   };
 
+  const shaclShapeMeta = shaclShapeMetas?.find(shaclShapeMeta => shaclShapeMeta.iri === transformationConfig.shaclShape)
+
+  React.useEffect(() => {
+    wizardAppConfig.getShaclShapes(transformationConfig.resourceClass)
+      .then(shaclShapeMetas => setShaclShapeMetas(shaclShapeMetas))
+  }, [transformationConfig]);
+
+
   if (!parsedCsv) throw new Error('Must have data')
 
   let [_csvHeader, ...csvRows] = parsedCsv
 
-  if (shaclShape || requireShaclShape) {
-    csvRows = csvRowsToShaclRows(csvRows, columnConfiguration)
+  if (shaclShapeMeta && (shaclShape || requireShaclShape)) {
+    csvRows = csvRowsToShaclRows(csvRows, columnConfiguration, shaclShapeMeta)
   }
 
   return (
@@ -113,7 +124,7 @@ const Configure: React.FC<Props> = ({}) => {
                 />
               }
             >
-              <TableHeaders />
+              <TableHeaders shaclShapeMeta={shaclShapeMeta} />
             </React.Suspense>
             <TableBody>
               {csvRows

@@ -1,27 +1,41 @@
-import { ColumnConfiguration, ShaclShapeMeta, TransformationConfiguration } from '../Definitions'
+import { ColumnConfiguration, ShaclShapeMeta } from '../Definitions'
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
 import { getPrefixed } from "@triply/utils/lib/prefixUtils";
 
-export const csvRowsToShaclRows = (rows: Array<Array<string>>, headers: Array<ColumnConfiguration>) => {
+export const csvRowsToShaclRows = (
+  rows: Array<Array<string>>, 
+  headers: Array<ColumnConfiguration>, 
+  shaclShapeMeta: ShaclShapeMeta, 
+) => {
+
+  const attachedShaclHeaders = headers
+    .filter(header => header.propertyIri && shaclShapeMeta.properties
+      .find(property => property.path === header.propertyIri)
+    )
+
+  const fillerCount = shaclShapeMeta.properties.length - attachedShaclHeaders.length
+  const fillers = Array(fillerCount).fill('').map((v, i)=> '-')
+
   return rows.map(row => [
-    'test',
+    ...fillers,
     ...row
   ])
 }
 
-export const configColumnsToShaclColumns = (headers: Array<ColumnConfiguration>, shaclMetas: Array<ShaclShapeMeta>, transformationConfig: TransformationConfiguration, prefixes: PrefixesArray): Array<ColumnConfiguration> => {
-  const shaclShape = shaclMetas.find(shaclMeta => shaclMeta.iri === transformationConfig.shaclShape)
-  if (!shaclShape) return headers
-
+export const configColumnsToShaclColumns = (
+  headers: Array<ColumnConfiguration>, 
+  shaclShapeMeta: ShaclShapeMeta, 
+  prefixes: PrefixesArray
+): Array<ColumnConfiguration> => {
   const mergedPrefixes = [
     ...prefixes,
-    ...Object.entries(shaclShape.prefixes).map(([alias, iri]) => ({
+    ...Object.entries(shaclShapeMeta.prefixes).map(([alias, iri]) => ({
       prefixLabel: alias, iri
     }))
   ]
 
   return [
-    ...shaclShape.properties.map(property => {
+    ...shaclShapeMeta.properties.map(property => {
       const columnName = property.name ?? getPrefixed(property.path, mergedPrefixes) ?? property.path
 
       return {
