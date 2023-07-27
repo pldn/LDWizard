@@ -11,27 +11,55 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "../../state";
 import styles from "./style.scss";
-import ShaclValidates from '../../components/ShaclValidates';
+import { ShaclShapeMeta } from '../../Definitions';
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { useRecoilState } from "recoil";
+import { transformationConfigState } from "../../state";
+import { wizardAppConfig } from "../../config";
 
 const Steps: React.FC<{ type: 'steps' | 'buttons' }> = ({ type }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [transformationConfig] = useRecoilState(transformationConfigState);
+
+  const currentStep = (location.pathname[1] !== undefined ? + location.pathname[1] : 1) as keyof typeof stepValidators
+
+  /** Gathering of validation properties */
+  const parsedCsv = useRecoilValue(matrixState);
+  let shaclValidates = !transformationConfig.shaclShape // Initial SHACL does not validate if it is used.
+  const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[]);
+
+  React.useEffect(() => {
+    wizardAppConfig.getShaclShapes(transformationConfig.resourceClass)
+      .then(shaclShapeMetas => setShaclShapeMetas(shaclShapeMetas))
+  }, [transformationConfig]);
+
+  if (shaclShapeMetas && transformationConfig.shaclShape) {
+    const shaclShapeMeta = shaclShapeMetas.find(shaclShapeMeta => shaclShapeMeta.iri === transformationConfig.shaclShape);
+    
+    const requiredProperties = (shaclShapeMeta?.properties
+      .filter(property => property.minCount && parseInt(property.minCount)) ?? [])
+      .map(property => property.path)
+
+    const configuredIris = transformationConfig.columnConfiguration.map(column => column.propertyIri);
+    shaclValidates = requiredProperties.every(requiredProperty => configuredIris.includes(requiredProperty));
+  }
+  /** End of gathering of validation properties */
 
   const stepValidators = {
     1: () => !!parsedCsv,
-    2: () => !!parsedCsv,
-    3: () => !!parsedCsv && currentStep > 2
+    2: () => !!parsedCsv && shaclValidates,
+    3: () => !!parsedCsv && currentStep > 2 && shaclValidates
   }
-
-  const currentStep = (location.pathname[1] !== undefined ? + location.pathname[1] : 1) as keyof typeof stepValidators
-  const parsedCsv = useRecoilValue(matrixState);
 
   const stepIsValid = (step: keyof typeof stepValidators) => {
-    return step.toString() in stepValidators ? stepValidators[step]() : false
+    return step.toString() in stepValidators ? stepValidators[step]() : false;
   }
 
+  /**
+   * We have two ways of displaying the steps but one way of validating.
+   */
   if (type === 'steps') {
     return (
       <Container sx={{ py: 2 }}>
