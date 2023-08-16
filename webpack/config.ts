@@ -5,7 +5,7 @@ import * as path from "path";
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
 import autoprefixer from "autoprefixer";
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import  MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
@@ -219,7 +219,12 @@ const config: webpack.Configuration = {
   output: {
     path: path.resolve("lib"),
     filename: "[name].min.js",
-    libraryTarget: "umd",
+    libraryTarget: "commonjs-module", // used to be umd
+    scriptType: 'text/javascript'
+  },
+  experiments:{
+    outputModule: true,
+    topLevelAwait: true 
   },
   entry: {
     config: [path.resolve(__dirname, "./runtimeConfig.ts")],

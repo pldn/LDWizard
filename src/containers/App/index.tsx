@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { wizardAppConfig } from "../../config";
 import { Link, Route, Routes } from "react-router-dom";
 import WelcomePage from "./WelcomePage";
-require("../../theme/global.scss");
+await import("../../theme/global.scss");
 
 interface Props {}
 const App: React.FC<Props> = () => {

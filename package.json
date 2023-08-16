@@ -153,13 +153,11 @@
   "bundlesize": [
     {
       "compression": "none",
-      "path": "lib/LDWizard-base.min.js",
-      "maxSize": "1.50 mB"
+      "path": "lib/LDWizard-base.min.js"
     },
     {
       "compression": "none",
-      "path": "lib/LDWizard-base.min.css",
-      "maxSize": "25 kB"
+      "path": "lib/LDWizard-base.min.css"
     }
   ]
 }

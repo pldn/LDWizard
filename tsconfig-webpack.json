@@ -2,7 +2,7 @@
   "extends": "./tsconfig-build.json",
   "compilerOptions": {
     "outDir": "./webpack",
-    "module": "commonjs",
+    "module": "Node16",
     "esModuleInterop": true,
     "rootDir": "./webpack",
     "incremental": true,

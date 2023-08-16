@@ -75,6 +75,7 @@ const Publish: React.FC<Props> = ({}) => {
       // Transformation
       if (parsedCsv) {
         // Transformation done here for double-column single-param etc
+        // @here transformation done
         const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,

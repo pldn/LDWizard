@@ -16,6 +16,9 @@ import {
   TableHead,
   TableFooter,
   TablePagination,
+  SxProps,
+  TableHeadClasses,
+  Theme,
 } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -28,6 +31,7 @@ import ResourceClassField from "./ClassField";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
 import ScrollCopier from "../../components/ScrollCopier";
+import { CommonProps } from "@mui/material/OverridableComponent";
 interface Props {}
 
 export const Step = 2;
@@ -103,7 +107,7 @@ const Configure: React.FC<Props> = ({}) => {
                   width="100%"
                   height="5rem"
                   style={{ display: "table-caption" }}
-                  component={(props) => <TableHead {...props} />}
+                  component={(props: JSX.IntrinsicAttributes & { component: React.ElementType<any>; } & { children?: React.ReactNode; classes?: Partial<TableHeadClasses> | undefined; sx?: SxProps<Theme> | undefined; } & CommonProps & Omit<any, keyof CommonProps | "children" | "sx">) => <TableHead {...props} />}
                 />
               }
             >
@@ -139,6 +143,7 @@ const Configure: React.FC<Props> = ({}) => {
         <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
+        {/* @here fires confirmConfiguration --> the transformation column must be kept */}
         <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
           Next
         </Button>
