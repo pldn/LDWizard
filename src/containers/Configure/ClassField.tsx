@@ -1,17 +1,17 @@
 import * as React from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { transformationConfigState, prefixState } from "../../state";
+import { transformationConfigState, prefixState } from "../../state/index.ts";
 import validator from "validator";
-import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
+import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/prefixUtils";
 
 import { Autocomplete } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
-import HintWrapper from "../../components/HintWrapper";
+import HintWrapper from "../../components/HintWrapper/index.tsx";
 
 import styles from "./style.scss";
-import { AutocompleteSuggestion } from "../../Definitions";
-import { wizardAppConfig } from "../../config";
+import { AutocompleteSuggestion } from "../../Definitions.ts";
+import { wizardAppConfig } from "../../config/index.ts";
 
 interface Props {
   isValidUrl: boolean,

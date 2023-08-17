@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": ["ES6", "dom"],
+    "target": "es2020",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "lib": ["es2020", "dom"],
     "esModuleInterop": true,
-
-    "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": false,
     "allowSyntheticDefaultImports": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
@@ -14,9 +15,10 @@
     "sourceMap": true,
     "listFiles": false,
     "rootDir": ".",
-    "jsx": "react"
+    "jsx": "react",
   },
   "include": ["./src/**/*", "./webpack/**/*"],
+  "exclude": ["node_modules"],
   "files":["./typings-custom/main.d.ts"],
   "compileOnSave": false
 }

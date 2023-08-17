@@ -2,11 +2,13 @@ import * as React from "react";
 import { TextField, Button, Typography, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import style from "./style.scss";
-import { currentTokenState, accountsInfoQuery } from "../../state/clientJs";
-import ErrorBoundary from "../../components/ErrorBoundary";
-import App from "@triply/triplydb";
+import { currentTokenState, accountsInfoQuery } from "../../state/clientJs.ts";
+import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
+import _App from "@triply/triplydb";
+const App = _App.default;
+type App = _App.default;
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import wizardConfig from "../../config";
+import wizardConfig from "../../config/index.ts";
 export interface Props {}
 const TokenForm: React.FC<Props> = () => {
   const [token, setToken] = useRecoilState(currentTokenState);

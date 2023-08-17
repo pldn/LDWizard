@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { createTheme, ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
-import wizardConfig from "./config";
+import wizardConfig from "./config/index.ts";
 
 const theme = createTheme({
   palette: {

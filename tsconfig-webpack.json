@@ -2,7 +2,8 @@
   "extends": "./tsconfig-build.json",
   "compilerOptions": {
     "outDir": "./webpack",
-    "module": "Node16",
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "rootDir": "./webpack",
     "incremental": true,

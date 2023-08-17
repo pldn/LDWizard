@@ -9,12 +9,12 @@ import {
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import HintWrapper from "../../components/HintWrapper";
+import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
-import config from "../../config";
-import { ColumnRefinementSetting } from "../../Definitions";
+import config from "../../config/index.ts";
+import { ColumnRefinementSetting } from "../../Definitions.ts";
 import { useRecoilValue } from "recoil";
-import { transformationConfigState } from "../../state";
+import { transformationConfigState } from "../../state/index.ts";
 interface Props {
   selectedColumn: number;
   selectedTransformation: ColumnRefinementSetting | undefined;

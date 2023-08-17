@@ -1,14 +1,29 @@
 import * as React from "react";
-import { Box, Dialog, TextField, Button, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
+
+import {
+  Box,
+  Dialog,
+  TextField,
+  Button,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+} from "@mui/material";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+
 import {
   userDatasetsState,
   currentDsIdState,
   currentAccountDataSelector,
   currentTokenState,
-} from "../../state/clientJs";
-import App from "@triply/triplydb";
+} from "../../state/clientJs.ts";
+
+import _App from "@triply/triplydb";
+const App = _App.default;
+type App = _App.default;
 interface Props {}
 
 const AddDataset: React.FC<Props> = ({}) => {

@@ -1,6 +1,6 @@
-import { TransformationScript, TransformationConfiguration } from "../Definitions";
+import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
 import { DataFactory, Writer } from "n3";
-import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers.ts";
 const { namedNode, literal } = DataFactory;
 
 const rmlPrefixes: { [key: string]: string } = {

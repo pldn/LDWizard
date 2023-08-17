@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { sourceState, matrixState, transformationConfigState } from "../../state";
-import config from "../../config";
+import { sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
+import config from "../../config/index.ts";
 
 const exampleFile = config.exampleCsv
   ? new File([new Blob([config.exampleCsv], { type: "text/csv" })], "example.csv")

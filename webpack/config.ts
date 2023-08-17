@@ -1,6 +1,6 @@
 import bgImage from "postcss-bgimage";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import * as webpack from "webpack";
+import webpack from "webpack";
 import * as path from "path";
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
@@ -10,7 +10,7 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import { compact } from "lodash";
+import { compact } from "lodash-es";
 import { Renderer as MarkdownRenderer } from "marked";
 
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
@@ -37,7 +37,7 @@ if (isDev) {
 }
 plugins.push(
   new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, "index.html"),
+    template: path.resolve("index.html"),
     // filename: "index.html"
     favicon: "",
   })
@@ -85,10 +85,10 @@ export const genericConfig: webpack.Configuration = {
               ]),
             },
           },
-          {
+          { 
             loader: "ts-loader",
             options: {
-              configFile: path.resolve(__dirname, `../tsconfig-build.json`),
+              configFile: path.resolve(`./tsconfig-build.json`),
               compilerOptions: {
                 rootDir: process.cwd(),
               },
@@ -148,9 +148,9 @@ export const genericConfig: webpack.Configuration = {
         exclude: [
           // These packages have issues with their sourcemaps
           isDev
-            ? path.resolve(__dirname, "../node_modules/rdf-data-factory")
-            : path.resolve(__dirname, "../node_modules"),
-          path.resolve(__dirname, "../node_modules/@triply/utils"),
+            ? path.resolve("../node_modules/rdf-data-factory")
+            : path.resolve("../node_modules"),
+          path.resolve("../node_modules/@triply/utils"),
         ],
         enforce: "pre",
       },
@@ -208,7 +208,7 @@ export const genericConfig: webpack.Configuration = {
       path: false,
       zlib: false,
       os: false,
-      url: path.resolve(__dirname, "/node_modules/url/url.js"),
+      url: path.resolve("/node_modules/url/url.js"),
     },
   },
   plugins: plugins,
@@ -217,9 +217,9 @@ export const genericConfig: webpack.Configuration = {
 const config: webpack.Configuration = {
   ...genericConfig,
   output: {
-    path: path.resolve("lib"),
+    path: path.resolve(process.cwd(), "lib"),
     filename: "[name].min.js",
-    libraryTarget: "commonjs-module", // used to be umd
+    libraryTarget: "umd", // used to be umd
     scriptType: 'text/javascript'
   },
   experiments:{
@@ -227,8 +227,8 @@ const config: webpack.Configuration = {
     topLevelAwait: true 
   },
   entry: {
-    config: [path.resolve(__dirname, "./runtimeConfig.ts")],
-    "LDWizard-base": [path.resolve(__dirname, "./../src/index.tsx")],
+    config: [path.resolve("./webpack/runtimeConfig.ts")],
+    "LDWizard-base": [path.resolve("./src/index.tsx")],
   },
   externals: {
     pumpify: "pumpify",

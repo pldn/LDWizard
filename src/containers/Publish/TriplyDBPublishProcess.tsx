@@ -1,24 +1,40 @@
 import * as React from "react";
 import { useRecoilValue } from "recoil";
-import { Button, DialogTitle, Dialog, DialogContent, CircularProgress, Typography, IconButton } from "@mui/material";
+
+import {
+  Button,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  CircularProgress,
+  Typography,
+  IconButton,
+} from "@mui/material";
+
 import {
   currentDatasetSelector,
   currentTokenState,
   currentAccountDataSelector,
   apiInfoState,
-} from "../../state/clientJs";
-import { matrixState, sourceState, transformationConfigState } from "../../state";
-import { wizardAppConfig } from "../../config";
+} from "../../state/clientJs.ts";
+
+import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
+import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import App from "@triply/triplydb";
-import Dataset from "@triply/triplydb/lib/Dataset";
+import _App from "@triply/triplydb";
+const App = _App.default;
+type App = _App.default;
+import _Dataset from "@triply/triplydb/lib/Dataset";
+const Dataset = _Dataset.default;
+type Dataset = _Dataset.default;
 import { unparse as serializeCsv } from "papaparse";
-
 import styles from "./style.scss";
-import { Matrix } from "../../Definitions";
-import { getFileBaseName } from "../../utils/helpers";
-import Asset from "@triply/triplydb/lib/Asset";
+import { Matrix } from "../../Definitions.ts";
+import { getFileBaseName } from "../../utils/helpers.ts";
+import _Asset from "@triply/triplydb/lib/Asset";
+const Asset = _Asset.default;
+type Asset = _Asset.default;
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);

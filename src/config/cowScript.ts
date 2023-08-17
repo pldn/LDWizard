@@ -1,5 +1,5 @@
-import { TransformationScript, TransformationConfiguration } from "../Definitions";
-import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers";
+import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
+import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri } from "../utils/helpers.ts";
 
 interface CowColumn {
   "@id"?: string;

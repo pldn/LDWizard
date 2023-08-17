@@ -36,7 +36,6 @@
   "bin": {
     "ldwizard-build": "./webpack/ldwizard-build.js"
   },
-  "main": "./src/index.ts",
   "betterScripts": {
     "dev": {
       "command": "yarn run util:buildWebpackConfig && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/config.js",
@@ -106,7 +105,6 @@
     "husky": "^8.0.3",
     "jshashes": "^1.0.8",
     "lint-staged": "^13.2.0",
-    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "markdown-loader": "^8.0.0",
     "marked": "^4.3.0",
@@ -159,5 +157,23 @@
       "compression": "none",
       "path": "lib/LDWizard-base.min.css"
     }
-  ]
+  ],
+  "devDependencies": {
+    "@esbuild-kit/esm-loader": "^2.5.5"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./src/index.ts"
+      }
+    }
+  },
+  "type": "module",
+  "imports": {
+    "#*": {
+      "import": {
+        "default": "./src/*"
+      }
+    }
+  }
 }

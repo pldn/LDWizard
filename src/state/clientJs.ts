@@ -1,6 +1,15 @@
-import { selector, atom, DefaultValue, selectorFamily, RecoilValueReadOnly, RecoilState } from "recoil";
+import {
+  selector,
+  atom,
+  DefaultValue,
+  selectorFamily,
+  RecoilValueReadOnly,
+  RecoilState,
+} from "recoil";
 
-import App from "@triply/triplydb";
+import _App from "@triply/triplydb";
+const App = _App.default;
+type App = _App.default;
 import { Models } from "@triply/utils";
 
 const currentUserAtom = atom<number>({

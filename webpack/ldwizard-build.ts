@@ -2,7 +2,7 @@
 process.env.NODE_ENV = "production";
 import { program } from "commander";
 import webpack from "webpack";
-import client from "./config";
+import client from "./config.js";
 import * as path from "path";
 import * as fs from "fs";
 

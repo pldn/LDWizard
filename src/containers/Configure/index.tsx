@@ -22,15 +22,15 @@ import {
 } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "../../state";
+import { matrixState } from "../../state/index.ts";
 import styles from "./style.scss";
-import BaseIriField from "./BaseIriField";
-import FontAwesomeIcon from "../../components/FontAwesomeIcon";
-import TableHeaders from "./InteractiveTableHeaders";
-import ResourceClassField from "./ClassField";
+import BaseIriField from "./BaseIriField.tsx";
+import FontAwesomeIcon from "../../components/FontAwesomeIcon/index.tsx";
+import TableHeaders from "./InteractiveTableHeaders.tsx";
+import ResourceClassField from "./ClassField.tsx";
 import { Skeleton } from "@mui/material";
-import ColumnSelector from "./ColumnSelector";
-import ScrollCopier from "../../components/ScrollCopier";
+import ColumnSelector from "./ColumnSelector.tsx";
+import ScrollCopier from "../../components/ScrollCopier/index.tsx";
 import { CommonProps } from "@mui/material/OverridableComponent";
 interface Props {}
 

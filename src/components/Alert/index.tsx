@@ -2,7 +2,7 @@
 import * as React from "react";
 import getClassName from "classnames";
 //import own dependencies
-import FontAwesomeIcon from "../FontAwesomeIcon";
+import FontAwesomeIcon from "../FontAwesomeIcon/index.tsx";
 
 export interface AlertProps {
   className?: string;

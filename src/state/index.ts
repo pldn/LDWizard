@@ -1,7 +1,7 @@
 import { atom, selector, DefaultValue } from "recoil";
-import { TransformationConfiguration, Matrix } from "../Definitions";
+import { TransformationConfiguration, Matrix } from "../Definitions.ts";
 import { MD5 } from "jshashes";
-import { wizardAppConfig } from "../config";
+import { wizardAppConfig } from "../config/index.ts";
 const hasher = new MD5().setUTF8(true);
 
 export const sourceState = atom<File | string | undefined>({
