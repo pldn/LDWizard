@@ -3,7 +3,7 @@ import * as React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state/index.ts";
 import validator from "validator";
-import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/prefixUtils";
+import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 
 import { Autocomplete } from "@mui/material";
 import { Typography, TextField } from "@mui/material";

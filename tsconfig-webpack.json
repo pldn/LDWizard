@@ -1,17 +1,19 @@
 {
-  "extends": "./tsconfig-build.json",
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "outDir": "./webpack",
-    "module": "ES2020",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
+    "outDir": "./webpack/lib",
     "rootDir": "./webpack",
     "incremental": true,
-    "strict": false
+    "strict": false,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "removeComments": false
   },
-  "files": [
-    "./webpack/config.ts",
-    "./webpack/ldwizard-build.ts"
-  ],
-  "include": []
+  "include": [
+    "./webpack/*.ts",
+    "./typings-custom/main.d.ts"
+  ]
 }

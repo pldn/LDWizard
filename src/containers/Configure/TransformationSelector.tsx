@@ -26,7 +26,6 @@ const TransformationSelector: React.FC<Props> = ({
   onTransformationChange,
 }) => {
   const transformationConfig = useRecoilValue(transformationConfigState);
-  // @here figure out what this does
   const transformationText =
     selectedTransformation &&
     config.refinementOptions.find((refinementOption) => refinementOption.label === selectedTransformation.label)

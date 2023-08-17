@@ -22,19 +22,14 @@ import { matrixState, sourceState, transformationConfigState } from "../../state
 import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import _App from "@triply/triplydb";
-const App = _App.default;
-type App = _App.default;
-import _Dataset from "@triply/triplydb/lib/Dataset";
-const Dataset = _Dataset.default;
-type Dataset = _Dataset.default;
+import App from "@triply/triplydb";
+import Dataset from "@triply/triplydb/lib/Dataset";
+
 import { unparse as serializeCsv } from "papaparse";
 import styles from "./style.scss";
 import { Matrix } from "../../Definitions.ts";
 import { getFileBaseName } from "../../utils/helpers.ts";
-import _Asset from "@triply/triplydb/lib/Asset";
-const Asset = _Asset.default;
-type Asset = _Asset.default;
+import Asset from "@triply/triplydb/lib/Asset";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);

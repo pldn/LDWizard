@@ -37,14 +37,14 @@ if (isDev) {
 }
 plugins.push(
   new HtmlWebpackPlugin({
-    template: path.resolve("index.html"),
-    // filename: "index.html"
+    template: path.resolve("./webpack/index.html"),
     favicon: "",
   })
 );
 
 plugins.push(new webpack.ProvidePlugin({ Buffer: ["buffer", "Buffer"] }));
 
+//@ts-ignore
 if (analyzeBundle) plugins.push(new BundleAnalyzerPlugin());
 
 export const genericConfig: webpack.Configuration = {
@@ -75,13 +75,15 @@ export const genericConfig: webpack.Configuration = {
                 [
                   "@babel/preset-env",
                   {
-                    targets: ["last 3 versions", "> 1%"],
+                    modules: false,
+                    targets: {browsers: ["last 3 versions", "> 1%"]}
                   },
                 ],
+                "@babel/preset-react",
               ],
               plugins: compact([
-                isDev ? require.resolve("react-refresh/babel") : undefined,
-                "@babel/plugin-transform-runtime",
+                isDev ? path.resolve("./node_modules/react-refresh/babel.js") : undefined,
+                // "@babel/plugin-transform-runtime",
               ]),
             },
           },
@@ -89,32 +91,30 @@ export const genericConfig: webpack.Configuration = {
             loader: "ts-loader",
             options: {
               configFile: path.resolve(`./tsconfig-build.json`),
-              compilerOptions: {
-                rootDir: process.cwd(),
-              },
+              transpileOnly: true
             },
           },
         ],
       },
-      {
-        test: /\.js$/,
-        include: [/query-string/, /strict-uri-encode/, /superagent/, /n3/, /split-on-first/],
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    targets: ["last 3 versions", "> 1%"],
-                  },
-                ],
-              ],
-            },
-          },
-        ],
-      },
+      // {
+      //   test: /\.js$/,
+      //   include: [/query-string/, /strict-uri-encode/, /superagent/, /n3/, /split-on-first/],
+      //   use: [
+      //     {
+      //       loader: "babel-loader",
+      //       options: {
+      //         presets: [
+      //           [
+      //             "@babel/preset-env",
+      //             {
+      //               targets: ["last 3 versions", "> 1%"],
+      //             },
+      //           ],
+      //         ],
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.(woff2?|ttf)$/,
         type: "asset",
@@ -218,8 +218,7 @@ const config: webpack.Configuration = {
   ...genericConfig,
   output: {
     path: path.resolve(process.cwd(), "lib"),
-    filename: "[name].min.js",
-    libraryTarget: "umd", // used to be umd
+    filename: "[name].min.js", 
     scriptType: 'text/javascript'
   },
   experiments:{
@@ -231,10 +230,10 @@ const config: webpack.Configuration = {
     "LDWizard-base": [path.resolve("./src/index.tsx")],
   },
   externals: {
-    pumpify: "pumpify",
-    "fs-extra": "fs-extra",
-    "global-agent": "global-agent",
-    querystring: "querystring",
+    // pumpify: "pumpify",
+    // "fs-extra": "fs-extra",
+    // "global-agent": "global-agent",
+    // querystring: "querystring",
   },
   ignoreWarnings: [/Failed to parse source map/],
 };

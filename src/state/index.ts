@@ -35,8 +35,7 @@ export const matrixState = selector({
       reset(matrixAtom);
     } else {
       set(matrixAtom, newValue);
-      if (newValue) {
-        // @here transformations 
+      if (newValue) { 
         set(transformationConfigState, (state) => {
           return {
             ...state,

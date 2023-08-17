@@ -1,10 +1,17 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
-    "strict": false,
-    "noImplicitAny": false,
-    "noImplicitThis": false,
-    "noUnusedLocals": false,
-  }
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ESNext", "DOM"],
+    "useDefineForClassFields": false,
+    "experimentalDecorators": true,
+    "composite": false,
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "outDir": "./lib",
+    "removeComments": false
+  },
+  "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
 }

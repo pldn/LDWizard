@@ -7,9 +7,7 @@ import {
   RecoilState,
 } from "recoil";
 
-import _App from "@triply/triplydb";
-const App = _App.default;
-type App = _App.default;
+import App from "@triply/triplydb";
 import { Models } from "@triply/utils";
 
 const currentUserAtom = atom<number>({

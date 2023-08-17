@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "target": "es2020",
+      "module": "es2020",
+      "moduleResolution": "node16",
+      "lib": ["es2020", "dom"],
+      "esModuleInterop": true,
+      "composite": true,
+      "noEmit": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "listFiles": false,
+      // "rootDir": "./",
+      "jsx": "react",
+    },
+    // "include": ["./src/**/*", "./webpack/**/*"],
+    // "exclude": ["node_modules"],
+    // "files":["./typings-custom/main.d.ts"],
+    "compileOnSave": false
+  }
+  

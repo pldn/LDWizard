@@ -21,9 +21,8 @@ import {
   currentTokenState,
 } from "../../state/clientJs.ts";
 
-import _App from "@triply/triplydb";
-const App = _App.default;
-type App = _App.default;
+import App from "@triply/triplydb";
+
 interface Props {}
 
 const AddDataset: React.FC<Props> = ({}) => {

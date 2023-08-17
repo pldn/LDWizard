@@ -17,7 +17,7 @@ import {
 import styles from "./style.scss";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state/index.ts";
-import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/prefixUtils";
+import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 import getClassName from "classnames";
 import HintWrapper from "../../components/HintWrapper/index.tsx";
 import { AutocompleteSuggestion } from "../../Definitions.ts";
