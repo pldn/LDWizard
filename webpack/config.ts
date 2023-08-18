@@ -1,16 +1,16 @@
 import bgImage from "postcss-bgimage";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import * as webpack from "webpack";
+import webpack from "webpack";
 import * as path from "path";
 const isProd = process.env.NODE_ENV === "production";
 const isDev = !isProd;
 import autoprefixer from "autoprefixer";
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import  MiniCssExtractPlugin from "mini-css-extract-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import { compact } from "lodash";
+import { compact } from "lodash-es";
 import { Renderer as MarkdownRenderer } from "marked";
 
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
@@ -37,14 +37,14 @@ if (isDev) {
 }
 plugins.push(
   new HtmlWebpackPlugin({
-    template: path.resolve(__dirname, "index.html"),
-    // filename: "index.html"
+    template: path.resolve("./webpack/index.html"),
     favicon: "",
   })
 );
 
 plugins.push(new webpack.ProvidePlugin({ Buffer: ["buffer", "Buffer"] }));
 
+//@ts-ignore
 if (analyzeBundle) plugins.push(new BundleAnalyzerPlugin());
 
 export const genericConfig: webpack.Configuration = {
@@ -75,42 +75,23 @@ export const genericConfig: webpack.Configuration = {
                 [
                   "@babel/preset-env",
                   {
-                    targets: ["last 3 versions", "> 1%"],
+                    modules: false,
+                    targets: {browsers: ["last 3 versions", "> 1%"]}
                   },
                 ],
+                "@babel/preset-react",
               ],
               plugins: compact([
-                isDev ? require.resolve("react-refresh/babel") : undefined,
-                "@babel/plugin-transform-runtime",
+                isDev ? path.resolve("./node_modules/react-refresh/babel.js") : undefined,
+                // "@babel/plugin-transform-runtime",
               ]),
             },
           },
-          {
+          { 
             loader: "ts-loader",
             options: {
-              configFile: path.resolve(__dirname, `../tsconfig-build.json`),
-              compilerOptions: {
-                rootDir: process.cwd(),
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.js$/,
-        include: [/query-string/, /strict-uri-encode/, /superagent/, /n3/, /split-on-first/],
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/preset-env",
-                  {
-                    targets: ["last 3 versions", "> 1%"],
-                  },
-                ],
-              ],
+              configFile: path.resolve(`./tsconfig-build.json`),
+              transpileOnly: true
             },
           },
         ],
@@ -148,9 +129,9 @@ export const genericConfig: webpack.Configuration = {
         exclude: [
           // These packages have issues with their sourcemaps
           isDev
-            ? path.resolve(__dirname, "../node_modules/rdf-data-factory")
-            : path.resolve(__dirname, "../node_modules"),
-          path.resolve(__dirname, "../node_modules/@triply/utils"),
+            ? path.resolve("../node_modules/rdf-data-factory")
+            : path.resolve("../node_modules"),
+          path.resolve("../node_modules/@triply/utils"),
         ],
         enforce: "pre",
       },
@@ -200,6 +181,7 @@ export const genericConfig: webpack.Configuration = {
       },
     ],
   },
+  // Moved to package.json "browser"
   resolve: {
     extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
     modules: ["node_modules", path.resolve("./src")],
@@ -208,7 +190,7 @@ export const genericConfig: webpack.Configuration = {
       path: false,
       zlib: false,
       os: false,
-      url: path.resolve(__dirname, "/node_modules/url/url.js"),
+      url: path.resolve("/node_modules/url/url.js"),
     },
   },
   plugins: plugins,
@@ -217,19 +199,19 @@ export const genericConfig: webpack.Configuration = {
 const config: webpack.Configuration = {
   ...genericConfig,
   output: {
-    path: path.resolve("lib"),
-    filename: "[name].min.js",
-    libraryTarget: "umd",
+    path: path.resolve(process.cwd(), "lib"),
+    filename: "[name].min.js", 
+    scriptType: 'text/javascript'
+  },
+  experiments:{
+    outputModule: true,
+    topLevelAwait: true 
   },
   entry: {
-    config: [path.resolve(__dirname, "./runtimeConfig.ts")],
-    "LDWizard-base": [path.resolve(__dirname, "./../src/index.tsx")],
+    config: [path.resolve("./webpack/runtimeConfig.ts")],
+    "LDWizard-base": [path.resolve("./src/index.tsx")],
   },
   externals: {
-    pumpify: "pumpify",
-    "fs-extra": "fs-extra",
-    "global-agent": "global-agent",
-    querystring: "querystring",
   },
   ignoreWarnings: [/Failed to parse source map/],
 };

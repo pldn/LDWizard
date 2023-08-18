@@ -4,12 +4,12 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepButton from "@mui/material/StepButton";
-import { Step as UploadStep } from "../Upload";
-import { Step as ConfigureStep } from "../Configure";
-import { Step as PublishStep } from "../Publish";
+import { Step as UploadStep } from "../Upload/index.tsx";
+import { Step as ConfigureStep } from "../Configure/index.tsx";
+import { Step as PublishStep } from "../Publish/index.tsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "../../state";
+import { matrixState } from "../../state/index.ts";
 import styles from "./style.scss";
 const Steps: React.FC = () => {
   const navigate = useNavigate();

@@ -1,14 +1,14 @@
 import * as React from "react";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { transformationConfigState, matrixState } from "../../state";
+import { transformationConfigState, matrixState } from "../../state/index.ts";
 import { FormControl, InputLabel, Select, MenuItem, Typography } from "@mui/material";
-import HintWrapper from "../../components/HintWrapper";
+import HintWrapper from "../../components/HintWrapper/index.tsx";
 
-import { some } from "lodash";
+import { some } from "lodash-es";
 
 import styles from "./style.scss";
-import { Matrix, SelectKeyColumn } from "../../Definitions";
+import { Matrix, SelectKeyColumn } from "../../Definitions.ts";
 
 interface Props {}
 

@@ -4,23 +4,23 @@ import {
   GetPropertySuggestions,
   GetTransformationScript,
   ColumnRefinements,
-} from "../Definitions";
-import getCowTransformationScript from "./cowScript";
-import applyTransformation from "./rocketrmlScript";
-import getRmlTransformationScript from "./rmlScript";
+} from "../Definitions.ts";
+import getCowTransformationScript from "./cowScript.ts";
+import applyTransformation from "./rocketrmlScript.ts";
+import getRmlTransformationScript from "./rmlScript.ts";
 import {
   getClassSuggestions as getElasticClassSuggestions,
   getPropertySuggestions as getElasticPropertySuggestions,
-} from "./elasticSearch";
+} from "./elasticSearch.ts";
 import {
   getClassSuggestions as getSparqlClassSuggestions,
   getPropertySuggestions as getSparqlPropertySuggestions,
-} from "./sparqlSearch";
+} from "./sparqlSearch.ts";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
 import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
 import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models";
-import WizardConfig from "./WizardConfig";
+import WizardConfig from "./WizardConfig.ts";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
 
 declare global {

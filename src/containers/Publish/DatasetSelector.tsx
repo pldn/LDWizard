@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormControl, InputLabel, Select, Avatar, MenuItem } from "@mui/material";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styles from "./style.scss";
-import { currentDsIdState, userDatasetsState } from "../../state/clientJs";
+import { currentDsIdState, userDatasetsState } from "../../state/clientJs.ts";
 export interface Props {}
 
 const AccountSelector: React.FC<Props> = () => {

@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import { useRecoilState } from "recoil";
-import { transformationConfigState } from "../../state";
+import { transformationConfigState } from "../../state/index.ts";
 
 import { TextField } from "@mui/material";
-import HintWrapper from "../../components/HintWrapper";
+import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
 import validator from "validator";
 

@@ -1,13 +1,13 @@
 import React from "react";
-import Wizard from "../Wizard";
+import Wizard from "../Wizard/index.tsx";
 import { AppBar, Toolbar, Typography, Container, Paper } from "@mui/material";
 import LDWizardImg from "./LDWizard.svg?react";
 import styles from "./style.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { wizardAppConfig } from "../../config";
+import { wizardAppConfig } from "../../config/index.ts";
 import { Link, Route, Routes } from "react-router-dom";
-import WelcomePage from "./WelcomePage";
-require("../../theme/global.scss");
+import WelcomePage from "./WelcomePage.tsx";
+import("../../theme/global.scss");
 
 interface Props {}
 const App: React.FC<Props> = () => {
