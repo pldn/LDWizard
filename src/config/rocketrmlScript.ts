@@ -12,7 +12,6 @@ import parser from "rocketrml";
  * @param opts
  */
 const applyTransformation: ApplyTransformation = async (opts) => {
-  console.log('🪵  | file: rocketrmlScript.ts:15 | applyTransformation | opts:', opts)
   if (opts.type === "rml" && Array.isArray(opts.source)) {
     const rmlMappings = await getRmlTransformationScript(opts.config)
     const inputFiles={
@@ -25,7 +24,6 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       replace: false,
     };
     const result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
-    console.log(123, inputFiles, 456, result)
     return result
   } else {
     throw new Error("Not supported");
