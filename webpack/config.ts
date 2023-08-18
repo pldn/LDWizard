@@ -96,25 +96,6 @@ export const genericConfig: webpack.Configuration = {
           },
         ],
       },
-      // {
-      //   test: /\.js$/,
-      //   include: [/query-string/, /strict-uri-encode/, /superagent/, /n3/, /split-on-first/],
-      //   use: [
-      //     {
-      //       loader: "babel-loader",
-      //       options: {
-      //         presets: [
-      //           [
-      //             "@babel/preset-env",
-      //             {
-      //               targets: ["last 3 versions", "> 1%"],
-      //             },
-      //           ],
-      //         ],
-      //       },
-      //     },
-      //   ],
-      // },
       {
         test: /\.(woff2?|ttf)$/,
         type: "asset",
@@ -200,6 +181,7 @@ export const genericConfig: webpack.Configuration = {
       },
     ],
   },
+  // Moved to package.json "browser"
   resolve: {
     extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
     modules: ["node_modules", path.resolve("./src")],
@@ -230,10 +212,6 @@ const config: webpack.Configuration = {
     "LDWizard-base": [path.resolve("./src/index.tsx")],
   },
   externals: {
-    // pumpify: "pumpify",
-    // "fs-extra": "fs-extra",
-    // "global-agent": "global-agent",
-    // querystring: "querystring",
   },
   ignoreWarnings: [/Failed to parse source map/],
 };

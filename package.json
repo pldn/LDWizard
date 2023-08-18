@@ -54,7 +54,7 @@
       }
     },
     "build": {
-      "command": "rm -rf ./lib && yarn run util:buildWebpackConfig && webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js && tsc -p ./tsconfig-config.json",
+      "command": "rm -rf ./lib && yarn run util:buildWebpackConfig && yarn run webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js && tsc -p ./tsconfig-config.json",
       "env": {
         "NODE_ENV": "production"
       }
@@ -143,7 +143,7 @@
     "style-loader": "^3.3.2",
     "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.4.3",
-    "typescript": "^5.1.3",
+    "typescript": "^5.1.6",
     "uri-js": "^4.4.1",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",

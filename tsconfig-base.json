@@ -12,12 +12,8 @@
       "removeComments": false,
       "sourceMap": true,
       "listFiles": false,
-      // "rootDir": "./",
       "jsx": "react",
     },
-    // "include": ["./src/**/*", "./webpack/**/*"],
-    // "exclude": ["node_modules"],
-    // "files":["./typings-custom/main.d.ts"],
     "compileOnSave": false
   }
   

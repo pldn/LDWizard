@@ -3,7 +3,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
     "lib": ["ESNext", "DOM"],
     "useDefineForClassFields": false,
     "experimentalDecorators": true,
