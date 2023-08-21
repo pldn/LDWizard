@@ -16,6 +16,7 @@ program.action(async () => {
   const webpackConfig = client;
   console.info("Config found at", path.resolve(process.cwd(), config));
   (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), config);
+  console.log(webpackConfig)
   const compiler = webpack(webpackConfig);
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");

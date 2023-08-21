@@ -12,6 +12,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash-es";
 import { Renderer as MarkdownRenderer } from "marked";
+import * as url from "url"
 
 export const analyzeBundle = process.env["ANALYZE_BUNDLE"] === "true";
 const plugins: webpack.WebpackPluginInstance[] = [
@@ -20,6 +21,9 @@ const plugins: webpack.WebpackPluginInstance[] = [
   }),
 ];
 
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+console.log(__dirname)
 // Ignore optional dependency from RocketRML
 plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u }));
 
@@ -53,7 +57,7 @@ export const genericConfig: webpack.Configuration = {
   devtool: isDev ? "inline-source-map" : false,
   cache: isDev,
   optimization: {
-    minimize: true, //If you're debugging the production build, set this to false
+    minimize: isProd, //If you're debugging the production build, set this to false
     //that'll speed up the build process quite a bit
     minimizer: isDev ? [] : [new TerserPlugin({}), new CssMinimizerPlugin({})],
   },
@@ -212,8 +216,8 @@ const config: webpack.Configuration = {
     topLevelAwait: true 
   },
   entry: {
-    config: [path.resolve("./webpack/runtimeConfig.ts")],
-    "LDWizard-base": [path.resolve("../src/index.tsx")], // impossible to reslove currently when using in 3rd party library
+    config: [path.resolve(__dirname, "../runtimeConfig.ts")],
+    "LDWizard-base": [path.resolve(__dirname, "../../src/index.tsx")], // impossible to reslove currently when using in 3rd party library
   },
   externals: {
   },
