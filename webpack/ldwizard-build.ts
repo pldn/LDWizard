@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-process.env.NODE_ENV = "production";
 import { program } from "commander";
 import webpack from "webpack";
-import client from "./config.js";
+import { getConfig } from "./config.js";
 import * as path from "path";
 import * as fs from "fs";
 
 program.usage("[command] <configuration-file>");
 program.action(async () => {
-  const config = program.args[0];
-  if (!config || config.length === 0) {
+  const entrypoint = program.args[0];
+  if (!entrypoint || entrypoint.length === 0) {
     program.outputHelp();
     throw new Error("No config file specified");
   }
-  const webpackConfig = client;
-  console.info("Config found at", path.resolve(process.cwd(), config));
-  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), config);
-  console.log(webpackConfig)
+  const webpackConfig = getConfig({ production: true });
+  console.info("Config found at", path.resolve(process.cwd(), entrypoint));
+  // here we set the entry point to the config file or custom config file
+  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), entrypoint);
+  console.log(webpackConfig);
   const compiler = webpack(webpackConfig);
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");

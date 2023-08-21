@@ -11,7 +11,6 @@ globalThis.wizardConfig = {};
 //    defaultBaseIri: "https://w3id.org/my-wizard/",
 //    primaryColor: "#4caf50", // green
 //    secondaryColor: "#1565c0", // blue
-
 //    columnRefinements: [
 //       {
 //          label: "Convert lang ISO to Lexvo URIs",
