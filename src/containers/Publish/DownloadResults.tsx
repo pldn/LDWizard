@@ -17,9 +17,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
   
-  console.log('🪵  | file: DownloadResults.tsx:19 | source:', source)
   const transformationConfig = useRecoilValue(transformationConfigState);
-  console.log('🪵  | file: DownloadResults.tsx:20 | transformationConfig:', transformationConfig)
 
 
   const downloadFile = (content: File | string | undefined, defaultName: string, mediaType: string) => {

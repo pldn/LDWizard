@@ -18,8 +18,8 @@ import {
 } from "./sparqlSearch.ts";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
-import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
-import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models";
+import { PrefixesArray } from "@triply/utils/lib/prefixUtils.ts";
+import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models.ts";
 import WizardConfig from "./WizardConfig.ts";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
 
