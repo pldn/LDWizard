@@ -136,6 +136,10 @@ export const genericConfig: webpack.Configuration = {
         enforce: "pre",
       },
       {
+        test: /\.csv$/,
+        type: "asset"
+      },
+      {
         test: /\.svg$/i,
         type: "asset",
         resourceQuery: { not: [/react/] }, // exclude react component if *.svg?url
@@ -209,7 +213,7 @@ const config: webpack.Configuration = {
   },
   entry: {
     config: [path.resolve("./webpack/runtimeConfig.ts")],
-    "LDWizard-base": [path.resolve("./src/index.tsx")],
+    "LDWizard-base": [path.resolve("../src/index.tsx")], // impossible to reslove currently when using in 3rd party library
   },
   externals: {
   },
