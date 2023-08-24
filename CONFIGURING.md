@@ -29,41 +29,40 @@ You can create your own LD Wizard application by following these steps:
    npx tsc --init
    ```
 
-The `tsconfig.json` file should have the following contents:
+   The `tsconfig.json` file should have the following contents:
 
-   ```json
-   {
-      "compilerOptions": {
-         "target": "ES2020",
-         "module": "ES2020",
-         "lib": ["ES2020", "DOM", "DOM.Iterable"],
-         "useDefineForClassFields": false,
-         "experimentalDecorators": true,
-         "composite": false,
-         "allowImportingTsExtensions": true,
-         "declaration": false,
-         "strict": false,
-         "noEmit": true,
-         "noImplicitAny": false,
-         "noImplicitThis": false,
-         "noUnusedLocals": false,
-      },
-   "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
-   }
+      ```json
+         {
+            "compilerOptions": {
+               "target": "ES2020",
+               "module": "ES2020",
+               "lib": ["ES2020", "DOM", "DOM.Iterable"],
+               "useDefineForClassFields": false,
+               "experimentalDecorators": true,
+               "composite": false,
+               "allowImportingTsExtensions": true,
+               "declaration": false,
+               "strict": false,
+               "noEmit": true,
+               "noImplicitAny": false,
+               "noImplicitThis": false,
+               "noUnusedLocals": false,
+            },
+            "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
+         }
+      ```
 
-   ```
+   Add the following to the `package.json` file:
 
-Add the following to the `package.json` file:
+      ```json
+      {
+         "scripts": {
+            "build": "ldwizard-build ./src/config.ts"
+         },
+         "type": "module",
+      }
 
-   ```json
-   {
-      "scripts": {
-         "build": "ldwizard-build ./src/config.ts"
-      },
-      "type": "module",
-   }
-
-   ```
+      ```
 
 4. Create a `.yarnrc` file with:
 
