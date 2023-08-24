@@ -44,7 +44,7 @@
     ]
   },
   "bin": {
-    "ldwizard-build": "./webpack/ldwizard-build.js"
+    "ldwizard-build": "./webpack/lib/ldwizard-build.js"
   },
   "betterScripts": {
     "dev": {
