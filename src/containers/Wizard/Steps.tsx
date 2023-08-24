@@ -1,9 +1,5 @@
 import React from "react";
-import Container from "@mui/material/Container";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import StepButton from "@mui/material/StepButton";
+import { Container, Step, StepButton, StepLabel, Stepper } from "@mui/material";
 import { Step as UploadStep } from "../Upload/index.tsx";
 import { Step as ConfigureStep } from "../Configure/index.tsx";
 import { Step as PublishStep } from "../Publish/index.tsx";

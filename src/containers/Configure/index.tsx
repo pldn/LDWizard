@@ -31,7 +31,7 @@ import ResourceClassField from "./ClassField.tsx";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector.tsx";
 import ScrollCopier from "../../components/ScrollCopier/index.tsx";
-import { CommonProps } from "@mui/material/OverridableComponent";
+import { CommonProps } from "@mui/material/OverridableComponent.js";
 interface Props {}
 
 export const Step = 2;

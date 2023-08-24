@@ -3,7 +3,7 @@ import * as React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { transformationConfigState, prefixState } from "../../state/index.ts";
 import validator from "validator";
-import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
+
 
 import { Autocomplete } from "@mui/material";
 import { Typography, TextField } from "@mui/material";
@@ -12,6 +12,7 @@ import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
 import { AutocompleteSuggestion } from "../../Definitions.ts";
 import { wizardAppConfig } from "../../config/index.ts";
+import { getPrefixInfoFromPrefixedValue, getPrefixed } from "@triply/utils/lib/prefixUtils.js";
 
 interface Props {
   isValidUrl: boolean,
@@ -97,7 +98,7 @@ const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
-        setIsValidUrl(validator.isURL(newValueString))
+        setIsValidUrl(validator.default.isURL(newValueString))
       }}
       disableClearable
       renderInput={(props) => (
@@ -112,7 +113,7 @@ const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
             error={!!autocompleteError || !isValidUrl}
             onChange={(event) => {
               setSelectedClassValue(undefined);
-              setIsValidUrl(validator.isURL(event.currentTarget.value))
+              setIsValidUrl(validator.default.isURL(event.currentTarget.value))
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes)
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);

@@ -15,12 +15,11 @@
   },
   "scripts": {
     "prepublishOnly": "yarn run build",
-    "build": "better-npm-run build",
-    "dev": "better-npm-run dev",
+    "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && yarn webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js",
+    "dev": "yarn --development && tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
     "ldwizard-build": "./webpack/ldwizard-build.js",
     "test": "tsc -p ./tsconfig-test.json && mocha $(find ./test -name '*-test.js') --require source-map-support/register",
     "util:analyzeBundle": "ANALYZE_BUNDLE=true yarn run build",
-    "util:buildWebpackConfig": "tsc -p tsconfig-webpack.json",
     "util:bundlesize": "bundlesize",
     "util:lint": "ESLINT_STRICT=true  eslint --ext .tsx --ext .ts ./src",
     "util:markStable": "git tag -d stable && git push origin :refs/tags/stable && git tag stable && git push origin stable",
@@ -46,35 +45,22 @@
   "bin": {
     "ldwizard-build": "./webpack/lib/ldwizard-build.js"
   },
-  "betterScripts": {
-    "dev": {
-      "command": "yarn run util:buildWebpackConfig && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
-      "env": {
-        "NODE_ENV": "development"
-      }
-    },
-    "build": {
-      "command": "rm -rf ./lib && yarn run util:buildWebpackConfig && yarn run webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js && tsc -p ./tsconfig-config.json",
-      "env": {
-        "NODE_ENV": "production"
-      }
-    }
-  },
   "dependencies": {
     "@babel/core": "^7.22.10",
     "@babel/plugin-transform-runtime": "^7.21.0",
     "@babel/preset-env": "^7.22.3",
     "@babel/preset-react": "^7.22.5",
     "@babel/runtime": "^7.21.0",
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",
     "@fortawesome/free-brands-svg-icons": "^6.3.0",
     "@fortawesome/free-regular-svg-icons": "^6.3.0",
     "@fortawesome/free-solid-svg-icons": "^6.3.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@material-ui/core": "^4.12.4",
     "@mui/lab": "^5.0.0-alpha.124",
-    "@mui/material": "^5.11.14",
+    "@mui/material": "^5.14.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@svgr/webpack": "^6.5.1",
     "@triply/triplydb": "4.3.0",
@@ -97,7 +83,6 @@
     "@typescript-eslint/parser": "^5.56.0",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
-    "better-npm-run": "^0.1.1",
     "bundlesize2": "^0.0.31",
     "chai": "^4.3.7",
     "classnames": "^2.3.2",
