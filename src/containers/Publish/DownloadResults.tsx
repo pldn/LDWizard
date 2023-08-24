@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "./style.scss";
 import { Container, Button, Card, CardActions, CardContent, CardHeader, Typography } from "@mui/material";
-import FontAwesomeIcon from "../../components/FontAwesomeIcon";
-import SplitButton from "../../components/SplitButton";
-import { Matrix, TransformationType } from "../../Definitions";
+import FontAwesomeIcon from "../../components/FontAwesomeIcon/index.tsx";
+import SplitButton from "../../components/SplitButton/index.tsx";
+import { Matrix, TransformationType } from "../../Definitions.ts";
 import { useRecoilValue } from "recoil";
-import { sourceState, transformationConfigState } from "../../state";
-import { wizardAppConfig } from "../../config";
+import { sourceState, transformationConfigState } from "../../state/index.ts";
+import { wizardAppConfig } from "../../config/index.ts";
 import { unparse as serializeCsv } from "papaparse";
-import { getFileBaseName } from "../../utils/helpers";
+import { getFileBaseName } from "../../utils/helpers.ts";
 interface Props {
   transformationResult: string;
   refinedCsv: Matrix | undefined;
@@ -16,7 +16,9 @@ interface Props {
 const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
+  
   const transformationConfig = useRecoilValue(transformationConfigState);
+
 
   const downloadFile = (content: File | string | undefined, defaultName: string, mediaType: string) => {
     if (!downloadRef.current || !content) return;
@@ -36,7 +38,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
     (source && source instanceof File &&  "name" in source) ? getFileBaseName(source.name) + ".nt" : "result.nt";
 
   return (
-    <Card variant="outlined">
+    (<Card variant="outlined">
       <CardHeader
         title={<Typography variant="h5">Download results</Typography>}
         avatar={<FontAwesomeIcon icon={["fas", "download"]} />}
@@ -133,7 +135,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
         </Container>
       </CardContent>
       <a style={{ visibility: "hidden" }} ref={downloadRef} />
-    </Card>
+    </Card>)
   );
 };
 

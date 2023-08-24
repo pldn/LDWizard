@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "es2020",
+      "module": "es2020",
+      "moduleResolution": "Node",
+      "lib": ["es2020", "dom"],
+      "esModuleInterop": true,
+      "composite": true,
+      "noEmit": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "listFiles": false,
+      "jsx": "react",
+    },
+    "compileOnSave": false
+  }
+  

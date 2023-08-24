@@ -8,6 +8,7 @@ window.wizardConfig = {
         targetShape: 'http://pldn.nl/ldwizard/Philosopher'
     }]
 };
+// declare global { interface Window {wizardConfig: any}}
 
 // NOTE: Example of detailed LDWizard config with column refinments
 // const wizardConfig = {

@@ -12,7 +12,7 @@ import getRmlTransformationScript from "./rmlScript";
 import {
   getClassSuggestions as getElasticClassSuggestions,
   getPropertySuggestions as getElasticPropertySuggestions,
-} from "./elasticSearch";
+} from "./elasticSearch.ts";
 import {
   getClassSuggestions as getSparqlClassSuggestions,
   getPropertySuggestions as getSparqlPropertySuggestions,
@@ -20,9 +20,9 @@ import {
 import getShaclShapes from "./shaclShapes";
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
-import { PrefixesArray } from "@triply/utils/lib/prefixUtils";
-import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models";
-import WizardConfig from "./WizardConfig";
+import { PrefixesArray } from "@triply/utils/lib/prefixUtils.ts";
+import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models.ts";
+import WizardConfig from "./WizardConfig.ts";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";
 
 declare global {

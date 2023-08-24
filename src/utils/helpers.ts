@@ -1,4 +1,4 @@
-import { Matrix } from "../Definitions";
+import { Matrix } from "../Definitions.ts";
 
 /**
  * Transforms a header into a valid part of an IRI

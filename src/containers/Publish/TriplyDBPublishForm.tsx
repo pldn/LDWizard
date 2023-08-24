@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Card, CardHeader, CardContent, Box, CardActions, Avatar, Typography } from "@mui/material";
-import TokenForm from "./TokenForm";
-import DatasetSelector from "./DatasetSelector";
+import TokenForm from "./TokenForm.tsx";
+import DatasetSelector from "./DatasetSelector.tsx";
 import { useRecoilState, useRecoilValue } from "recoil";
-import ErrorBoundary from "../../components/ErrorBoundary";
-import AccountSelector from "./AccountSelector";
+import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
+import AccountSelector from "./AccountSelector.tsx";
 import { Skeleton } from "@mui/material";
-import { currentTokenState, apiInfoState } from "../../state/clientJs";
-import AddDataset from "./AddDatasetForm";
+import { currentTokenState, apiInfoState } from "../../state/clientJs.ts";
+import AddDataset from "./AddDatasetForm.tsx";
 import styles from "./style.scss";
-import TriplyDBPublishProcess from "./TriplyDBPublishProcess";
-import { Matrix } from "../../Definitions";
+import TriplyDBPublishProcess from "./TriplyDBPublishProcess.tsx";
+import { Matrix } from "../../Definitions.ts";
 // ClientJS Recoil state
 
 // Component

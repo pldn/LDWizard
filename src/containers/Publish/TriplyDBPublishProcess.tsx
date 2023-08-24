@@ -1,23 +1,34 @@
 import * as React from "react";
 import { useRecoilValue } from "recoil";
-import { Button, DialogTitle, Dialog, DialogContent, CircularProgress, Typography, IconButton } from "@mui/material";
+
+import {
+  Button,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  CircularProgress,
+  Typography,
+  IconButton,
+} from "@mui/material";
+
 import {
   currentDatasetSelector,
   currentTokenState,
   currentAccountDataSelector,
   apiInfoState,
-} from "../../state/clientJs";
-import { matrixState, sourceState, transformationConfigState } from "../../state";
-import { wizardAppConfig } from "../../config";
+} from "../../state/clientJs.ts";
+
+import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
+import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import App from "@triply/triplydb";
 import Dataset from "@triply/triplydb/lib/Dataset";
-import { unparse as serializeCsv } from "papaparse";
 
+import { unparse as serializeCsv } from "papaparse";
 import styles from "./style.scss";
-import { Matrix } from "../../Definitions";
-import { getFileBaseName } from "../../utils/helpers";
+import { Matrix } from "../../Definitions.ts";
+import { getFileBaseName } from "../../utils/helpers.ts";
 import Asset from "@triply/triplydb/lib/Asset";
 
 function stringToFile(content: string, fileName: string, contentType: string) {

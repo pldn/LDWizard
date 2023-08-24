@@ -15,14 +15,17 @@ import {
   TableHead,
   TableFooter,
   TablePagination,
+  SxProps,
+  TableHeadClasses,
+  Theme,
 } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { matrixState, transformationConfigState } from "../../state";
 import styles from "./style.scss";
-import BaseIriField from "./BaseIriField";
-import FontAwesomeIcon from "../../components/FontAwesomeIcon";
-import TableHeaders from "./InteractiveTableHeaders";
-import ResourceClassField from "./ClassField";
+import BaseIriField from "./BaseIriField.tsx";
+import FontAwesomeIcon from "../../components/FontAwesomeIcon/index.tsx";
+import TableHeaders from "./InteractiveTableHeaders.tsx";
+import ResourceClassField from "./ClassField.tsx";
 import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector";
 import ShaclShapeField from "./ShaclShapeField";
@@ -30,7 +33,7 @@ import ScrollCopier from "../../components/ScrollCopier";
 import { csvRowsToShaclRows } from '../../utils/csvRowsToShaclRows';
 import { ShaclShapeMeta } from '../../Definitions';
 import { wizardAppConfig } from "../../config";
-
+import { CommonProps } from "@mui/material/OverridableComponent";
 interface Props {}
 
 export const Step = 2;
@@ -120,7 +123,7 @@ const Configure: React.FC<Props> = ({}) => {
                   width="100%"
                   height="5rem"
                   style={{ display: "table-caption" }}
-                  component={(props) => <TableHead {...props} />}
+                  component={(props: JSX.IntrinsicAttributes & { component: React.ElementType<any>; } & { children?: React.ReactNode; classes?: Partial<TableHeadClasses> | undefined; sx?: SxProps<Theme> | undefined; } & CommonProps & Omit<any, keyof CommonProps | "children" | "sx">) => <TableHead {...props} />}
                 />
               }
             >
@@ -157,6 +160,28 @@ const Configure: React.FC<Props> = ({}) => {
           </Table>
         </TableContainer>
       </Paper>
+<<<<<<< HEAD
+=======
+      <Box id="#navigationButtons" ref={navigationButtonsRef}>
+        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
+          Back
+        </Button>
+        {/* @here fires confirmConfiguration --> the transformation column must be kept */}
+        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
+          Next
+        </Button>
+        <Button
+          className={styles.actionButtons}
+          onClick={() => {
+            if (confirm("All progress will be lost, are you sure?")) {
+              window.location.replace("");
+            }
+          }}
+        >
+          Restart
+        </Button>
+      </Box>
+>>>>>>> 9eba3af5444418b23bf73ef884841a2d88adfb0b
     </>
   );
 };

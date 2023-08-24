@@ -8,7 +8,6 @@
     "incremental": false,
     "strict": false,
     "declaration": true,
-    "emitDeclarationOnly": true
   },
   "files": ["./src/config/WizardConfig.ts"],
   "include": []

@@ -1,6 +1,6 @@
-import { ApplyTransformation } from "../Definitions";
-import getRmlTransformationScript from "./rmlScript";
-import { matrixToCsv } from "../utils/helpers";
+import { ApplyTransformation } from "../Definitions.ts";
+import getRmlTransformationScript from "./rmlScript.ts";
+import { matrixToCsv } from "../utils/helpers.ts";
 import parser from "rocketrml";
 
 /**

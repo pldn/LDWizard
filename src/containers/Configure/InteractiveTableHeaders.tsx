@@ -16,14 +16,14 @@ import {
 } from "@mui/material";
 import styles from "./style.scss";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { transformationConfigState, prefixState } from "../../state";
+import { transformationConfigState, prefixState } from "../../state/index.ts";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils";
 import getClassName from "classnames";
-import HintWrapper from "../../components/HintWrapper";
+import HintWrapper from "../../components/HintWrapper/index.tsx";
 import { AutocompleteSuggestion, ShaclShapeMeta, ColumnConfiguration } from "../../Definitions";
-import { wizardAppConfig } from "../../config";
+import { wizardAppConfig } from "../../config/index.ts";
 import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers";
-import TransformationSelector from "./TransformationSelector";
+import TransformationSelector from "./TransformationSelector.tsx";
 import validator from "validator";
 import { configColumnsToShaclColumns } from '../../utils/csvRowsToShaclRows'
 

@@ -3,14 +3,14 @@ import styles from "./style.scss";
 import { Box, Container, Button, Typography } from "@mui/material";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { matrixState, sourceState, transformationConfigState } from "../../state";
-import TriplyDBUpload from "./TriplyDBPublishForm";
+import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
+import TriplyDBUpload from "./TriplyDBPublishForm.tsx";
 import { Skeleton, Alert } from "@mui/material";
-import ErrorBoundary from "../../components/ErrorBoundary";
-import { currentTokenState } from "../../state/clientJs";
-import DownloadResults from "./DownloadResults";
-import { wizardAppConfig, PublishElement } from "../../config";
-import { Matrix } from "../../Definitions";
+import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
+import { currentTokenState } from "../../state/clientJs.ts";
+import DownloadResults from "./DownloadResults.tsx";
+import { wizardAppConfig, PublishElement } from "../../config/index.ts";
+import { Matrix } from "../../Definitions.ts";
 interface Props {}
 export const Step = 3;
 const Publish: React.FC<Props> = ({}) => {
