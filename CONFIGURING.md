@@ -14,7 +14,6 @@ You can create your own LD Wizard application by following these steps:
    npm install --global yarn
    ```
 
-
 2. Create a directory for your application:
 
    ```sh
@@ -22,32 +21,77 @@ You can create your own LD Wizard application by following these steps:
    cd my-wizard
    ```
 
-3. Create a `.yarnrc` file
+3. Start a typescript project:
+
+   ```sh
+   npm init
+   npm i typescript --save-dev
+   npx tsc --init
+   ```
+
+   The `tsconfig.json` file should have the following contents:
+
+      ```json
+         {
+            "compilerOptions": {
+               "target": "ES2020",
+               "module": "ES2020",
+               "lib": ["ES2020", "DOM", "DOM.Iterable"],
+               "useDefineForClassFields": false,
+               "experimentalDecorators": true,
+               "composite": false,
+               "allowImportingTsExtensions": true,
+               "declaration": false,
+               "strict": false,
+               "noEmit": true,
+               "noImplicitAny": false,
+               "noImplicitThis": false,
+               "noUnusedLocals": false,
+            },
+            "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
+         }
+      ```
+
+   Add the following to the `package.json` file:
+
+      ```json
+      {
+         "scripts": {
+            "build": "ldwizard-build ./src/config.ts"
+         },
+         "type": "module",
+      }
+
+      ```
+
+4. Create a `.yarnrc` file with:
 
    ```yarnrc
    --ignore-engines true
    ```
 
-4. Add the LD Wizard dependency:
+5. Add the LD Wizard dependency:
 
    ```sh
    yarn add @pldn/ldwizard
    ```
 
-5. Create a configuration file called `config.ts` and enter the following content:
+6. Create a configuration file called `config.ts` in the `./src` directory and enter the following content:
 
    ```ts
    // This is a template file
    import WizardConfig from "@pldn/ldwizard/types/WizardConfig";
-   const wizardConfig: WizardConfig = {};
+   const wizardConfig: WizardConfig = {
+      // Your custom configuration comes here - see 1b. Configuration options mentioned below
+   };
 
    globalThis.config = wizardConfig;
    ```
 
-6. Run the following command to build your application:
+7. Run the following command to build your application:
 
    ```sh
-   yarn exec ldwizard-build config.ts
+   yarn ldwizard-build config.ts
    ```
 
 Your LD Wizard application can now be found inside the `lib/` directory.
@@ -63,8 +107,7 @@ npm install -g http-server
 With this particular HTTP server the LDWizard can be started in the following way:
 
 ```sh
-cd lib
-http-server .
+npx http-server ./lib
 ```
 
 Open <http://localhost:8080> in a web browser.
@@ -172,5 +215,5 @@ const wizardConfig = {
    ],
 };
 
-window.wizardConfig = wizardConfig;
+globalThis.wizardConfig = wizardConfig;
 ```

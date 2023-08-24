@@ -7,14 +7,15 @@ We have implemented a lightweight governance structure for the LDWizard developm
 The ownership of the LDWizard activities has been transferred in Februari 2022 from the Dutch Digital Heritage Network ([NDE](https://netwerkdigitaalerfgoed.nl/)) to Platform Linked Data Netherlands ([PLDN](https://www.pldn.nl)).
 
 We have two teams involved in the decision making around the LDWizard activities:
+
 * PLDN LDWizard Steering Group
-* PLDN LDWizard Working Group<br/>
+* PLDN LDWizard Working Group
 
 Where the **LDWizard Working Group** priorities the development activities for new releases and where the development activities are guided by a gatekeeper that monitors the quality of the development activities (see also: the Gatekeeper role and quality control section).
 
 The technical/architecture activities and the business/governance activities for the LDWizard are combined in one working group (having multiple groups is less efficient and adds unnecessary complexity). So, business and technical topics are combined in our 1-hour meetings.
 
-And where needed, sub sessions are organized with smaller groups to discuss are very specific topic in more detail (e.g. sub sessions to discuss the ‘replacing RATT with RocketRML’ issue). 
+And where needed, sub sessions are organized with smaller groups to discuss are very specific topic in more detail (e.g. sub sessions to discuss the ‘replacing RATT with RocketRML’ issue).
 
 The **LDWizard Steering Group** decides upon the development budget and the bounty sums (see also: the Funding and bounties section). They also support the Working Group where needed to make the right decisions and to solve any other issues that need further attention.
 
@@ -33,30 +34,33 @@ Please contact us via **<info@pldn.nl>** when you would like to become involved 
 Our development process follows the general development guidelines from the CLARIAH Plus project as described in the [Software and Service Requirements](https://github.com/CLARIAH/clariah-plus/blob/main/requirements/software-requirements.pdf) document.
 
 We make the distinction between:
+
 * Bug fixes
 * Enhancements
-* New features<br/>
+* New features
 
 And we follow a subset of the [semantic versioning](https://semver.org/) guidelines for our releases (no Beta versions and no release candidates), where the gatekeeper monitors the quality of these releases.
 
-Anyone in our LDWizard developer community can solve issues on a voluntary basis (this is strongly encouraged, especially for the domains that already benefit from the functionality of the available LDWizard variants) and we would also like to welcome LDWizard implementers and developers from other domains that would like to create new variants for the LDWizard and that would like to see enhancements and/or new features for the LDWizard. This can also lead to offering development bonuses (bounties) by the involved organizations to further stimulate the development activities for the LDWizard (see also: the Funding and bounties section).   
+Anyone in our LDWizard developer community can solve issues on a voluntary basis (this is strongly encouraged, especially for the domains that already benefit from the functionality of the available LDWizard variants) and we would also like to welcome LDWizard implementers and developers from other domains that would like to create new variants for the LDWizard and that would like to see enhancements and/or new features for the LDWizard. This can also lead to offering development bonuses (bounties) by the involved organizations to further stimulate the development activities for the LDWizard (see also: the Funding and bounties section).
 
 ## Gatekeeper role and quality control
 
 We have agreed upon to have a gatekeeper role in our development community for a 1-year period (from September 2022 to September 2023).
 
 Our gatekeeper is:
-* [Mark Lindeman](https://github.com/mightymax) 
+
+* [Mark Lindeman](https://github.com/mightymax)
 
 Who has been assigned with the following tasks:
+
 * Responsible for the LDWizard GitHub environment
 * Reviewing the work of other developers
 * Safe guarding the LDWizard architecture
-* Solving bugs that take too long to solve<br/>
+* Solving bugs that take too long to solve
 
 ## Funding and bounties
 
-The first release of the LDWizard was funded by the Dutch Digital Heritage Network (NDE). 
+The first release of the LDWizard was funded by the Dutch Digital Heritage Network (NDE).
 
 For the next releases we welcome new organizations, also in new domains, to become involved in the LDWizard activities via a financial contribution to our activities, that we can assure sufficient budget to continue our activities and to make the LDWizard and its community grow in size and maturity that it can become a self-driven community after a period of 2-3 years.
 

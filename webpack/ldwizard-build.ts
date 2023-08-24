@@ -1,21 +1,25 @@
 #!/usr/bin/env node
-process.env.NODE_ENV = "production";
 import { program } from "commander";
 import webpack from "webpack";
-import client from "./config.js";
+import { getConfig } from "./config.js";
 import * as path from "path";
 import * as fs from "fs";
+import url from "url";
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 program.usage("[command] <configuration-file>");
 program.action(async () => {
-  const config = program.args[0];
-  if (!config || config.length === 0) {
+  const entrypoint = program.args[0];
+  if (!entrypoint || entrypoint.length === 0) {
     program.outputHelp();
     throw new Error("No config file specified");
   }
-  const webpackConfig = client;
-  console.info("Config found at", path.resolve(process.cwd(), config));
-  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), config);
+  const webpackConfig = getConfig({ production: true });
+  console.info("Config found at", path.resolve(process.cwd(), entrypoint));
+  // here we set the entry point to the config file or custom config file
+  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), entrypoint);
+
   const compiler = webpack(webpackConfig);
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");
@@ -34,7 +38,7 @@ program.action(async () => {
     compiler.run(() => {});
   });
   console.info("Moving docker files");
-  const dockerOriginFolder = path.resolve(__dirname, "../docker");
+  const dockerOriginFolder = path.resolve(__dirname, "../../docker");
   const dockerFolder = path.resolve(process.cwd(), "docker");
 
   if (!fs.existsSync(dockerFolder)) {

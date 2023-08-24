@@ -23,18 +23,18 @@ import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import App from "@triply/triplydb";
-import Dataset from "@triply/triplydb/lib/Dataset";
+import Dataset from "@triply/triplydb/lib/Dataset.ts";
 
 import { unparse as serializeCsv } from "papaparse";
 import styles from "./style.scss";
 import { Matrix } from "../../Definitions.ts";
 import { getFileBaseName } from "../../utils/helpers.ts";
-import Asset from "@triply/triplydb/lib/Asset";
+import Asset from "@triply/triplydb/lib/Asset.ts";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
 }
-async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
+async function uploadAsset(ds: Dataset.default, file: File, asset?: Asset.default) {
   try {
     if (asset) {
       asset.addVersion(file);
@@ -90,7 +90,7 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
     setProcessDialogOpen(true);
     try {
       // We need to get a mutable object as we create a local job
-      const ds = await (await App.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
+      const ds = await (await App.default.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
       setProcessText("Uploading results");
       await ds.importFromFiles([stringToFile(transformationResult, "results.nt", "application/n-triples")]);
       setProcessText("Uploading scripts");
