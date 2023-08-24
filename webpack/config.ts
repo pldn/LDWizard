@@ -23,7 +23,6 @@ export function getConfig(opts: { production: boolean }) {
 
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
-  console.log(__dirname);
   // Ignore optional dependency from RocketRML
   plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u }));
 
@@ -61,8 +60,8 @@ export function getConfig(opts: { production: boolean }) {
       minimizer: development ? [] : [new TerserPlugin({}), new CssMinimizerPlugin({})],
     },
     performance: {
-      maxEntrypointSize: 3000000,
-      maxAssetSize: 3000000,
+      maxEntrypointSize: 8000000,
+      maxAssetSize: 8000000,
     },
     mode: development ? "development" : "production",
     module: {
@@ -101,7 +100,7 @@ export function getConfig(opts: { production: boolean }) {
         },
         {
           test: /\.(woff2?|ttf)$/,
-          type: "asset",
+          type: "asset/resource",
         },
         {
           test: /\.txt$/,
@@ -138,11 +137,17 @@ export function getConfig(opts: { production: boolean }) {
         },
         {
           test: /\.csv$/,
-          type: "asset",
+          type: "asset/source", 
+
+          // use: [
+          //   {
+          //     loader: 'file-loader',
+          //   },
+          // ],
         },
         {
           test: /\.svg$/i,
-          type: "asset",
+          type: "asset/resource",
           resourceQuery: { not: [/react/] }, // exclude react component if *.svg?url
         },
         {
@@ -167,7 +172,7 @@ export function getConfig(opts: { production: boolean }) {
         },
         {
           test: /\.png$/,
-          loader: "file-loader",
+          type: "asset/resource", 
         },
         {
           test: /\.md$/,

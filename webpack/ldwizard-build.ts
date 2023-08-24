@@ -4,6 +4,9 @@ import webpack from "webpack";
 import { getConfig } from "./config.js";
 import * as path from "path";
 import * as fs from "fs";
+import url from "url";
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 program.usage("[command] <configuration-file>");
 program.action(async () => {
@@ -16,7 +19,7 @@ program.action(async () => {
   console.info("Config found at", path.resolve(process.cwd(), entrypoint));
   // here we set the entry point to the config file or custom config file
   (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), entrypoint);
-  console.log(webpackConfig);
+
   const compiler = webpack(webpackConfig);
   compiler.name = "LDWizard-base";
   console.info("Start webpack compilation");
@@ -35,7 +38,7 @@ program.action(async () => {
     compiler.run(() => {});
   });
   console.info("Moving docker files");
-  const dockerOriginFolder = path.resolve(__dirname, "../docker");
+  const dockerOriginFolder = path.resolve(__dirname, "../../docker");
   const dockerFolder = path.resolve(process.cwd(), "docker");
 
   if (!fs.existsSync(dockerFolder)) {

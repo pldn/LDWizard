@@ -14,7 +14,6 @@ You can create your own LD Wizard application by following these steps:
    npm install --global yarn
    ```
 
-
 2. Create a directory for your application:
 
    ```sh
@@ -172,5 +171,5 @@ const wizardConfig = {
    ],
 };
 
-window.wizardConfig = wizardConfig;
+globalThis.wizardConfig = wizardConfig;
 ```

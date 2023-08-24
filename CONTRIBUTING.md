@@ -12,6 +12,7 @@ We also have a CODE OF CONDUCT that gives some additional guidance on how we wou
 ## Report bugs or request new features
 
 The easiest way to contribute to the LDWizard codebase is by reporting bugs and by requesting new features or enhancements. Both should be done via GitHub issues.
+
 - **Avoid duplicates**: Check the [current issue list](https://github.com/pldn/LDWizard/issues) first whether  a bug has already been reported or a new feature or enhancement has already been requested;
 - Add new issues with a clear title, describe only one issue per issue and describe an issue as descriptive as possible (e.g. via Who, What, Where, When and Why).
 
@@ -46,4 +47,3 @@ yarn build && yarn publish
 ### Write documentation
 
 Writing documentation follows the same process as writing code. Always accompany your code with good documentation for other developers.
-

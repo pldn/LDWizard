@@ -1,17 +1,18 @@
 # Upgrading
 
-## 1.1.2 to 2.0.0
+## Version 1.1.2 to 2.0.0
 
-In your configuration file replace
+* In your configuration file replace
 
-```ts
-export default wizardConfig;
-```
+    ```ts
+    export default wizardConfig;
+    ```
 
-With
+    With
 
-```ts
-window.config = wizardConfig;
-```
+    ```ts
+    globalThis.config = wizardConfig;
+    ```
 
-And add `--add.ignore-engines true` to your `.yarnrc` file (or create one at the root of your project)
+* Add `--add.ignore-engines true` to your `.yarnrc` file (or create one at the root of your project)
+* Upgrade to node version 18

@@ -31,4 +31,4 @@ globalThis.wizardConfig = {};
 //       },
 //    ],
 // };
-// window.wizardConfig = wizardConfig;
+// globalThis.wizardConfig = wizardConfig;
