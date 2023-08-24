@@ -34,8 +34,17 @@ const Upload: React.FC<Props> = ({}) => {
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
+
+  const validateCSV: (data: string[][]) => boolean = (data) => {
+    // Example validation: Check if each row has the same number of columns
+    const numColumns = data[0].length;
+    return data.every(row => row.length === numColumns);
+    // You can add more validation checks as needed
+  };
+
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
+    console.log("it detect an error at 49")
   const handleCsvParse = (sourceFile: File) => {
     setSource(sourceFile);
     setTransformationConfig((state) => {
@@ -44,20 +53,26 @@ const Upload: React.FC<Props> = ({}) => {
     setError(undefined);
     parseCSV(sourceFile)
       .then((parseResults) => {
-        setParsedSource(parseResults.data);
-        setTransformationConfig((state) => {
-          return {
-            ...state,
-            key: undefined,
-            csvProps: {
-              delimiter: parseResults.meta.delimiter,
-            },
-            columnConfiguration: parseResults.data[0].map((header) => {
-              return { columnName: header };
-            }),
-          };
-        });
-        navigate(`/${Step + 1}`);
+        const parsedData = parseResults.data;
+        if (validateCSV(parsedData)) {
+          setParsedSource(parseResults.data);
+          setTransformationConfig((state) => {
+            return {
+              ...state,
+              key: undefined,
+              csvProps: {
+                delimiter: parseResults.meta.delimiter,
+              },
+              columnConfiguration: parseResults.data[0].map((header) => {
+                return { columnName: header };
+              }),
+            };
+          });
+          navigate(`/${Step + 1}`);
+        }
+        else {
+          setError("Invalid CSV file format.");
+        }
       })
       .catch((e) => {
         setError(e.message);
