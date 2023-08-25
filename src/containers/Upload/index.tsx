@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Button, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Button, Box, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +71,7 @@ const Upload: React.FC<Props> = ({ }) => {
           navigate(`/${Step + 1}`);
         }
         else {
-          setError("Invalid CSV file format.")
+          setError("Invalid CSV file format. The file includes column(s) without a header.")
         }
       })
       .catch((e) => {
