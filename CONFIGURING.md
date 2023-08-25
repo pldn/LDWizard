@@ -32,24 +32,24 @@ You can create your own LD Wizard application by following these steps:
    The `tsconfig.json` file should have the following contents:
 
       ```json
-         {
-            "compilerOptions": {
-               "target": "ES2020",
-               "module": "ES2020",
-               "lib": ["ES2020", "DOM", "DOM.Iterable"],
-               "useDefineForClassFields": false,
-               "experimentalDecorators": true,
-               "composite": false,
-               "allowImportingTsExtensions": true,
-               "declaration": false,
-               "strict": false,
-               "noEmit": true,
-               "noImplicitAny": false,
-               "noImplicitThis": false,
-               "noUnusedLocals": false,
-            },
-            "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
-         }
+      {
+         "compilerOptions": {
+            "target": "ES2020",
+            "module": "ES2020",
+            "moduleResolution": "node",
+            "lib": ["ES2020", "DOM", "DOM.Iterable"],
+            "useDefineForClassFields": false,
+            "experimentalDecorators": true,
+            "composite": false,
+            "allowImportingTsExtensions": true,
+            "declaration": false,
+            "strict": false,
+            "noEmit": true,
+            "noImplicitAny": false,
+            "noImplicitThis": false,
+            "noUnusedLocals": false,
+         },
+      }
       ```
 
    Add the following to the `package.json` file:
