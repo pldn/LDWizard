@@ -12,7 +12,7 @@ const exampleFile = config.exampleCsv
   ? new File([new Blob([config.exampleCsv], { type: "text/csv" })], "example.csv")
   : undefined;
 
-interface Props {}
+interface Props { }
 export const Step = 1;
 const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) => {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) =
     });
   });
 };
-const Upload: React.FC<Props> = ({}) => {
+const Upload: React.FC<Props> = ({ }) => {
   const navigate = useNavigate();
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
