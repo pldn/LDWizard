@@ -34,27 +34,27 @@ const Upload: React.FC<Props> = ({}) => {
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
-
-  const validateCSV: (data: string[][]) => boolean = (data) => {
-    // Example validation: Check if each row has the same number of columns
-    const numColumns = data[0].length;
-    return data.every(row => row.length === numColumns);
-    // You can add more validation checks as needed
-  };
-
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
-    console.log("it detect an error at 49")
   const handleCsvParse = (sourceFile: File) => {
     setSource(sourceFile);
     setTransformationConfig((state) => {
       return { ...state, sourceFileName: sourceFile.name };
     });
+
+    const validateCSV: (data: string[][]) => boolean = (data) => {
+      const numColumns = data[0].filter(column => column !== "").length
+      for (let i = 1; i < data.length; i++) {
+        return data[i].length > numColumns ? false : true;
+      }
+    };
+
     setError(undefined);
     parseCSV(sourceFile)
       .then((parseResults) => {
         const parsedData = parseResults.data;
         if (validateCSV(parsedData)) {
+          validateCSV(parsedData)
           setParsedSource(parseResults.data);
           setTransformationConfig((state) => {
             return {
@@ -71,7 +71,7 @@ const Upload: React.FC<Props> = ({}) => {
           navigate(`/${Step + 1}`);
         }
         else {
-          setError("Invalid CSV file format.");
+          setError("Invalid CSV file format.")
         }
       })
       .catch((e) => {
