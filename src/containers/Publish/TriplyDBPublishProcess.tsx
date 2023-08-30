@@ -34,7 +34,7 @@ import Asset from "@triply/triplydb/lib/Asset.ts";
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
 }
-async function uploadAsset(ds: Dataset.default, file: File, asset?: Asset.default) {
+async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
   try {
     if (asset) {
       asset.addVersion(file);
@@ -90,7 +90,7 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
     setProcessDialogOpen(true);
     try {
       // We need to get a mutable object as we create a local job
-      const ds = await (await App.default.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
+      const ds = await (await App.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
       setProcessText("Uploading results");
       await ds.importFromFiles([stringToFile(transformationResult, "results.nt", "application/n-triples")]);
       setProcessText("Uploading scripts");

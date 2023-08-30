@@ -43,7 +43,7 @@ const AddDataset: React.FC<Props> = ({}) => {
     if (newDatasetName.length === 0) return;
     setCreatingDs(true);
     try {
-      const currentAccount = await App.default.get(token).getAccount(selectedAccount?.accountName);
+      const currentAccount = await App.get(token).getAccount(selectedAccount?.accountName);
       const newDataset = await currentAccount.addDataset(newDatasetName);
       const datasetInfo = await newDataset.getInfo();
       setDatasets([datasetInfo]);

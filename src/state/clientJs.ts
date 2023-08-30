@@ -33,7 +33,7 @@ export const accountsInfoQuery = selector({
   get: async ({ get }) => {
     const token = get(currentTokenState);
     if (!token || token.length === 0) return [];
-    const clientJs = App.default.get(token);
+    const clientJs = App.get(token);
     const account = await clientJs.getAccount();
     const accountInfo = await account.getInfo();
     const organizations = await Promise.all(
@@ -54,7 +54,7 @@ const datasetsOfAccountQuery = selectorFamily({
     async ({ get }) => {
       const selectedAccount = get(accountsInfoQuery)[currentAccountState];
       if (!selectedAccount) return [];
-      const account = await App.default.get(get(currentTokenState)).getAccount(selectedAccount.accountName);
+      const account = await App.get(get(currentTokenState)).getAccount(selectedAccount.accountName);
       const datasets = await account.getDatasets().toArray();
       const retrievedDatasets = await Promise.all(
         datasets.map(async (ds) => {
@@ -70,7 +70,7 @@ const apiInfoQuery = selectorFamily({
     (token?: string) =>
     async ({}) => {
       if (!token) return undefined;
-      return await App.default.get(token).getInfo();
+      return await App.get(token).getInfo();
     },
 });
 
