@@ -48,7 +48,8 @@ You can create your own LD Wizard application by following these steps:
             "noImplicitAny": false,
             "noImplicitThis": false,
             "noUnusedLocals": false,
-         },
+            "skipLibCheck": true
+         }
       }
       ```
 
@@ -57,9 +58,10 @@ You can create your own LD Wizard application by following these steps:
       ```json
       {
          "scripts": {
-            "build": "ldwizard-build ./src/config.ts"
+            "build": "ldwizard-build ./src/config.ts",
+            "start": "yarn build && npx http-server -c-1 ./lib"
          },
-         "type": "module",
+         "type": "module"
       }
 
       ```
@@ -77,21 +79,24 @@ You can create your own LD Wizard application by following these steps:
    ```
 
 6. Create a configuration file called `config.ts` in the `./src` directory and enter the following content:
+   * 6.1. `mkdir src`
 
-   ```ts
-   // This is a template file
-   import WizardConfig from "@pldn/ldwizard/types/WizardConfig";
-   const wizardConfig: WizardConfig = {
-      // Your custom configuration comes here - see 1b. Configuration options mentioned below
-   };
+   * 6.2. Create the `config.ts` file:
 
-   globalThis.config = wizardConfig;
-   ```
+      ```ts
+      // This is a template file
+      import WizardConfig from "@pldn/ldwizard/types/WizardConfig";
+      const wizardConfig: WizardConfig = {
+         // Your custom configuration comes here - see 1b. Configuration options mentioned below
+      };
+
+      globalThis.config = wizardConfig;
+      ```
 
 7. Run the following command to build your application:
 
    ```sh
-   yarn ldwizard-build config.ts
+   yarn build
    ```
 
 Your LD Wizard application can now be found inside the `lib/` directory.

@@ -27,7 +27,7 @@ const TokenForm: React.FC<Props> = () => {
 
   const loadToken = async () => {
     try {
-      const app = App.default.get(currentTokenValue);
+      const app = App.get(currentTokenValue);
       // Lets check if the endpoint is configured correctly
       await app.getInfo();
       if (shouldStoreToken) localStorage.setItem("token", currentTokenValue);
