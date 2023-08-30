@@ -84,6 +84,7 @@ const Publish: React.FC<Props> = ({}) => {
       }
     };
     transformFunction().catch((e) => {
+      console.error(e)
       setTransformationError(e.message);
     });
   }, [transformationConfig, parsedCsv]);
