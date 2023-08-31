@@ -170,6 +170,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               ])
             );
           } else {
+            // TODO add parameter setting check for IRI or Literal
             colName = `${header.columnName}-refined`;
             // add each seperately
             writer.addQuad(
