@@ -6,9 +6,8 @@ import {
   RecoilValueReadOnly,
   RecoilState,
 } from "recoil";
-
-import App from "@triply/triplydb";
-import { Models } from "@triply/utils";
+import App from "@triply/triplydb/lib/App";
+import Models from "@triply/utils/lib/Models";
 
 const currentUserAtom = atom<number>({
   key: "selectedUserId",

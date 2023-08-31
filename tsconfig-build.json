@@ -7,7 +7,6 @@
     "useDefineForClassFields": false,
     "experimentalDecorators": true,
     "composite": false,
-    "allowImportingTsExtensions": true,
     "strict": true,
     "outDir": "./lib",
     "removeComments": false

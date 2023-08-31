@@ -20,8 +20,7 @@ import {
   currentAccountDataSelector,
   currentTokenState,
 } from "../../state/clientJs.ts";
-
-import App from "@triply/triplydb";
+import App from "@triply/triplydb/lib/App";
 
 interface Props {}
 

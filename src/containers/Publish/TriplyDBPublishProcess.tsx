@@ -22,7 +22,7 @@ import { matrixState, sourceState, transformationConfigState } from "../../state
 import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import App from "@triply/triplydb";
+import App from "@triply/triplydb/lib/App";
 import Dataset from "@triply/triplydb/lib/Dataset.ts";
 
 import { unparse as serializeCsv } from "papaparse";
