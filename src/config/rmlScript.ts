@@ -147,35 +147,58 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
           let colName: string;
           if (i > 0) {
             colName = header.columnName;
+            // add each seperately
+            writer.addQuad(
+              namedNode(":TriplesMap"),
+              namedNode("rr:predicateObjectMap"),
+              writer.blank([
+                {
+                  predicate: namedNode("rr:predicate"),
+                  object: namedNode(
+                    header.propertyIri ? header.propertyIri : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                  ),
+                },
+                {
+                  predicate: namedNode("rr:objectMap"),
+                  object: writer.blank([
+                    {
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${colName}`),
+                    }
+                  ]),
+                },
+              ])
+            );
           } else {
             colName = `${header.columnName}-refined`;
+            // add each seperately
+            writer.addQuad(
+              namedNode(":TriplesMap"),
+              namedNode("rr:predicateObjectMap"),
+              writer.blank([
+                {
+                  predicate: namedNode("rr:predicate"),
+                  object: namedNode(
+                    header.propertyIri ? header.propertyIri : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                  ),
+                },
+                {
+                  predicate: namedNode("rr:objectMap"),
+                  object: writer.blank([
+                    {
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${colName}`),
+                    },
+                    {
+                      predicate: namedNode("rr:termType"),
+                      object: namedNode("rr:IRI"),
+                    },
+                  ]),
+                },
+              ])
+            );
           }
-          // add each seperately
-          writer.addQuad(
-            namedNode(":TriplesMap"),
-            namedNode("rr:predicateObjectMap"),
-            writer.blank([
-              {
-                predicate: namedNode("rr:predicate"),
-                object: namedNode(
-                  header.propertyIri ? header.propertyIri : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
-                ),
-              },
-              {
-                predicate: namedNode("rr:objectMap"),
-                object: writer.blank([
-                  {
-                    predicate: namedNode("rml:reference"),
-                    object: literal(`${colName}`),
-                  },
-                  {
-                    predicate: namedNode("rr:termType"),
-                    object: namedNode("rr:IRI"),
-                  },
-                ]),
-              },
-            ])
-          );
+
         }
       }
     } else {
