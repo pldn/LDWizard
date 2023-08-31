@@ -189,10 +189,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       predicate: namedNode("rml:reference"),
                       object: literal(`${colName}`),
                     },
-                    {
-                      predicate: namedNode("rr:termType"),
-                      object: namedNode("rr:IRI"),
-                    },
                   ]),
                 },
               ])
