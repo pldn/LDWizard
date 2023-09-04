@@ -30,13 +30,10 @@ const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) =
 };
 const Upload: React.FC<Props> = ({}) => {
   const navigate = useNavigate();
-
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
-
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
-
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
   const handleCsvParse = (sourceFile: File) => {
@@ -66,50 +63,72 @@ const Upload: React.FC<Props> = ({}) => {
         setError(e.message);
       });
   };
+
+  // Drag and drop event handlers
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const droppedFiles = e.dataTransfer.files;
+    if (droppedFiles.length === 1) {
+      const sourceFile = droppedFiles[0];
+      handleCsvParse(sourceFile);
+    } else {
+      setError("You can only drop one file");
+    }
+  };
+
   return (
-    <>
-      <div className={styles.button}>
-        <Typography variant="body1" gutterBottom>
-          {sourceText}
-        </Typography>
-        <input
-          id="csv-upload"
-          type="file"
-          className={styles.input}
-          onChange={(event) => {
-            if (event.target.files && event.target.files.length === 1) {
-              const sourceFile = event.target.files[0];
-              handleCsvParse(sourceFile);
-            } else {
-              setError(
-                event.target.files && event.target.files.length > 0
-                  ? "You can only upload one file"
-                  : "No files selected"
-              );
-            }
-          }}
-          accept="text/csv"
-        />
-        <label htmlFor="csv-upload">
-          <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
-            Load Your CSV File
-          </Button>
-          {error && <Typography color="error">No file selected</Typography>}
-        </label>
-        {exampleFile && (
-          <Typography style={{ paddingTop: "1rem" }}>
-            Or try it with an{" "}
-            <a
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                handleCsvParse(exampleFile);
-              }}
-            >
-              example CSV file
-            </a>
+    <><div
+      className={styles.button}
+      onDragOver={(e) => handleDragOver(e)}
+      onDrop={(e) => handleDrop(e)}>
+        <div className={styles.dragDropIndicator}>
+          <Typography variant="body1" color="primary">
+            Drag and Drop Here
           </Typography>
-        )}
-      </div>
+        </div>
+      <Typography variant="body1" gutterBottom>
+        {sourceText}
+      </Typography>
+      <input
+        id="csv-upload"
+        type="file"
+        className={styles.input}
+        onChange={(event) => {
+          if (event.target.files && event.target.files.length === 1) {
+            const sourceFile = event.target.files[0];
+            handleCsvParse(sourceFile);
+          } else {
+            setError(
+              event.target.files && event.target.files.length > 0
+                ? "You can only upload one file"
+                : "No files selected"
+            );
+          }
+        }}
+        accept="text/csv"/>
+      <label htmlFor="csv-upload">
+        <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
+          Load Your CSV File
+        </Button>
+        {error && <Typography color="error">No file selected</Typography>}
+      </label>
+      {exampleFile && (
+        <Typography style={{ paddingTop: "1rem" }}>
+          Or try it with an{" "}
+          <a
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              handleCsvParse(exampleFile);
+            }}>
+            example CSV file
+          </a>
+        </Typography>
+      )}
+    </div>
       <Box>
         <Button disabled className={styles.actionButtons} style={{textTransform: 'none'}}>
           Back
@@ -140,4 +159,5 @@ const Upload: React.FC<Props> = ({}) => {
     </>
   );
 };
+
 export default Upload;
