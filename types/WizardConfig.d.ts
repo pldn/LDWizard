@@ -13,7 +13,6 @@ export interface BaseColumnRefinement {
     description: string;
     type: ColumnRefinementType;
     transformation: unknown;
-    yieldsIri: boolean;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
     type: "single";

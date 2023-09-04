@@ -13,6 +13,7 @@ interface Props {}
 const App: React.FC<Props> = () => {
   return (
     <div className={styles.app}>
+      <title>{wizardAppConfig.appName}</title>
       <AppBar position="static" color="default">
         <Toolbar>
           <Link to={"/"}>
@@ -31,7 +32,7 @@ const App: React.FC<Props> = () => {
             <Container component="main" className={styles.main}>
               <Wizard />
             </Container>
-          }
+          } 
         />
       </Routes>
 

@@ -1,6 +1,7 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
 import { DataFactory, Writer } from "n3";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers.ts";
+
 const { namedNode, literal } = DataFactory;
 
 const rmlPrefixes: { [key: string]: string } = {
@@ -170,7 +171,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               ])
             );
           } else {
-            console.log(header.columnRefinement.yieldsIri)
             colName = `${header.columnName}-refined`;
             // add each seperately
             writer.addQuad(
@@ -185,19 +185,10 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                 },
                 {
                   predicate: namedNode("rr:objectMap"),
-                  object: writer.blank(
-                    header.columnRefinement.yieldsIri 
-                    ?    [ {
+                  object: writer.blank( [{
                       predicate: namedNode("rml:reference"),
                       object: literal(`${colName}`),
-                    }, {
-                      predicate: namedNode("rr:termType"),
-                      object: namedNode("rr:IRI"),
-                    }]
-                    :   [{
-                      predicate: namedNode("rml:reference"),
-                      object: literal(`${colName}`),
-                    },]
+                    }]   
                   ),
                 },
               ])
