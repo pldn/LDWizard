@@ -109,6 +109,7 @@ export interface BaseColumnRefinement {
   description: string;
   type: ColumnRefinementType;
   transformation: unknown;
+  yieldsIri?: boolean
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
   type: "single";
@@ -132,6 +133,7 @@ export type ColumnRefinements = ColumnRefinement[];
  */
 
 interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type"> {
+  yieldsIri?: boolean;
   data?: unknown;
 }
 interface SingleColumnRefinementSetting extends BaseColumnRefinementSetting {

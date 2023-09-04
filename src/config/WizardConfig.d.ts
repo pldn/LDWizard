@@ -12,6 +12,7 @@ export interface BaseColumnRefinement {
     label: string;
     description: string;
     type: ColumnRefinementType;
+    yieldsIri: boolean,
     transformation: unknown;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {

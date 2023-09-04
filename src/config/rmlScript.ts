@@ -170,7 +170,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               ])
             );
           } else {
-            // TODO add parameter setting check for IRI or Literal
+            console.log(header.columnRefinement.yieldsIri)
             colName = `${header.columnName}-refined`;
             // add each seperately
             writer.addQuad(
@@ -185,12 +185,20 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                 },
                 {
                   predicate: namedNode("rr:objectMap"),
-                  object: writer.blank([
-                    {
+                  object: writer.blank(
+                    header.columnRefinement.yieldsIri 
+                    ?    [ {
                       predicate: namedNode("rml:reference"),
                       object: literal(`${colName}`),
-                    },
-                  ]),
+                    }, {
+                      predicate: namedNode("rr:termType"),
+                      object: namedNode("rr:IRI"),
+                    }]
+                    :   [{
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${colName}`),
+                    },]
+                  ),
                 },
               ])
             );

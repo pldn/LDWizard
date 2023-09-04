@@ -18,7 +18,7 @@ const App: React.FC<Props> = () => {
           <Link to={"/"}>
             <img src={wizardAppConfig.brandLogo.toString()} className={styles.image} />
           </Link>
-          <Typography>{wizardAppConfig.appName}</Typography>
+          <Typography fontSize={22}>{wizardAppConfig.appName}</Typography>
         </Toolbar>
       </AppBar>
       <Routes>
