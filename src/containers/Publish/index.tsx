@@ -22,10 +22,13 @@ const Publish: React.FC<Props> = ({}) => {
   const navigate = useNavigate();
   const [transformationResult, setTransformationResult] = React.useState<string>();
   const [transformationError, setTransformationError] = React.useState<string>();
+  const [progress, setProgress] = React.useState(0);
+
   React.useEffect(() => {
     const transformFunction = async () => {
       setTransformationResult(undefined);
       setTransformationError(undefined);
+      setProgress(0);
       await new Promise<void>((resolve) => {
         // Make sure that the first render is done before we start the transformation
         setTimeout(() => {
@@ -66,12 +69,19 @@ const Publish: React.FC<Props> = ({}) => {
                 }
                 // || column.columnRefinement.type === "single-param"
               }
+              const currentProgress = (rowIdx + 1) / tempRefinedCsv.length;
+              setProgress(currentProgress);
               return new Array(...row.slice(0, columnIdx + 1), (await toInject) || "", ...row.slice(columnIdx + 1));
             })
           );
         }
         setRefinedCsv(tempRefinedCsv);
       }
+      await new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }); // Adjust the delay as needed
+      });
       // Transformation
       if (parsedCsv) {
         // Transformation done here for double-column single-param etc
@@ -117,7 +127,7 @@ const Publish: React.FC<Props> = ({}) => {
   if (!transformationResult) {
     return (
       <Container>
-        <Skeleton animation="wave" width="100%" height="70vh" />
+        <LinearProgress value={progress * 100} />
       </Container>
     );
   }
@@ -132,7 +142,7 @@ const Publish: React.FC<Props> = ({}) => {
           // Token is valid, but CORS fails, expect api not to be up
           if (
             errorText ===
-              "Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc." ||
+            "Request has been terminated\nPossible causes: the network is offline, Origin is not allowed by Access-Control-Allow-Origin, the page is being unloaded, etc." ||
             // Token is deleted
             errorText === "Token does not exist." ||
             errorText.indexOf("401: Token does not exist.") >= 0

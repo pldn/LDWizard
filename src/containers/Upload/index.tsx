@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Button, Box, Typography } from "@mui/material";
+import { Button, Box, Typography, Stack, CircularProgress } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ const exampleFile = config.exampleCsv
   ? new File([new Blob([config.exampleCsv], { type: "text/csv" })], "example.csv")
   : undefined;
 
-interface Props {}
+interface Props { }
 export const Step = 1;
 const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) => {
   return new Promise((resolve, reject) => {
@@ -28,18 +28,20 @@ const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) =
     });
   });
 };
-const Upload: React.FC<Props> = ({}) => {
+const Upload: React.FC<Props> = ({ }) => {
   const navigate = useNavigate();
 
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
+  const [loading, setLoading] = React.useState(false);
 
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
 
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
   const handleCsvParse = (sourceFile: File) => {
+    setLoading(true);
     setSource(sourceFile);
     setTransformationConfig((state) => {
       return { ...state, sourceFileName: sourceFile.name };
@@ -61,13 +63,25 @@ const Upload: React.FC<Props> = ({}) => {
           };
         });
         navigate(`/${Step + 1}`);
+        setLoading(false);
       })
       .catch((e) => {
         setError(e.message);
+        setLoading(false);
       });
   };
   return (
-    <>
+    <>    {loading ? (
+      <div className={styles.loading}>
+        <Stack alignItems="center">
+          <Typography variant="body1" gutterBottom>
+            Loading your CVS file
+          </Typography>
+          <CircularProgress />
+        </Stack>
+
+      </div>
+    ) : (
       <div className={styles.button}>
         <Typography variant="body1" gutterBottom>
           {sourceText}
@@ -110,6 +124,7 @@ const Upload: React.FC<Props> = ({}) => {
           </Typography>
         )}
       </div>
+    )}
       <Box>
         <Button disabled className={styles.actionButtons}>
           Back
