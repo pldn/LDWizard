@@ -42,10 +42,15 @@ const Upload: React.FC<Props> = ({ }) => {
       return { ...state, sourceFileName: sourceFile.name };
     });
 
-    const validateCSV: (data: string[][]) => boolean = (data) => {
-      const numColumns = data[0].filter(column => column !== "").length
+    const validateCSV: (data: string[][]) => void = (data) => {
+      const numColumns = data[0].filter(column => column !== ("" || " ")).length
       for (let i = 1; i < data.length; i++) {
-        return data[i].length > numColumns ? false : true;
+        if (data[i].includes((" " || ""))){
+          throw new Error("Invalid CSV file format. The file includes row(s) without a value.", {cause:"emptySpaceInRow"})
+        }
+        if (data[i].length > numColumns){
+          throw new Error("Invalid CSV file format. The file includes column(s) without a value.", {cause:"emptySpaceInColumn"})
+        }
       }
     };
 
@@ -53,7 +58,7 @@ const Upload: React.FC<Props> = ({ }) => {
     parseCSV(sourceFile)
       .then((parseResults) => {
         const parsedData = parseResults.data;
-        if (validateCSV(parsedData)) {
+        try {
           validateCSV(parsedData)
           setParsedSource(parseResults.data);
           setTransformationConfig((state) => {
@@ -70,8 +75,14 @@ const Upload: React.FC<Props> = ({ }) => {
           });
           navigate(`/${Step + 1}`);
         }
-        else {
-          setError("Invalid CSV file format. The file includes column(s) without a header.")
+        catch(e){
+          console.error(e)
+          if(e.cause == "emptySpaceInRow"){
+            setError("Invalid CSV file format. The file includes row(s) without a value.")
+          }
+          if(e.cause == "emptySpaceInColumn"){
+            setError("Invalid CSV file format. The file includes column(s) without a header.")
+          }
         }
       })
       .catch((e) => {
