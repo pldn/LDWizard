@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Alert, AlertTitle, Button, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Button, Box, Typography, Stack, CircularProgress} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
@@ -34,11 +34,13 @@ const Upload: React.FC<Props> = ({ }) => {
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
+  const [loading, setLoading] = React.useState(false);
 
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
   const handleCsvParse = (sourceFile: File) => {
+    setLoading(true);
     setSource(sourceFile);
     setTransformationConfig((state) => {
       return { ...state, sourceFileName: sourceFile.name };
@@ -76,6 +78,7 @@ const Upload: React.FC<Props> = ({ }) => {
             };
           });
           navigate(`/${Step + 1}`);
+          setLoading(false);
         }
         catch(e){
           console.error(e)
@@ -89,6 +92,7 @@ const Upload: React.FC<Props> = ({ }) => {
       })
       .catch((e) => {
         setError(e.message);
+        setLoading(false);
       });
   };
 
@@ -109,7 +113,17 @@ const Upload: React.FC<Props> = ({ }) => {
   };
 
   return (
-    <>
+    <> {loading ? (
+      <div className={styles.loading}>
+        <Stack alignItems="center">
+          <Typography variant="body1" gutterBottom>
+            Loading your CVS file
+          </Typography>
+          <CircularProgress />
+        </Stack>
+
+      </div>
+    ) : (
       <div className={styles.button}
       onDragOver={(e) => handleDragOver(e)}
       onDrop={(e) => handleDrop(e)}>
@@ -166,6 +180,7 @@ const Upload: React.FC<Props> = ({ }) => {
           </Typography>
         )}
       </div>
+      )}
       <Box>
         <Button disabled className={styles.actionButtons} style={{textTransform: 'none'}}>
           Back
