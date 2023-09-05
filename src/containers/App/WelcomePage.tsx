@@ -22,9 +22,9 @@ const WelcomePage: React.FC<Props> = ({ content }) => {
               size="medium"
               startIcon={<FontAwesomeIcon icon="play" />}
               className={styles.actionButton}
-              style={{marginTop: 60, marginLeft: 30, zIndex: 1}}
+              style={{marginTop: 60, marginLeft: 30, zIndex: 1, textTransform: 'none'}}
             >
-              Get started right away!
+              Get Started Right Away!
             </Button>
           </Link>
           </Container>
@@ -37,7 +37,7 @@ const WelcomePage: React.FC<Props> = ({ content }) => {
               size="large"
               startIcon={<FontAwesomeIcon icon="play" />}
               className={styles.actionButton}
-              style={{marginTop: 40, marginLeft: 30, zIndex: 1}}
+              style={{marginTop: 40, marginLeft: 30, zIndex: 1, textTransform:'none'}}
             >
               Get Started!
             </Button>

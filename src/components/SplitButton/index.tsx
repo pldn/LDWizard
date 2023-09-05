@@ -31,6 +31,7 @@ const SplitButton: React.FC<Props> = ({ actions, onActionSelected, getButtonlabe
           ref={anchorRef}
           onClick={() => onActionSelected(selectedAction)}
           fullWidth
+          style={{textTransform:"none"}}
         >
           {getButtonlabel ? getButtonlabel(selectedAction) : selectedAction}
         </Button>

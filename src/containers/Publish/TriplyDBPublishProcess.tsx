@@ -184,6 +184,7 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
           }
           variant="contained"
           color="primary"
+          style={{textTransform: 'none'}}
         >
           Publish
         </Button>
