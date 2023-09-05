@@ -1,6 +1,7 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
 import { DataFactory, Writer } from "n3";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers.ts";
+
 const { namedNode, literal } = DataFactory;
 
 const rmlPrefixes: { [key: string]: string } = {
@@ -33,8 +34,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             object: literal(
               usesRefinedSource
                 ? getFileBaseName(configuration.sourceFileName) + ".csv"
-                // ? getFileBaseName(configuration.sourceFileName) + "-emriched.csv"
-                : configuration.sourceFileName
+                : // ? getFileBaseName(configuration.sourceFileName) + "-emriched.csv"
+                configuration.sourceFileName
             ),
           },
           {
@@ -70,11 +71,11 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
     undefined;
   const subjectTuple = !!keyColumnName
     ? {
-        predicate: namedNode("rr:template"),
-        object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{${keyColumnName}}`),
-      }
+      predicate: namedNode("rr:template"),
+      object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{${keyColumnName}}`),
+    }
     : // RML doesn't support adding base-iri + row-numbers as an identifier, so we use b-nodes here
-      { predicate: namedNode("rr:termType"), object: namedNode("rr:BlankNode") };
+    { predicate: namedNode("rr:termType"), object: namedNode("rr:BlankNode") };
   writer.addQuad(namedNode(":TriplesMap"), namedNode("rr:subjectMap"), writer.blank([subjectTuple]));
   // Assign "rdfs:Resource" as a class to each row
   writer.addQuad(
@@ -97,24 +98,27 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
   // Add columns to the transform script
   for (const header of configuration.columnConfiguration) {
     if (header.columnName === keyColumnName) continue;
-    writer.addQuad(
-      namedNode(":TriplesMap"),
-      namedNode("rr:predicateObjectMap"),
-      writer.blank([
-        {
-          predicate: namedNode("rr:predicate"),
-          object: namedNode(
-            header.propertyIri
-              ? header.propertyIri
-              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
-          ),
-        },
-        {
-          predicate: namedNode("rr:objectMap"),
-          object: writer.blank(
-            header.columnRefinement?.type === "to-iri"
-              ? header.columnRefinement.data.iriPrefix === ""
-                ? [
+    if (header.columnRefinement) {
+      // don't add both if column refinement is "to-iri"
+      if (header.columnRefinement?.type === "to-iri") {
+        // add each seperately
+        writer.addQuad(
+          namedNode(":TriplesMap"),
+          namedNode("rr:predicateObjectMap"),
+          writer.blank([
+            {
+              predicate: namedNode("rr:predicate"),
+              object: namedNode(
+                header.propertyIri
+                  ? header.propertyIri
+                  : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
+              ),
+            },
+            {
+              predicate: namedNode("rr:objectMap"),
+              object: writer.blank(
+                header.columnRefinement.data.iriPrefix === ""
+                  ? [
                     {
                       predicate: namedNode("rml:reference"),
                       object: literal(`${header.columnName}`),
@@ -124,7 +128,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       object: namedNode("rr:IRI"),
                     },
                   ]
-                : [
+                  : [
                     {
                       predicate: namedNode("rr:termType"),
                       object: namedNode("rr:IRI"),
@@ -134,27 +138,91 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       object: literal(`${header.columnRefinement.data.iriPrefix}{${header.columnName}}`),
                     },
                   ]
-              : header.columnRefinement
-              ? [
-                  {
-                    predicate: namedNode("rml:reference"),
-                    object: literal(`${header.columnName}-refined`),
-                  },
-                  {
-                    predicate: namedNode("rr:termType"),
-                    object: namedNode("rr:IRI"),
-                  },
-                ]
-              : [
-                  {
-                    predicate: namedNode("rml:reference"),
-                    object: literal(header.columnName),
-                  },
-                ]
-          ),
-        },
-      ])
-    );
+              ),
+            },
+          ])
+        );
+      } else {
+        // for any other column refinement add both original and refined value to the RML script
+        for (let i = 0; i < 2; i++) {
+          let colName: string;
+          if (i > 0) {
+            colName = header.columnName;
+            // add each seperately
+            writer.addQuad(
+              namedNode(":TriplesMap"),
+              namedNode("rr:predicateObjectMap"),
+              writer.blank([
+                {
+                  predicate: namedNode("rr:predicate"),
+                  object: namedNode(
+                    header.propertyIri ? header.propertyIri : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                  ),
+                },
+                {
+                  predicate: namedNode("rr:objectMap"),
+                  object: writer.blank([
+                    {
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${colName}`),
+                    }
+                  ]),
+                },
+              ])
+            );
+          } else {
+            colName = `${header.columnName}-refined`;
+            // add each seperately
+            writer.addQuad(
+              namedNode(":TriplesMap"),
+              namedNode("rr:predicateObjectMap"),
+              writer.blank([
+                {
+                  predicate: namedNode("rr:predicate"),
+                  object: namedNode(
+                    header.propertyIri ? header.propertyIri : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                  ),
+                },
+                {
+                  predicate: namedNode("rr:objectMap"),
+                  object: writer.blank( [{
+                      predicate: namedNode("rml:reference"),
+                      object: literal(`${colName}`),
+                    }]   
+                  ),
+                },
+              ])
+            );
+          }
+
+        }
+      }
+    } else {
+      // non refined data
+      writer.addQuad(
+        namedNode(":TriplesMap"),
+        namedNode("rr:predicateObjectMap"),
+        writer.blank([
+          {
+            predicate: namedNode("rr:predicate"),
+            object: namedNode(
+              header.propertyIri
+                ? header.propertyIri
+                : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
+            ),
+          },
+          {
+            predicate: namedNode("rr:objectMap"),
+            object: writer.blank([
+              {
+                predicate: namedNode("rml:reference"),
+                object: literal(header.columnName),
+              },
+            ]),
+          },
+        ])
+      );
+    }
   }
   return new Promise((resolve, reject) => {
     writer.end((error, result) => {

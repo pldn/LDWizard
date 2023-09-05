@@ -87,14 +87,16 @@ const AddDataset: React.FC<Props> = ({}) => {
             color="primary"
             disabled={creatingDs || !!datasetCreationError || newDatasetName.length === 0}
             onClick={createNewDataset}
+            style={{textTransform: 'none'}}
           >
-            Create dataset
+            Create Dataset
           </Button>
           <Button
             disabled={creatingDs}
             onClick={() => {
               setCreateDialogOpen(false), setDatasetCreationError(undefined);
             }}
+            style={{textTransform: 'none'}}
           >
             Cancel
           </Button>

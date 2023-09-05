@@ -282,10 +282,10 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           )}
         </DialogContent>
         <DialogActions>
-          <Button disabled={!isValidUrl} className={styles.actionButtons} variant="contained" color="primary" type="submit">
+          <Button disabled={!isValidUrl} className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" type="submit">
             Confirm
           </Button>
-          <Button className={styles.actionButtons} onClick={onClose}>
+          <Button className={styles.actionButtons} onClick={onClose} style={{textTransform: 'none'}}>
             Cancel
           </Button>
         </DialogActions>

@@ -76,6 +76,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                   variant="contained"
                   color="primary"
                   disabled={!source}
+                  style={{textTransform: 'none'}}
                 >
                   Download CSV
                 </Button>
@@ -93,6 +94,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                 component="span"
                 variant="contained"
                 color="primary"
+                style={{textTransform: 'none'}}
               >
                 Download RDF
               </Button>
@@ -107,7 +109,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             <CardActions>
               <SplitButton
                 actions={["rml", "cow"]}
-                getButtonlabel={(selectedOption) => `Download ${selectedOption}`}
+                getButtonlabel={(selectedOption) => `Download ${selectedOption.toUpperCase()}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
                   wizardAppConfig

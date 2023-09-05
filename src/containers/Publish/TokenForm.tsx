@@ -136,7 +136,7 @@ const TokenForm: React.FC<Props> = () => {
             />
           </div>
 
-          <Button type="submit" color="primary" disabled={currentTokenValue.length === 0}>
+          <Button type="submit" color="primary" disabled={currentTokenValue.length === 0}  style={{textTransform: 'none'}}>
             Load token
           </Button>
         </form>

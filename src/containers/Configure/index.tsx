@@ -161,11 +161,10 @@ const Configure: React.FC<Props> = ({}) => {
         </TableContainer>
       </Paper>
       <Box id="#navigationButtons" ref={navigationButtonsRef}>
-        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
+        <Button className={styles.actionButtons}  style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>
           Back
         </Button>
-        {/* @here fires confirmConfiguration --> the transformation column must be kept */}
-        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} variant="contained" color="primary" onClick={confirmConfiguration}>
+        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" onClick={confirmConfiguration}>
           Next
         </Button>
         <Button
@@ -175,6 +174,7 @@ const Configure: React.FC<Props> = ({}) => {
               window.location.replace("");
             }
           }}
+          style={{textTransform: 'none'}}
         >
           Restart
         </Button>

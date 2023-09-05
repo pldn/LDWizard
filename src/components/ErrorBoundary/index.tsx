@@ -27,7 +27,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
           <p className={styles.errorContent}>
             {typeof this.state.hasError === "boolean" ? "Something went wrong" : this.state.hasError}
           </p>
-          <Button onClick={this.resetError} color="inherit" size="small">
+          <Button onClick={this.resetError} color="inherit" size="small"  style={{textTransform: 'none'}}>
             Retry
           </Button>
         </Alert>

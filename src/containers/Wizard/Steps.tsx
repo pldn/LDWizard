@@ -109,4 +109,5 @@ const Steps: React.FC<{ type: 'steps' | 'buttons' }> = ({ type }) => {
 
   throw new Error('Unknown type given')
 };
+
 export default Steps;
