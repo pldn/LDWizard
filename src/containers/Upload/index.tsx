@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.scss";
-import { Button, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Button, Box, Typography } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ const exampleFile = config.exampleCsv
   ? new File([new Blob([config.exampleCsv], { type: "text/csv" })], "example.csv")
   : undefined;
 
-interface Props {}
+interface Props { }
 export const Step = 1;
 const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) => {
   return new Promise((resolve, reject) => {
@@ -28,11 +28,13 @@ const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) =
     });
   });
 };
-const Upload: React.FC<Props> = ({}) => {
+const Upload: React.FC<Props> = ({ }) => {
   const navigate = useNavigate();
+
   const [error, setError] = React.useState<string>();
   const [parsedSource, setParsedSource] = useRecoilState(matrixState);
   const [source, setSource] = useRecoilState(sourceState);
+
   const setTransformationConfig = useSetRecoilState(transformationConfigState);
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
@@ -41,23 +43,49 @@ const Upload: React.FC<Props> = ({}) => {
     setTransformationConfig((state) => {
       return { ...state, sourceFileName: sourceFile.name };
     });
+
+    const validateCSV: (data: string[][]) => void = (data) => {
+      const numColumns = data[0].filter(column => column !== ("" || " ")).length
+      for (let i = 1; i < data.length; i++) {
+        if (data[i].includes((" " || ""))){
+          throw new Error("Invalid CSV file format. The file includes row(s) without a value.", {cause:"emptySpaceInRow"})
+        }
+        if (data[i].length > numColumns){
+          throw new Error("Invalid CSV file format. The file includes column(s) without a value.", {cause:"emptySpaceInColumn"})
+        }
+      }
+    };
+
     setError(undefined);
     parseCSV(sourceFile)
       .then((parseResults) => {
-        setParsedSource(parseResults.data);
-        setTransformationConfig((state) => {
-          return {
-            ...state,
-            key: undefined,
-            csvProps: {
-              delimiter: parseResults.meta.delimiter,
-            },
-            columnConfiguration: parseResults.data[0].map((header) => {
-              return { columnName: header };
-            }),
-          };
-        });
-        navigate(`/${Step + 1}`);
+        const parsedData = parseResults.data;
+        try {
+          validateCSV(parsedData)
+          setParsedSource(parseResults.data);
+          setTransformationConfig((state) => {
+            return {
+              ...state,
+              key: undefined,
+              csvProps: {
+                delimiter: parseResults.meta.delimiter,
+              },
+              columnConfiguration: parseResults.data[0].map((header) => {
+                return { columnName: header };
+              }),
+            };
+          });
+          navigate(`/${Step + 1}`);
+        }
+        catch(e){
+          console.error(e)
+          if(e.cause == "emptySpaceInRow"){
+            setError("Invalid CSV file format. The file includes row(s) without a value.")
+          }
+          if(e.cause == "emptySpaceInColumn"){
+            setError("Invalid CSV file format. The file includes column(s) without a header.")
+          }
+        }
       })
       .catch((e) => {
         setError(e.message);
@@ -81,8 +109,8 @@ const Upload: React.FC<Props> = ({}) => {
   };
 
   return (
-    <><div
-      className={styles.button}
+    <>
+      <div className={styles.button}
       onDragOver={(e) => handleDragOver(e)}
       onDrop={(e) => handleDrop(e)}>
         <div className={styles.dragDropIndicator}>
@@ -90,45 +118,54 @@ const Upload: React.FC<Props> = ({}) => {
             Drag and Drop Here
           </Typography>
         </div>
-      <Typography variant="body1" gutterBottom>
-        {sourceText}
-      </Typography>
-      <input
-        id="csv-upload"
-        type="file"
-        className={styles.input}
-        onChange={(event) => {
-          if (event.target.files && event.target.files.length === 1) {
-            const sourceFile = event.target.files[0];
-            handleCsvParse(sourceFile);
-          } else {
-            setError(
-              event.target.files && event.target.files.length > 0
-                ? "You can only upload one file"
-                : "No files selected"
-            );
-          }
-        }}
-        accept="text/csv"/>
-      <label htmlFor="csv-upload">
-        <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
-          Load Your CSV File
-        </Button>
-        {error && <Typography color="error">No file selected</Typography>}
-      </label>
-      {exampleFile && (
-        <Typography style={{ paddingTop: "1rem" }}>
-          Or try it with an{" "}
-          <a
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleCsvParse(exampleFile);
-            }}>
-            example CSV file
-          </a>
+        <Typography variant="body1" gutterBottom>
+          {sourceText}
         </Typography>
-      )}
-    </div>
+        <input
+          id="csv-upload"
+          type="file"
+          className={styles.input}
+          onChange={(event) => {
+            if (event.target.files && event.target.files.length === 1) {
+              const sourceFile = event.target.files[0];
+              handleCsvParse(sourceFile);
+            }
+            else {
+              if (event.target.files && event.target.files.length > 0) {
+                setError("You can only upload one file")
+              }
+              else if (event.target.files && event.target.files.length <= 0) {
+                setError("No files selected")
+              }
+              else {
+                setError("Invalid CSV file format")
+              }
+            }
+          }}
+          accept="text/csv"
+        />
+        <label htmlFor="csv-upload">
+          <Box textAlign='center'>
+            <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
+              Load Your CSV File
+            </Button>
+          </Box>
+          {error && <Alert severity="error"><AlertTitle>Error</AlertTitle>{error}</Alert>}
+        </label>
+        {exampleFile && (
+          <Typography style={{ paddingTop: "1rem" }}>
+            Or try it with an{" "}
+            <a
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                handleCsvParse(exampleFile);
+              }}
+            >
+              example CSV file
+            </a>
+          </Typography>
+        )}
+      </div>
       <Box>
         <Button disabled className={styles.actionButtons} style={{textTransform: 'none'}}>
           Back
@@ -159,5 +196,4 @@ const Upload: React.FC<Props> = ({}) => {
     </>
   );
 };
-
 export default Upload;
