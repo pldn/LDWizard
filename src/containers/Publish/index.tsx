@@ -1,11 +1,10 @@
 import React from "react";
 import styles from "./style.scss";
-import { Box, Container, Button, Typography } from "@mui/material";
+import { Box, Container, Button, Typography, Skeleton, Alert, LinearProgress } from "@mui/material";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
 import TriplyDBUpload from "./TriplyDBPublishForm.tsx";
-import { Skeleton, Alert } from "@mui/material";
 import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
 import { currentTokenState } from "../../state/clientJs.ts";
 import DownloadResults from "./DownloadResults.tsx";
@@ -118,7 +117,12 @@ const Publish: React.FC<Props> = ({}) => {
   if (!transformationResult) {
     return (
       <Container>
-        <Skeleton animation="wave" width="100%" height="70vh" />
+                <Box>
+          <Typography variant="h4" align="center" style={{marginBottom: 50, marginTop: 50}}>
+          Transforming data...
+          </Typography>
+        </Box>
+        <LinearProgress/>
       </Container>
     );
   }
