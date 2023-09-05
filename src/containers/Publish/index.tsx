@@ -1,11 +1,10 @@
 import React from "react";
 import styles from "./style.scss";
-import { Box, Container, Button, Typography } from "@mui/material";
+import { Box, Container, Button, Typography, Skeleton, Alert, LinearProgress  } from "@mui/material";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
 import TriplyDBUpload from "./TriplyDBPublishForm.tsx";
-import { Skeleton, Alert, LinearProgress } from "@mui/material";
 import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
 import { currentTokenState } from "../../state/clientJs.ts";
 import DownloadResults from "./DownloadResults.tsx";
@@ -22,13 +21,11 @@ const Publish: React.FC<Props> = ({ }) => {
   const navigate = useNavigate();
   const [transformationResult, setTransformationResult] = React.useState<string>();
   const [transformationError, setTransformationError] = React.useState<string>();
-  const [progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
     const transformFunction = async () => {
       setTransformationResult(undefined);
       setTransformationError(undefined);
-      setProgress(0);
       await new Promise<void>((resolve) => {
         // Make sure that the first render is done before we start the transformation
         setTimeout(() => {
@@ -69,8 +66,6 @@ const Publish: React.FC<Props> = ({ }) => {
                 }
                 // || column.columnRefinement.type === "single-param"
               }
-              const currentProgress = (rowIdx + 1) / tempRefinedCsv.length;
-              setProgress(currentProgress);
               return new Array(...row.slice(0, columnIdx + 1), (await toInject) || "", ...row.slice(columnIdx + 1));
             })
           );
@@ -127,7 +122,12 @@ const Publish: React.FC<Props> = ({ }) => {
   if (!transformationResult) {
     return (
       <Container>
-        <LinearProgress value={progress * 100} />
+        <Box>
+          <Typography variant="h4" align="center" style={{marginBottom: 50, marginTop: 50}}>
+          Transforming data...
+          </Typography>
+        </Box>
+        <LinearProgress/>
       </Container>
     );
   }

@@ -71,7 +71,7 @@ const Upload: React.FC<Props> = ({ }) => {
       });
   };
   return (
-    <>    {loading ? (
+    <> {loading ? (
       <div className={styles.loading}>
         <Stack alignItems="center">
           <Typography variant="body1" gutterBottom>
