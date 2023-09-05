@@ -13,12 +13,13 @@ interface Props {}
 const App: React.FC<Props> = () => {
   return (
     <div className={styles.app}>
+      <title>{wizardAppConfig.appName}</title>
       <AppBar position="static" color="default">
         <Toolbar>
           <Link to={"/"}>
             <img src={wizardAppConfig.brandLogo.toString()} className={styles.image} />
           </Link>
-          <Typography>{wizardAppConfig.appName}</Typography>
+          <Typography fontSize={22}>{wizardAppConfig.appName}</Typography>
         </Toolbar>
       </AppBar>
       <Routes>
@@ -31,7 +32,7 @@ const App: React.FC<Props> = () => {
             <Container component="main" className={styles.main}>
               <Wizard />
             </Container>
-          }
+          } 
         />
       </Routes>
 

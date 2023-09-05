@@ -14,8 +14,21 @@ const WelcomePage: React.FC<Props> = ({ content }) => {
     <Container component="main" maxWidth="md" className={styles.homepage}>
       <Paper square>
         <Container>
-          <div className={mdStyles.markdownContent} dangerouslySetInnerHTML={{ __html: content }} />
-        </Container>
+          <Container>
+          <Link to="/1">
+            <Button
+              color="primary"
+              variant="contained"
+              size="medium"
+              startIcon={<FontAwesomeIcon icon="play" />}
+              className={styles.actionButton}
+              style={{marginTop: 60, marginLeft: 30, zIndex: 1, textTransform: 'none'}}
+            >
+              Get Started Right Away!
+            </Button>
+          </Link>
+          </Container>
+          <div style={{marginTop: -40, overflow: "hidden"}} className={mdStyles.markdownContent} dangerouslySetInnerHTML={{ __html: content }} />
         <Container>
           <Link to="/1">
             <Button
@@ -24,10 +37,12 @@ const WelcomePage: React.FC<Props> = ({ content }) => {
               size="large"
               startIcon={<FontAwesomeIcon icon="play" />}
               className={styles.actionButton}
+              style={{marginTop: 40, marginLeft: 30, zIndex: 1, textTransform:'none'}}
             >
-              Transform your CSV into Linked Data
+              Get Started!
             </Button>
           </Link>
+        </Container>
         </Container>
       </Paper>
     </Container>

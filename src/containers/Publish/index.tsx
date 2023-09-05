@@ -84,6 +84,7 @@ const Publish: React.FC<Props> = ({}) => {
       }
     };
     transformFunction().catch((e) => {
+      console.error(e)
       setTransformationError(e.message);
     });
   }, [transformationConfig, parsedCsv]);
@@ -103,10 +104,10 @@ const Publish: React.FC<Props> = ({}) => {
           </Alert>
         </Container>
         <Box>
-          <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
+          <Button className={styles.actionButtons} style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>
             Back
           </Button>
-          <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
+          <Button className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" disabled>
             Next
           </Button>
         </Box>
@@ -158,10 +159,10 @@ const Publish: React.FC<Props> = ({}) => {
         })}
       </Container>
       <Box>
-        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
+        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}  style={{textTransform: 'none'}}>
           Back
         </Button>
-        <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
+        <Button className={styles.actionButtons} variant="contained" color="primary" disabled  style={{textTransform: 'none'}}>
           Next
         </Button>
         <Button
@@ -171,6 +172,7 @@ const Publish: React.FC<Props> = ({}) => {
               window.location.replace("");
             }
           }}
+          style={{textTransform: 'none'}}
         >
           Restart
         </Button>

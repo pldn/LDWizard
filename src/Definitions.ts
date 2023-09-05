@@ -131,7 +131,7 @@ export type ColumnRefinements = ColumnRefinement[];
  * Use internally to store additional data needed for transformation
  */
 
-interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type"> {
+interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type" > {
   data?: unknown;
 }
 interface SingleColumnRefinementSetting extends BaseColumnRefinementSetting {

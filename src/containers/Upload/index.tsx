@@ -91,8 +91,8 @@ const Upload: React.FC<Props> = ({}) => {
           accept="text/csv"
         />
         <label htmlFor="csv-upload">
-          <Button component="span" variant="contained" startIcon={<FontAwesomeIcon icon="upload" />}>
-            Load your CSV File
+          <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
+            Load Your CSV File
           </Button>
           {error && <Typography color="error">No file selected</Typography>}
         </label>
@@ -111,7 +111,7 @@ const Upload: React.FC<Props> = ({}) => {
         )}
       </div>
       <Box>
-        <Button disabled className={styles.actionButtons}>
+        <Button disabled className={styles.actionButtons} style={{textTransform: 'none'}}>
           Back
         </Button>
         <Button
@@ -120,6 +120,7 @@ const Upload: React.FC<Props> = ({}) => {
           color="primary"
           disabled={!parsedSource}
           onClick={() => navigate(`/${Step + 1}`)}
+          style={{textTransform: 'none'}}
         >
           Next
         </Button>
@@ -131,6 +132,7 @@ const Upload: React.FC<Props> = ({}) => {
               window.location.replace("");
             }
           }}
+          style={{textTransform: 'none'}}
         >
           Restart
         </Button>

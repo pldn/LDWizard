@@ -16,7 +16,7 @@ const Transform: React.FC<Props> = ({}) => {
       {!parsedCsv && (
         <Container>
           <Typography>No CSV is currently please proceed to the previous step</Typography>
-          <Button onClick={() => navigate(`/${Step - 1}`)}>Back</Button>
+          <Button style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>Back</Button>
         </Container>
       )}
       {parsedCsv && (

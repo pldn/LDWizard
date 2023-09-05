@@ -7,6 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { matrixState } from "../../state/index.ts";
 import styles from "./style.scss";
+
 const Steps: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,4 +34,5 @@ const Steps: React.FC = () => {
     </Container>
   );
 };
+
 export default Steps;

@@ -5,7 +5,7 @@
 
 globalThis.wizardConfig = {};
 
-// NOTE: Example of detailed LDWizard config with column refinments
+// NOTE: Example of detailed LDWizard config with column refinements
 // const wizardConfig = {
 //    appName: "LDWizard - example",
 //    defaultBaseIri: "https://w3id.org/my-wizard/",
