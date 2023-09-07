@@ -179,13 +179,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
-                      setIsValidUrl(validator.isURL(newValue))
+                      setIsValidUrl(validator.default.isURL(newValue))
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
-                      setIsValidUrl(validator.isURL(newValue.iri))
+                      setIsValidUrl(validator.default.isURL(newValue.iri))
                     } else {
                       setPropertyIri(newValue.value);
-                      setIsValidUrl(validator.isURL(newValue.value))
+                      setIsValidUrl(validator.default.isURL(newValue.value))
                     }
                   }}
                   disableClearable
@@ -206,7 +206,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         inputMode="url"
                         fullWidth
                         onChange={(event) => {
-                          setIsValidUrl(validator.isURL(event.currentTarget.value))
+                          setIsValidUrl(validator.default.isURL(event.currentTarget.value))
                           const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
                           if (prefixInfo.prefixLabel) {
                             setPropertyIri(`${prefixInfo.iri}${prefixInfo.localName}`);

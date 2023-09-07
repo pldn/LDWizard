@@ -7,8 +7,8 @@ import {
   RecoilState,
 } from "recoil";
 
-import App from "@triply/triplydb";
-import { Models } from "@triply/utils";
+import App from "@triply/triplydb/App.js";
+import { Models } from "@triply/utils/lib";
 
 const currentUserAtom = atom<number>({
   key: "selectedUserId",
@@ -102,6 +102,7 @@ export const currentUserIdState = selector({
   },
 });
 
+//@ts-ignore
 export const currentDatasetSelector: RecoilValueReadOnly<undefined | Models.Dataset> = selector({
   key: "selectedDatasetData",
   get: ({ get }) => {
@@ -109,6 +110,7 @@ export const currentDatasetSelector: RecoilValueReadOnly<undefined | Models.Data
     return datasets.length === 0 ? undefined : datasets[get(currentDsIdState)];
   },
 });
+//@ts-ignore
 export const currentAccountDataSelector: RecoilValueReadOnly<undefined | Models.Account> = selector({
   key: "selectedAccountData",
   get: ({ get }) => {
