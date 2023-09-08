@@ -6,7 +6,7 @@ import { currentTokenState, accountsInfoQuery } from "../../state/clientJs.ts";
 import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import wizardConfig from "../../config/index.ts";
-import App from "@triply/triplydb/App.js";
+import App from "@triply/triplydb/";
 export interface Props {}
 const TokenForm: React.FC<Props> = () => {
   const [token, setToken] = useRecoilState(currentTokenState);

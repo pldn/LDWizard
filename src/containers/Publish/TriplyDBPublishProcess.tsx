@@ -34,6 +34,7 @@ import App from "@triply/triplydb/App.js";
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
 }
+
 async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
   try {
     if (asset) {

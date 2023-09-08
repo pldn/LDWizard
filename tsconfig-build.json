@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "Node16",
     "lib": ["ESNext", "DOM"],
     "useDefineForClassFields": false,
     "experimentalDecorators": true,

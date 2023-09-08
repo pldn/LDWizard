@@ -20,7 +20,7 @@ import {
   currentAccountDataSelector,
   currentTokenState,
 } from "../../state/clientJs.ts";
-import App from "@triply/triplydb/App.js";
+import App from "@triply/triplydb";
 
 
 

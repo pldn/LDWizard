@@ -2,7 +2,7 @@
   "extends": "./tsconfig-build.json",
   "compilerOptions": {
     "outDir": "./test",
-    "module": "commonjs",
+    "module": "Node16",
     "target": "es6",
     "incremental": true,
     "esModuleInterop": true,
