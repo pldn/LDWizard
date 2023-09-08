@@ -29,7 +29,7 @@ import styles from "./style.scss";
 import { Matrix } from "../../Definitions.ts";
 import { getFileBaseName } from "../../utils/helpers.ts";
 import Asset from "@triply/triplydb/Asset.js";
-import App from "@triply/triplydb/App.js";
+import App from "@triply/triplydb";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
