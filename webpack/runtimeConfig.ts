@@ -36,4 +36,5 @@ window.wizardConfig = {
 //       },
 //    ],
 // };
-// globalThis.wizardConfig = wizardConfig;
+// export default globalThis.wizardConfig = wizardConfig
+
