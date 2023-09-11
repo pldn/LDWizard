@@ -32,7 +32,7 @@ const BaseIriField: React.FC<Props> = ({isValidUrl, setIsValidUrl}) => {
         value={baseIriTemp}
         onChange={(event) => {
           setValue(event.currentTarget.value)
-          setIsValidUrl(validator.default.isURL(event.currentTarget.value))
+          setIsValidUrl(validator.isURL(event.currentTarget.value))
         }}
         onEmptied={() => setValue("")}
         helperText={isValidUrl ? "" : 'Invalid URL'}
