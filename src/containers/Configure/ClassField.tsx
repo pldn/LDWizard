@@ -98,7 +98,7 @@ const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
           newValueString = newValue.value;
         }
         setSelectedClassValue(newValueString);
-        setIsValidUrl(validator.default.isURL(newValueString))
+        setIsValidUrl(validator.isURL(newValueString))
       }}
       disableClearable
       renderInput={(props) => (
@@ -113,7 +113,7 @@ const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
             error={!!autocompleteError || !isValidUrl}
             onChange={(event) => {
               setSelectedClassValue(undefined);
-              setIsValidUrl(validator.default.isURL(event.currentTarget.value))
+              setIsValidUrl(validator.isURL(event.currentTarget.value))
               const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes)
               if (prefixInfo.prefixLabel) {
                 setWrittenClassValue(`${prefixInfo.iri}${prefixInfo.localName}`);
