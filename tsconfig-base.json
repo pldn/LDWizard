@@ -2,7 +2,7 @@
     "compilerOptions": {
       "target": "es2020",
       "module": "es2020",
-      "moduleResolution": "node16",
+      "moduleResolution": "Node",
       "lib": ["es2020", "dom"],
       "esModuleInterop": true,
       "composite": true,

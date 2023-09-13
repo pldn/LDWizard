@@ -102,14 +102,6 @@ const Publish: React.FC<Props> = ({}) => {
             <Typography variant="body2">{transformationError}</Typography>
           </Alert>
         </Container>
-        <Box>
-          <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
-            Back
-          </Button>
-          <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
-            Next
-          </Button>
-        </Box>
       </>
     );
   }
@@ -157,24 +149,6 @@ const Publish: React.FC<Props> = ({}) => {
           return value;
         })}
       </Container>
-      <Box>
-        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
-          Back
-        </Button>
-        <Button className={styles.actionButtons} variant="contained" color="primary" disabled>
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

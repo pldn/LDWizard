@@ -21,6 +21,8 @@ import {
   faThumbsUp as faThumbsUpSolid,
   faTimes,
   faUpload,
+  faCheck,
+  faMinus
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -35,6 +37,7 @@ export default function registerIcons() {
     faDownload as IconDefinition,
     faExclamationTriangle as IconDefinition,
     faGithub,
+    faCheck as IconDefinition,
     faPlay as IconDefinition,
     faInfo as IconDefinition,
     faInfoCircle as IconDefinition,
@@ -47,7 +50,8 @@ export default function registerIcons() {
     faTimes as IconDefinition,
     faThumbsUp,
     faThumbsUpSolid as IconDefinition,
-    faUpload as IconDefinition
+    faUpload as IconDefinition,
+    faMinus as IconDefinition
   );
 }
 declare module "@fortawesome/fontawesome-svg-core" {

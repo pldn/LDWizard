@@ -11,12 +11,17 @@ import {
 import * as React from "react";
 import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
+<<<<<<< HEAD
+import config from "../../config";
+import { ColumnRefinementSetting, ColumnConfiguration } from "../../Definitions";
+=======
 import config from "../../config/index.ts";
 import { ColumnRefinementSetting } from "../../Definitions.ts";
+>>>>>>> 9eba3af5444418b23bf73ef884841a2d88adfb0b
 import { useRecoilValue } from "recoil";
 import { transformationConfigState } from "../../state/index.ts";
 interface Props {
-  selectedColumn: number;
+  selectedColumn: ColumnConfiguration;
   selectedTransformation: ColumnRefinementSetting | undefined;
   onTransformationChange: (newTransformation: ColumnRefinementSetting | undefined) => void;
 }
@@ -81,6 +86,8 @@ const TransformationSelector: React.FC<Props> = ({
     );
   } else {
     const noOtherColumns = transformationConfig.columnConfiguration.length <= 1;
+    const selectedColumnId = transformationConfig.columnConfiguration.indexOf(selectedColumn)
+
     return (
       <div className={styles.columnConfigSection}>
         <Typography variant="subtitle1">Value refinement</Typography>
@@ -109,13 +116,14 @@ const TransformationSelector: React.FC<Props> = ({
                       type: "single",
                     });
                   } else if (selectedTransformation.type === "double-column") {
+
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "double-column",
                       data: {
                         secondColumnIdx:
                           // Don't do transformations with the same column
-                          selectedColumn === 0 ? 1 : 0,
+                          selectedColumnId === 0 ? 1 : 0,
                       },
                     });
                   } else if (selectedTransformation.type === "single-param") {
@@ -191,10 +199,10 @@ const TransformationSelector: React.FC<Props> = ({
                     <MenuItem
                       key={config.columnName}
                       value={idx}
-                      disabled={idx === transformationConfig.key || idx === selectedColumn}
+                      disabled={idx === transformationConfig.key || idx === selectedColumnId}
                     >
                       {config.columnName}
-                      {idx === selectedColumn && (
+                      {idx === selectedColumnId && (
                         <Typography variant="caption" className={styles.duplicateWarning}>
                           This column is currently selected
                         </Typography>

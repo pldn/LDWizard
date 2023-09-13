@@ -20,23 +20,66 @@ import { transformationConfigState, prefixState } from "../../state/index.ts";
 import { getPrefixed, getPrefixInfoFromPrefixedValue } from "@triply/utils/lib/prefixUtils.js";
 import getClassName from "classnames";
 import HintWrapper from "../../components/HintWrapper/index.tsx";
-import { AutocompleteSuggestion } from "../../Definitions.ts";
+import { AutocompleteSuggestion, ShaclShapeMeta, ColumnConfiguration } from "../../Definitions";
 import { wizardAppConfig } from "../../config/index.ts";
-import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers.ts";
+import { cleanCsvValue, getBasePredicateIri } from "../../utils/helpers";
 import TransformationSelector from "./TransformationSelector.tsx";
 import validator from "validator";
+import { configColumnsToShaclColumns } from '../../utils/csvRowsToShaclRows'
 
-interface Props {}
-const TableHeaders: React.FC<Props> = ({}) => {
-  const transformationConfig = useRecoilValue(transformationConfigState);
-  const [selectedHeader, setSelectedHeader] = React.useState<number | undefined>();
+interface Props { shaclShapeMeta?: ShaclShapeMeta }
+const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
+  const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
+  const [selectedHeader, setSelectedHeader] = React.useState<ColumnConfiguration | undefined>();
   const prefixes = useRecoilValue(prefixState);
+
+  let columns = transformationConfig.columnConfiguration
+   
+  if (shaclShapeMeta) {
+    columns = configColumnsToShaclColumns(columns, shaclShapeMeta, prefixes)
+  }
+
+  const dragStart = (columnConfig: ColumnConfiguration) => columnConfig.shaclColumn ? (event: any) => {
+    event.dataTransfer.setData("application/ld-wizard", columnConfig.propertyIri);
+    event.dataTransfer.effectAllowed = "move";
+  } : undefined
+
+  const dragOver = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  } : undefined
+
+  const dropArea = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
+    event.preventDefault();
+    const propertyIri = event.dataTransfer.getData("application/ld-wizard");
+
+    setTransformationConfig((state) => {
+      const columnConfiguration = [...state.columnConfiguration];
+      // Objects in recoil arrays are read-only
+      const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
+      const index = state.columnConfiguration.indexOf(columnConfig)!
+      columnConfiguration[index] = {
+        ...selectedHeader,
+        columnName: columnConfig.columnName,
+        propertyIri: processedPropertyIri,
+      }
+
+      return {
+        ...state,
+        columnConfiguration: columnConfiguration,
+      };
+    });
+
+
+  } : undefined
+
   return (
     <>
       <TableHead>
         <TableRow>
-          {transformationConfig.columnConfiguration.map((columnConfig, idx) => {
-            const propertyIRI = transformationConfig.columnConfiguration[idx].propertyIri;
+          {columns.map((columnConfig, idx) => {
+            const propertyIRI = columnConfig.propertyIri;
+
             const fullUri =
               propertyIRI ??
               `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
@@ -44,14 +87,20 @@ const TableHeaders: React.FC<Props> = ({}) => {
               )}`;
             const shortUri = propertyIRI !== undefined ? getPrefixed(propertyIRI, prefixes) || propertyIRI : "";
             const isKeyColumn = idx === transformationConfig.key;
+            const disabled = isKeyColumn || columnConfig.disabled
+
             return (
               <TableCell
+              onDragStart={dragStart(columnConfig)}
+                draggable={columnConfig.shaclColumn}
+                onDrop={dropArea(columnConfig)}
+                onDragOver={dragOver(columnConfig)}
                 key={`${columnConfig.columnName}${idx}`}
-                className={getClassName(styles.tableHeader, { [styles.disabled]: isKeyColumn })}
+                className={getClassName(styles.tableHeader, { [styles.disabled]: isKeyColumn, [styles.shaclColumn]: columnConfig.shaclColumn })}
                 // Implement the disable here, I still want to be able to use tooltip
-                onClick={isKeyColumn ? undefined : () => setSelectedHeader(idx)}
+                onClick={columnConfig.disabled ? undefined : () => setSelectedHeader(columnConfig)}
                 // Replace Default tableCell with ButtonBase to create ripple effects on click
-                component={(props) => (
+                component={disabled ? undefined : (props) => (
                   <Tooltip
                     PopperProps={{ className: styles.tooltip }}
                     title={isKeyColumn ? "This column will be used to create identifiers" : fullUri}
@@ -69,7 +118,7 @@ const TableHeaders: React.FC<Props> = ({}) => {
         </TableRow>
       </TableHead>
       <ColumnConfigDialog
-        key={selectedHeader}
+        key={JSON.stringify(selectedHeader)}
         selectedHeader={selectedHeader}
         onClose={() => setSelectedHeader(undefined)}
       />
@@ -77,7 +126,7 @@ const TableHeaders: React.FC<Props> = ({}) => {
   );
 };
 interface AutoCompleteProps {
-  selectedHeader: number | undefined;
+  selectedHeader: ColumnConfiguration | undefined;
   onClose: () => void;
 }
 const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClose }) => {
@@ -86,8 +135,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
 
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-  const selectedColumn =
-    (selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader]) || undefined;
+  const selectedColumn = selectedHeader
   const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
   const [isValidUrl, setIsValidUrl] = React.useState<boolean>(true)
@@ -117,11 +165,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
       const columnConfiguration = [...state.columnConfiguration];
       // Objects in recoil arrays are read-only
       const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
-      columnConfiguration[selectedHeader] = {
-        columnName: columnConfiguration[selectedHeader].columnName,
+      const index = state.columnConfiguration.indexOf(selectedHeader)
+      columnConfiguration[index] = {
+        ...selectedHeader,
         propertyIri: processedPropertyIri,
         columnRefinement: selectedRefinement,
-      };
+      }
+
       return {
         ...state,
         columnConfiguration: columnConfiguration,
@@ -130,12 +180,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
     // Close the dialog
     onClose();
   };
+
   return (
     <Dialog open={selectedHeader !== undefined} onClose={onClose} fullWidth maxWidth="md">
       <form onSubmit={confirmIri}>
         <DialogTitle>
           Column configuration (
-          {selectedHeader !== undefined && transformationConfig.columnConfiguration[selectedHeader].columnName})
+          {selectedHeader?.columnName})
         </DialogTitle>
         <DialogContent>
           {selectedHeader !== undefined && (
@@ -157,6 +208,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     } else {
                       titleString = option.value;
                     }
+
                     return (
                       <li {...props}>
                         <Typography sx={{ mr: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>
@@ -199,7 +251,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         error={!!autocompleteError || !isValidUrl}
                         helperText={isValidUrl ? "" : 'Invalid URL'}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
-                          transformationConfig.columnConfiguration[selectedHeader].columnName
+                          selectedHeader.columnName
                         )}`}
                         InputLabelProps={{ shrink: true }}
                         type="url"

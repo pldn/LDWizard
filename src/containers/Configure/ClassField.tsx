@@ -76,6 +76,7 @@ const ResourceClassField: React.FC<Props> = ({ isValidUrl, setIsValidUrl }) => {
         } else {
           titleString = option.value;
         }
+
         return (
           <li {...props}>
             <Typography sx={{ mx: 1 }}>{getPrefixed(titleString, prefixes) || titleString}</Typography>

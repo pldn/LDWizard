@@ -10,8 +10,10 @@ export type TransformationOutput = string;
 export type AutocompleteSuggestion = string | Rdf.NamedNode | { iri: string; description?: string };
 export type ColumnConfiguration = {
   columnName: string;
+  disabled?: boolean;
   columnRefinement?: ColumnRefinementSetting | undefined;
   propertyIri?: string;
+  shaclColumn?: boolean
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -24,6 +26,9 @@ export interface TransformationConfiguration {
   sourceFileName: string;
   /** Class URI applied to each row */
   resourceClass: string;
+  /** SHACL shape */
+  shaclShape: string,
+  requireShaclShape: boolean,
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;
@@ -155,3 +160,17 @@ export type ColumnRefinementSetting =
   | DoubleColumnRefinementSetting
   | SingleColumnParamRefinementSetting
   | ToIriColumnRefinementSetting;
+
+export type ShaclShapeSetting = {
+  url: string,
+  targetShape?: string
+};
+
+export type ShaclShapeMeta = {
+  iri: string,
+  description: string,
+  store: Rdf.Store,
+  targetClasses: string[],
+  prefixes: { [key: string]: string }
+  properties: { [key: string]: any }[]
+};
