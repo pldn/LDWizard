@@ -198,33 +198,6 @@ const Upload: React.FC<Props> = ({ }) => {
         )}
       </div>
       )}
-      <Box>
-        <Button disabled className={styles.actionButtons} style={{textTransform: 'none'}}>
-          Back
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          variant="contained"
-          color="primary"
-          disabled={!parsedSource}
-          onClick={() => navigate(`/${Step + 1}`)}
-          style={{textTransform: 'none'}}
-        >
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          disabled={!parsedSource}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-          style={{textTransform: 'none'}}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

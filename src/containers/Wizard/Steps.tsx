@@ -82,7 +82,7 @@ const Steps: React.FC<{ type: 'steps' | 'buttons' }> = ({ type }) => {
   }
   else if (type === 'buttons') {
     return (<Box>
-      <Button disabled={!((currentStep - 1).toString() in stepValidators)} onClick={() => navigate(`/${currentStep - 1}`)} className={styles.actionButtons}>
+      <Button disabled={!((currentStep - 1).toString() in stepValidators)} onClick={() => navigate(`/${currentStep - 1}`)} className={styles.actionButtons} style={{textTransform: 'none'}} >
         Back
       </Button>
       <Button
@@ -91,6 +91,7 @@ const Steps: React.FC<{ type: 'steps' | 'buttons' }> = ({ type }) => {
         disabled={!((currentStep + 1).toString() in stepValidators) || !stepIsValid(currentStep)}
         color="primary"
         onClick={() => stepIsValid(currentStep) ? navigate(`/${currentStep + 1}`) : null}
+        style={{textTransform: 'none'}}
       >
         Next
       </Button>
@@ -101,6 +102,7 @@ const Steps: React.FC<{ type: 'steps' | 'buttons' }> = ({ type }) => {
           if (!confirmed) return
           window.location.replace("");
         }}
+        style={{textTransform: 'none'}}
       >
         Restart
       </Button>

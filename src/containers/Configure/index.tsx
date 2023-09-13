@@ -160,25 +160,6 @@ const Configure: React.FC<Props> = ({}) => {
           </Table>
         </TableContainer>
       </Paper>
-      <Box id="#navigationButtons" ref={navigationButtonsRef}>
-        <Button className={styles.actionButtons}  style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>
-          Back
-        </Button>
-        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" onClick={confirmConfiguration}>
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-          style={{textTransform: 'none'}}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

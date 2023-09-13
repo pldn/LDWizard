@@ -11,13 +11,8 @@ import {
 import * as React from "react";
 import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
-<<<<<<< HEAD
 import config from "../../config";
 import { ColumnRefinementSetting, ColumnConfiguration } from "../../Definitions";
-=======
-import config from "../../config/index.ts";
-import { ColumnRefinementSetting } from "../../Definitions.ts";
->>>>>>> 9eba3af5444418b23bf73ef884841a2d88adfb0b
 import { useRecoilValue } from "recoil";
 import { transformationConfigState } from "../../state/index.ts";
 interface Props {
