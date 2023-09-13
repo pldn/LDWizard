@@ -4,39 +4,43 @@
 
 LD Wizard is a framework for creating end-user focused Graphical User Interfaces (GUIs) that simplify the creation and publication of linked data.
 
-## 1. LD Wizard Project
+## 1. LD Wizard Project Implementations
 
 So far, the following LDWizard variants have been configured from the LDWizard Core:
 
-<dl>
-  <dt><a href="https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard" target="_blank">Cultural Heritage Wizard</a></dt>
-  <dd>A specific configuration of the LD Wizard by the Dutch Digital Heritage Network.</dd>
-  <dt><a href="https://github.com/MaastrichtU-IDS/ldwizard-humanities">UM - Humanities and Social Sciences</a></dt>
-  <dd>A specific configuration of the LD Wizard by the University of Maastricht for transforming tabular data in the humanities and the social sciences.</dd>
-  <dt><a href="https://github.com/MaastrichtU-IDS/ldwizard-biolink">UM - BioLink</a></dt>
-  <dd>A specific configuration of the LD Wizard by the University of Maastricht for transforming BioLink tables.</dd>
-  <dt><a href="https://labs.kadaster.nl/demonstrators/geodatawizard/" target="_blank">GeoData Wizard</a></dt>
-  <dd>A specific application of the LD Wizard configured for linking Dutch geo data to the BAG and BRT.</dd>
-  <dt><a href="https://hulc.triply.cc/">Clariah Wizard</a></dt>
-  <dd>A specific application of the LD Wizard configured for use in the Clariah research infrastructure for the humanities.</dd>
-</dl>
+[Cultural Heritage Wizard](https://github.com/netwerk-digitaal-erfgoed/LDWizard-ErfgoedWizard)
+> A specific configuration of the LD Wizard by the Dutch Digital Heritage Network.
+
+[UM - Humanities and Social Sciences](https://github.com/MaastrichtU-IDS/ldwizard-humanities)
+> A specific configuration of the LD Wizard by the University of Maastricht for transforming tabular data in the humanities and the social sciences.
+
+[UM - BioLink](https://github.com/MaastrichtU-IDS/ldwizard-biolink)
+> A specific configuration of the LD Wizard by the University of Maastricht for transforming BioLink tables.
+
+[GeoData Wizard](https://labs.kadaster.nl/demonstrators/geodatawizard/)
+> A specific application of the LD Wizard configured for linking Dutch geo data to the BAG and BRT.
+
+[Clariah Wizard](https://hulc.triply.cc/)
+> A specific application of the LD Wizard configured for use in the Clariah research infrastructure for the humanities.
 
 ## 2. LD Wizard Documentation
 
 The LD Wizard project uses the following guidance documents for the LD Wizard development community activities:
 
-<dl>
-  <dt><a href="https://github.com/pldn/LDWizard/blob/main/CODE_OF_CONDUCT.md" target="_blank">CODE_OF_CONDUCT</a></dt>
-  <dd>Describes our preferred interaction behavior.</dd>
-  <dt><a href="https://github.com/pldn/LDWizard/blob/main/CONFIGURING.md" target="_blank">CONFIGURING</a></dt>
-  <dd>Describes how to configure a new LD Wizard variant.</dd>
-  <dt><a href="https://github.com/pldn/LDWizard/blob/main/CONTRIBUTING.md" target="_blank">CONTRIBUTING</a></dt>
-  <dd>Describes how to develop local LD Wizard code.</dd>
-  <dt><a href="https://www.pldn.nl/wiki/Bounty_Program">BOUNTY_PROGRAM</a></dt>
-  <dd>Describes how organizations can place bounties and how developers can solve bounties and also gives an overview of the current bounty issues.</dd>
-  <dt><a href="https://github.com/pldn/LDWizard/blob/main/GOVERNANCE.md" target="_blank">GOVERNANCE</a></dt>
-  <dd>Describes our lightweight governance structure incl. the gatekeeper role.</dd>
-</dl>
+[CODE_OF_CONDUCT](https://github.com/pldn/LDWizard/blob/main/CODE_OF_CONDUCT.md)
+> Describes our preferred interaction behavior.
+
+[CONFIGURING](https://github.com/pldn/LDWizard/blob/main/CONFIGURING.md)
+> Describes how to configure a new LD Wizard variant.
+
+[CONTRIBUTING](https://github.com/pldn/LDWizard/blob/main/CONTRIBUTING.md)
+> Describes how to develop local LD Wizard code.
+
+[BOUNTY_PROGRAM](https://www.pldn.nl/wiki/Bounty_Program)
+> Describes how organizations can place bounties and how developers can solve bounties and also gives an overview of the current bounty issues.
+
+[GOVERNANCE](https://github.com/pldn/LDWizard/blob/main/GOVERNANCE.md)
+> Describes our lightweight governance structure incl. the gatekeeper role.
 
 ## 3. Attribution
 

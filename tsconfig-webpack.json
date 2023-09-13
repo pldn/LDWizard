@@ -10,10 +10,10 @@
     "declarationMap": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "removeComments": false
+    "removeComments": false,
   },
   "include": [
-    "./webpack/*.ts",
+    "./webpack/**.ts",
     "./typings-custom/main.d.ts"
   ]
 }

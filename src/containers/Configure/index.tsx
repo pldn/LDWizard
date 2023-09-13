@@ -160,8 +160,6 @@ const Configure: React.FC<Props> = ({}) => {
           </Table>
         </TableContainer>
       </Paper>
-<<<<<<< HEAD
-=======
       <Box id="#navigationButtons" ref={navigationButtonsRef}>
         <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}>
           Back
@@ -181,7 +179,6 @@ const Configure: React.FC<Props> = ({}) => {
           Restart
         </Button>
       </Box>
->>>>>>> 9eba3af5444418b23bf73ef884841a2d88adfb0b
     </>
   );
 };

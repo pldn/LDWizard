@@ -77,9 +77,9 @@ export const wizardAppConfig: WizardAppConfig = {
    * Branding
    */
   appName: config.appName || "LD-Wizard",
-  dataplatformLink: config.dataplatformLink || "https://data.netwerkdigitaalerfgoed.nl/",
-  documentationLink: config.documentationLink || "https://github.com/netwerk-digitaal-erfgoed/LDWizard",
-  repositoryLink: config.repositoryLink || "https://github.com/netwerk-digitaal-erfgoed/LDWizard-Core",
+  dataplatformLink: config.dataplatformLink || "https://data.pldn.nl/",
+  documentationLink: config.documentationLink || "https://github.com/pldn/LDWizard",
+  repositoryLink: config.repositoryLink || "https://github.com/pldn/LDWizard",
   primaryColor: config.primaryColor || "#6d1e70",
   secondaryColor: config.secondaryColor || "#a90362",
   brandLogo: config.icon || defaultImage,
@@ -90,7 +90,7 @@ export const wizardAppConfig: WizardAppConfig = {
    */
   publishOrder: ["download", "triplyDB"],
   triplyDbInstances: config.triplyDbInstances || [],
-  defaultBaseIri: config.defaultBaseIri || "https://data.netwerkdigitaalerfgoed.nl/",
+  defaultBaseIri: config.defaultBaseIri || "https://data.pldn.nl/",
   exampleCsv: config.exampleCSV || undefined,
 
   requireShaclShape: !!config.requireShaclShape,
