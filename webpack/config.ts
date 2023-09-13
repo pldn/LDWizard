@@ -4,12 +4,14 @@ import webpack from "webpack";
 import * as path from "path";
 import autoprefixer from "autoprefixer";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash-es";
 import { Renderer as MarkdownRenderer } from "marked";
+import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
+
 import * as url from "url";
 
 export function getConfig(opts: { production: boolean }) {
@@ -19,6 +21,7 @@ export function getConfig(opts: { production: boolean }) {
     new webpack.DefinePlugin({
       __DEVELOPMENT__: development,
     }),
+    new NodePolyfillPlugin()
   ];
 
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -50,9 +53,9 @@ export function getConfig(opts: { production: boolean }) {
   //@ts-ignore
   if (analyzeBundle) plugins.push(new BundleAnalyzerPlugin());
   const genericConfig: webpack.Configuration = {
-    //We cannot use all source map implementations because of the terser plugin
-    //See https://webpack.js.org/plugins/terser-webpack-plugin/#sourcemap
-    devtool: development ? "inline-source-map" : false,
+    // always use source maps for development
+    // don't use eval in dev, but cheap-module-source-map. See https://github.com/facebookincubator/create-react-app/issues/920
+    devtool: development ? "cheap-module-source-map" : false,
     cache: development,
     optimization: {
       minimize: !opts.production, //If you're debugging the production build, set this to false
@@ -191,10 +194,12 @@ export function getConfig(opts: { production: boolean }) {
         },
       ],
     },
-    // Moved to package.json "browser"
     resolve: {
       extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
       modules: ["node_modules", path.resolve("./src")],
+      alias: {
+        "fs-extra": false
+      },
       fallback: {
         fs: false,
         path: false,
@@ -214,7 +219,6 @@ export function getConfig(opts: { production: boolean }) {
       scriptType: "text/javascript",
     },
     experiments: {
-      outputModule: true,
       topLevelAwait: true,
     },
     entry: {

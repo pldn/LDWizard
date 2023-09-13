@@ -22,18 +22,19 @@ import { matrixState, sourceState, transformationConfigState } from "../../state
 import { wizardAppConfig } from "../../config/index.ts";
 import { AlertTitle, Alert } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import App from "@triply/triplydb";
-import Dataset from "@triply/triplydb/lib/Dataset.ts";
+import Dataset from "@triply/triplydb/Dataset.js";
 
 import { unparse as serializeCsv } from "papaparse";
 import styles from "./style.scss";
 import { Matrix } from "../../Definitions.ts";
 import { getFileBaseName } from "../../utils/helpers.ts";
-import Asset from "@triply/triplydb/lib/Asset.ts";
+import Asset from "@triply/triplydb/Asset.js";
+import App from "@triply/triplydb";
 
 function stringToFile(content: string, fileName: string, contentType: string) {
   return new File([new Blob([content], { type: contentType })], fileName);
 }
+
 async function uploadAsset(ds: Dataset, file: File, asset?: Asset) {
   try {
     if (asset) {
