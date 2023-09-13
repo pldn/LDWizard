@@ -2,7 +2,7 @@
   "extends": "./tsconfig-build.json",
   "compilerOptions": {
     "outDir": "./types",
-    "module": "commonjs",
+    "module": "Node16",
     "rootDir": "./src/config",
     "esModuleInterop": true,
     "incremental": false,

@@ -8,6 +8,21 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
 
+class EmptySpaceInRowError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "EmptySpaceInRowError";
+  }
+}
+
+class EmptySpaceInColumnError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "EmptySpaceInColumnError";
+  }
+}
+
+
 const exampleFile = config.exampleCsv
   ? new File([new Blob([config.exampleCsv], { type: "text/csv" })], "example.csv")
   : undefined;
@@ -50,10 +65,10 @@ const Upload: React.FC<Props> = ({ }) => {
       const numColumns = data[0].filter(column => column !== ("" || " ")).length
       for (let i = 1; i < data.length; i++) {
         if (data[i].includes((" " || ""))){
-          throw new Error("Invalid CSV file format. The file includes row(s) without a value.", {cause:"emptySpaceInRow"})
+          throw new EmptySpaceInRowError("Invalid CSV file format. The file includes row(s) without a value.")
         }
         if (data[i].length > numColumns){
-          throw new Error("Invalid CSV file format. The file includes column(s) without a value.", {cause:"emptySpaceInColumn"})
+          throw new EmptySpaceInColumnError("Invalid CSV file format. The file includes column(s) without a value.")
         }
       }
     };
@@ -77,22 +92,24 @@ const Upload: React.FC<Props> = ({ }) => {
               }),
             };
           });
-          navigate(`/${Step + 1}`);
           setLoading(false);
+          navigate(`/${Step + 1}`);
         }
         catch(e){
-          console.error(e)
-          if(e.cause == "emptySpaceInRow"){
+          console.error(e, typeof e)
+          if(e instanceof EmptySpaceInRowError){
+            setLoading(false);
             setError("Invalid CSV file format. The file includes row(s) without a value.")
           }
-          if(e.cause == "emptySpaceInColumn"){
+          if(e instanceof EmptySpaceInColumnError){
+            setLoading(false);
             setError("Invalid CSV file format. The file includes column(s) without a header.")
           }
         }
       })
       .catch((e) => {
-        setError(e.message);
         setLoading(false);
+        setError(e.message);
       });
   };
 
