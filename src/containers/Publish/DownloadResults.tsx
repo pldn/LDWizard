@@ -104,7 +104,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             <CardHeader title="Download script" avatar={<FontAwesomeIcon icon="file-code" />} />
             <CardContent className={styles.downloadContent}>
               Download the RML mappings that you can use to run the transformation yourself. The following mapping languages are
-              supported: RML, CoW.
+              supported: RML, YARRRML, CoW.
             </CardContent>
             <CardActions>
               <SplitButton
