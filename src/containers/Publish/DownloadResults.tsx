@@ -16,7 +16,7 @@ interface Props {
 const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
-  
+
   const transformationConfig = useRecoilValue(transformationConfigState);
 
 
@@ -108,7 +108,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             </CardContent>
             <CardActions>
               <SplitButton
-                actions={["rml", "cow"]}
+                actions={["rml", "yarrrml", "cow"]}
                 getButtonlabel={(selectedOption) => `Download ${selectedOption.toUpperCase()}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
@@ -125,6 +125,8 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                               ? `convert.csv-metadata.json`
                               : `${refinedCsv ? fileBase + "-enriched.csv" : source?.name}-metadata.json`;
                           downloadFile(file, fileName, "application/json+ld");
+                        } else if (result === "yarrrml") {
+                          downloadFile(file, `${fileBase || "rules"}.yarrrml.yml`, "text/x-yaml");
                         } else if (result === "rml") {
                           downloadFile(file, `${fileBase || "rules"}.rml.ttl`, "text/turtle");
                         }

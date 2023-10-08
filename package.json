@@ -70,6 +70,7 @@
     "@mui/lab": "5.0.0-alpha.165",
     "@mui/material": "^5.15.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "@rmlio/yarrrml-parser": "^1.6.2",
     "@svgr/webpack": "^8.1.0",
     "@triply/triplydb": "^7.0.2",
     "@triply/utils": "3.2.0",

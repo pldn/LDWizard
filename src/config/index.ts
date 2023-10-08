@@ -9,6 +9,7 @@ import {
 import getCowTransformationScript from "./cowScript.ts";
 import applyTransformation from "./rocketrmlScript.ts";
 import getRmlTransformationScript from "./rmlScript.ts";
+import getYarrrmlTransformationScript from "./yarrrmlScript.ts";
 import {
   getClassSuggestions as getElasticClassSuggestions,
   getPropertySuggestions as getElasticPropertySuggestions,
@@ -131,6 +132,8 @@ export const wizardAppConfig: WizardAppConfig = {
     switch (type) {
       case "cow":
         return getCowTransformationScript(config);
+      case "yarrrml":
+        return getYarrrmlTransformationScript(config);
       case "rml":
         return getRmlTransformationScript(config);
       default:
