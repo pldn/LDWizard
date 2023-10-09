@@ -25,6 +25,23 @@ let runtimeConfig: WizardConfig = {
   primaryColor: "#4caf50", // green
   secondaryColor: "#1565c0", // blue
   exampleCSV,
+
+  homepageMarkdown: `Example LDWizard for development, a tool to easily map CSV to RDF.`,
+  publishOrder: [ "download" as const ],
+  newDatasetAccessLevel: "internal" as const,
+  repositoryLink: "https://github.com/pldn/LDWizard",
+  documentationLink: "https://github.com/pldn/LDWizard/blob/main/CONFIGURING.md",
+  dataplatformLink: "https://lov.linkeddata.es/dataset/lov/sparql",
+
+  classConfig: {
+      method: "sparql" as const,
+      endpoint: "https://lov.linkeddata.es/dataset/lov/sparql"
+  },
+  predicateConfig: {
+      method:"sparql" as const,
+      endpoint: "https://lov.linkeddata.es/dataset/lov/sparql"
+  },
+
   columnRefinements: [
     {
       label: "Use bulk processing: add '-processed-in-bulk' at the end of literal",
@@ -142,6 +159,68 @@ select ?transformed ?obj where {
       targetShape: "http://pldn.nl/ldwizard/Philosopher",
     },
   ],
+
+
+  getAllowedPrefixes: async () => {
+    return [
+      {
+          "prefixLabel": "dc",
+          "iri": "http://purl.org/dc/elements/1.1/"
+      },
+      {
+          "prefixLabel": "dcat",
+          "iri": "http://www.w3.org/ns/dcat#"
+      },
+      {
+          "prefixLabel": "dct",
+          "iri": "http://purl.org/dc/terms/"
+      },
+      {
+          "prefixLabel": "foaf",
+          "iri": "http://xmlns.com/foaf/0.1/"
+      },
+      {
+          "prefixLabel": "owl",
+          "iri": "http://www.w3.org/2002/07/owl#"
+      },
+      {
+          "prefixLabel": "prov",
+          "iri": "http://www.w3.org/ns/prov#"
+      },
+      {
+          "prefixLabel": "pav",
+          "iri": "http://purl.org/pav/"
+      },
+      {
+          "prefixLabel": "rdf",
+          "iri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      },
+      {
+          "prefixLabel": "rdfa",
+          "iri": "http://www.w3.org/ns/rdfa#"
+      },
+      {
+          "prefixLabel": "rdfs",
+          "iri": "http://www.w3.org/2000/01/rdf-schema#"
+      },
+      {
+          "prefixLabel": "schema",
+          "iri": "https://schema.org/"
+      },
+      {
+          "prefixLabel": "skos",
+          "iri": "http://www.w3.org/2004/02/skos/core#"
+      },
+      {
+          "prefixLabel": "void",
+          "iri": "http://rdfs.org/ns/void#"
+      },
+      {
+          "prefixLabel": "xsd",
+          "iri": "http://www.w3.org/2001/XMLSchema#"
+      },
+    ]
+  },
 };
 
 useRuntimeConfigFile ? (wizardConfig = runtimeConfig) : (wizardConfig = {});
