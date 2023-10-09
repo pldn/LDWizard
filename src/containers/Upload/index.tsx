@@ -131,6 +131,7 @@ const Upload: React.FC<Props> = ({ }) => {
     const rdfType = namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     const rr = "http://www.w3.org/ns/r2rml#"
     const rml = "http://semweb.mmlab.be/ns/rml#"
+    const regexExtractTemplate = /(.*?)\{(.*?)\}/
     // NOTE: Info about source file dont need to be extracted as a new source file is provided
 
     // First we parse the provided RML RDF file
@@ -170,37 +171,33 @@ const Upload: React.FC<Props> = ({ }) => {
             subjectMapValue = subMapTemplateQuad.object.value;
           }
         }
-        const match = subjectMapValue.match(/(.*?)\{(.*?)\}/);
-        if (match) {
-          const baseIri = match[1];
-          const keyColumnName = match[2];
-          setTransformationConfig((state) => {
-            const keyColumnIndex = state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);
-            if (keyColumnIndex > -1) {
+        if (subjectMapValue) {
+          const match = subjectMapValue.match(regexExtractTemplate);
+          if (match) {
+            const baseIri = match[1];
+            const keyColumnName = match[2];
+            setTransformationConfig((state) => {
+              const keyIndex = state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);
+              if (keyIndex > -1) {
+                return {
+                  ...state,
+                  baseIri: baseIri,
+                  key: keyIndex
+                };
+              }
               return {
                 ...state,
                 baseIri: baseIri,
-                key: keyColumnIndex
               };
-            }
-            return {
-              ...state,
-              baseIri: baseIri,
-            };
-          });
+            });
+          }
         }
 
         // Iterate over TriplesMap predicate-object mappings (poMap)
         for (const poMapQuad of store.match(triplesMapSubject, namedNode(`${rr}predicateObjectMap`), null)) {
           const poMapSubject = poMapQuad.object
 
-          // Get the object of the predicate-object mapping
-          let poMapObject = null
-          for (const poMapObjectQuad of store.match(poMapSubject, namedNode(`${rr}objectMap`), null)) {
-            poMapObject = poMapObjectQuad.object
-          }
-
-          // Check the predicate of the predicate-object mapping (can be rr:predicate or rr:predicateMap)
+          // Get the predicate of the predicate-object mapping (can be rr:predicate or rr:predicateMap)
           let poMapPredicate = null
           for (const poMapPredicateQuad of store.match(poMapSubject, namedNode(`${rr}predicate`), null)) {
             poMapPredicate = poMapPredicateQuad.object.value
@@ -213,36 +210,67 @@ const Upload: React.FC<Props> = ({ }) => {
             }
           }
 
+          // Get the object of the predicate-object mapping
+          let poMapObjectUri = null
+          for (const poMapObjectQuad of store.match(poMapSubject, namedNode(`${rr}objectMap`), null)) {
+            poMapObjectUri = poMapObjectQuad.object
+          }
+          let poMapObjectValue = null
+          for (const poMapConstant of store.match(poMapObjectUri, namedNode(`${rr}constant`), null)) {
+            poMapObjectValue = poMapConstant.object.value
+          }
+          if (!poMapObjectValue) {
+            for (const poMapConstant of store.match(poMapObjectUri, namedNode(`${rml}reference`), null)) {
+              poMapObjectValue = poMapConstant.object.value
+            }
+          }
+          let isTemplate = false;
+          if (!poMapObjectValue) {
+            for (const poMapConstant of store.match(poMapObjectUri, namedNode(`${rr}template`), null)) {
+              poMapObjectValue = poMapConstant.object.value
+              isTemplate = true;
+            }
+          }
+
           // If the predicate is rdf:type we update the resourceClass
           if (poMapPredicate == rdfType.id) {
-            let triplesMapType = null
-            for (const predObjectMapConstant of store.match(poMapObject, namedNode(`${rr}constant`), null)) {
-              triplesMapType = predObjectMapConstant.object.value
-            }
             setTransformationConfig((state) => {
               return {
                 ...state,
-                resourceClass: triplesMapType
+                resourceClass: poMapObjectValue
               };
             });
           } else {
             // Handle predicates other than rdf:type
-            let triplesMapObject = null
-            for (const predObjectMapConstant of store.match(poMapObject, namedNode(`${rml}reference`), null)) {
-              triplesMapObject = predObjectMapConstant.object.value
-            }
-            // triplesMapObject is the column name in the CSV, and poMapPredicate is the URI of the predicate
             setTransformationConfig((state) => {
               const columnConfig = [...state.columnConfiguration];
-              let i = 0
-              for (const header of columnConfig) {
-                if (header.columnName === triplesMapObject) {
-                  columnConfig[i] = {
-                    columnName: header.columnName,
-                    propertyIri: poMapPredicate
+              if (isTemplate) {
+                // Handle rr:template for IRI Prefix transformation
+                const match = poMapObjectValue.match(regexExtractTemplate);
+                const baseIri = match[1];
+                const keyColumnName = match[2];
+                const keyIndex = state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);
+                if (keyIndex > -1) {
+                  columnConfig[keyIndex] = {
+                    columnName: keyColumnName,
+                    propertyIri: poMapPredicate,
+                    columnRefinement: {
+                      type: "to-iri",
+                      label: "to-iri",
+                      data: {
+                        iriPrefix: baseIri
+                      }
+                    }
                   }
                 }
-                i++
+
+              } else {
+                // Handle rml:reference which match to a column directly
+                const keyIndex = state.columnConfiguration.findIndex(obj => obj.columnName === poMapObjectValue);
+                columnConfig[keyIndex] = {
+                  columnName: poMapObjectValue,
+                  propertyIri: poMapPredicate
+                }
               }
               return {
                 ...state,
@@ -400,7 +428,13 @@ const Upload: React.FC<Props> = ({ }) => {
             </div>
           </>
         }
-        {error && <Alert severity="error"><AlertTitle>Error</AlertTitle>{error}</Alert>}
+        {error &&
+          <div className={styles.button} style={{ marginTop: "1rem" }}>
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>{error}
+            </Alert>
+          </div>
+        }
       </>
       )}
     </>
