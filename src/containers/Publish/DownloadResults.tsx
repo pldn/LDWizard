@@ -35,7 +35,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
   if (!source) return null;
 
   const rdfFileName =
-    (source && source instanceof File &&  "name" in source) ? getFileBaseName(source.name) + ".nt" : "result.nt";
+    (source && source instanceof File &&  "name" in source) ? getFileBaseName(source.name) + ".ttl" : "result.ttl";
 
   return (
     (<Card variant="outlined">
