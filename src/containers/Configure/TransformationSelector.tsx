@@ -49,6 +49,7 @@ const TransformationSelector: React.FC<Props> = ({
                       label: "to-iri",
                       type: "to-iri",
                       data: { iriPrefix: config.defaultBaseIri },
+                    KeepOriginalValueOptions: undefined
                     });
                   } else {
                     onTransformationChange(undefined);
@@ -69,6 +70,7 @@ const TransformationSelector: React.FC<Props> = ({
                   onTransformationChange({
                     ...selectedTransformation,
                     data: { iriPrefix: event.target.value },
+                    KeepOriginalValueOptions: undefined
                   })
                 }
                 InputLabelProps={{ shrink: true }}
@@ -100,13 +102,16 @@ const TransformationSelector: React.FC<Props> = ({
                     label: "to-iri",
                     type: "to-iri",
                     data: { iriPrefix: config.defaultBaseIri },
+                    KeepOriginalValueOptions: undefined
                   });
                 const selectedTransformation = config.refinementOptions.find((ref) => ref.label === event.target.value);
                 if (selectedTransformation) {
+                  //@phil 128 here we do the single, double and single param - haal de boolean uit selectedTransformation en geef mee aan de transformatie
                   if (selectedTransformation.type === "single") {
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "single",
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue || undefined
                     });
                   } else if (selectedTransformation.type === "double-column") {
                     onTransformationChange({
@@ -117,12 +122,14 @@ const TransformationSelector: React.FC<Props> = ({
                           // Don't do transformations with the same column
                           selectedColumn === 0 ? 1 : 0,
                       },
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue || undefined
                     });
                   } else if (selectedTransformation.type === "single-param") {
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "single-param",
                       data: { iriPrefix: config.defaultBaseIri },
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue || undefined
                     });
                   }
                 }
@@ -164,6 +171,7 @@ const TransformationSelector: React.FC<Props> = ({
                   onTransformationChange({
                     ...selectedTransformation,
                     data: { iriPrefix: event.target.value.trim() },
+                    KeepOriginalValueOptions: selectedTransformation.KeepOriginalValueOptions || undefined
                   })
                 }
                 InputLabelProps={{ shrink: true }}
@@ -184,6 +192,7 @@ const TransformationSelector: React.FC<Props> = ({
                     onTransformationChange({
                       ...selectedTransformation,
                       data: { secondColumnIdx: event.target.value as number },
+                      KeepOriginalValueOptions: selectedTransformation.KeepOriginalValueOptions || undefined
                     })
                   }
                 >
@@ -216,6 +225,7 @@ const TransformationSelector: React.FC<Props> = ({
                   onTransformationChange({
                     ...selectedTransformation,
                     data: { iriPrefix: event.target.value.trim() },
+                    KeepOriginalValueOptions: selectedTransformation.KeepOriginalValueOptions || undefined
                   })
                 }
                 InputLabelProps={{ shrink: true }}

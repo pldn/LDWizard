@@ -9,12 +9,16 @@ export type TriplyDbReference = {
   link: string;
 };
 export type ColumnRefinementType = "single" | "double-column" | "single-param";
-
+export type KeepOriginalValueOptions = {
+  keepValue: boolean
+  customIriName?: string
+}
 export interface BaseColumnRefinement {
   label: string;
   description: string;
   type: ColumnRefinementType;
   transformation: unknown;
+  keepOriginalValue?: KeepOriginalValueOptions
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
   type: "single";

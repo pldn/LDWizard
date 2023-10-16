@@ -14,6 +14,7 @@ import parser from "rocketrml";
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "rml" && Array.isArray(opts.source)) {
     const rmlMappings = await getRmlTransformationScript(opts.config)
+    console.log('🪵  | file: rocketrmlScript.ts:17 | constapplyTransformation:ApplyTransformation= | rmlMappings:', rmlMappings)
     const inputFiles={
       [opts.config.sourceFileName]: matrixToCsv(opts.source),
     };

@@ -1,3 +1,6 @@
+/**
+ * Standalone typings for the LD-Wizard config files
+ */
 export type PublishElement = "download" | "triplyDB";
 export type PrefixEntry = {
     prefixLabel: string;
@@ -8,11 +11,16 @@ export type TriplyDbReference = {
     link: string;
 };
 export type ColumnRefinementType = "single" | "double-column" | "single-param";
+export type KeepOriginalValueOptions = {
+    keepValue: boolean;
+    customIriName?: string;
+};
 export interface BaseColumnRefinement {
     label: string;
     description: string;
     type: ColumnRefinementType;
     transformation: unknown;
+    keepOriginalValue?: KeepOriginalValueOptions;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
     type: "single";
@@ -28,6 +36,9 @@ export interface SingleColumnParamRefinement extends BaseColumnRefinement {
 }
 export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
 export default interface WizardConfig {
+    /**
+     * Branding
+     */
     appName?: string;
     dataplatformLink?: string;
     documentationLink?: string;
@@ -37,8 +48,14 @@ export default interface WizardConfig {
     icon?: string;
     favIcon?: string;
     homepageMarkdown?: string;
+    /**
+     * App settings
+     */
     defaultBaseIri?: string;
     publishOrder?: PublishElement[];
+    /**
+     * Helper Settings
+     */
     predicateConfig?: {
         method: "elastic" | "sparql";
         endpoint: string;
@@ -49,6 +66,9 @@ export default interface WizardConfig {
     };
     triplyDbInstances?: TriplyDbReference[];
     getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
+    /**
+     * Refinement options
+     */
     columnRefinements?: ColumnRefinement[];
     exampleCSV?: string;
     newDatasetAccessLevel?: "private" | "internal" | "public";
