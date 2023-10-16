@@ -2,6 +2,8 @@ import { ApplyTransformation } from "../Definitions.ts";
 import getRmlTransformationScript from "./rmlScript.ts";
 import { matrixToCsv } from "../utils/helpers.ts";
 import parser from "rocketrml";
+import { sourceState } from "../state/index.ts";
+import lodash from "lodash";
 
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data.
@@ -14,9 +16,18 @@ import parser from "rocketrml";
 const applyTransformation: ApplyTransformation = async (opts) => {
   if (opts.type === "rml" && Array.isArray(opts.source)) {
     const rmlMappings = await getRmlTransformationScript(opts.config)
-    console.log('🪵  | file: rocketrmlScript.ts:17 | constapplyTransformation:ApplyTransformation= | rmlMappings:', rmlMappings)
+    // Since RML does not allow us to add row numbers in the mapping file, we temporarily add rowNumbers to the csv Matrix
+    const sourceData = lodash.cloneDeep(opts.source)
+    for (let index = 0; index < sourceData.length; index++) {
+      const element = sourceData[index];
+      if (index > 0){
+        element.unshift(index.toString()) 
+      }else{
+        element.unshift('_rowNumber')
+      }
+    }
     const inputFiles={
-      [opts.config.sourceFileName]: matrixToCsv(opts.source),
+      [opts.config.sourceFileName]: matrixToCsv(sourceData),
     };
     const options = {
       toRDF: true,

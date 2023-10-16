@@ -18,7 +18,7 @@ const rmlPrefixes: { [key: string]: string } = {
 };
 async function getRmlTransformationScript(configuration: TransformationConfiguration): Promise<TransformationScript> {
   const baseIri = configuration.baseIri.toString();
-
+  console.log(9999, configuration.sourceFileName)
   // Create base RML interface
   const writer = new Writer({ prefixes: rmlPrefixes });
   const usesRefinedSource = configuration.columnConfiguration.some((config) => !!config.columnRefinement);
@@ -71,18 +71,18 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       configuration.key >= 0 &&
       configuration.columnConfiguration[configuration.key].columnName) ||
     undefined;
+    //@here the keyColumn name or blanknode is set --> change for enum
   const subjectTuple = !!keyColumnName
     ? {
         predicate: namedNode("rr:template"),
         object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{${keyColumnName}}`),
       }
-    : // RML doesn't support adding base-iri + row-numbers as an identifier, so we use b-nodes here
-      { predicate: namedNode("rr:termType"), object: namedNode("rr:BlankNode") };
+    : // RML doesn't support adding base-iri + row-numbers as an identifier, so we temporarily inject a _rowNumber column in rmlScript.ts 
+      { predicate: namedNode("rr:template"), object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{_rowNumber}`) };
   writer.addQuad(namedNode(":TriplesMap"), namedNode("rr:subjectMap"), writer.blank([subjectTuple]));
   // Assign "rdfs:Resource" as a class to each row
-  // TODO #144 Blanknodes
-  // [ ] check for blank nodes as transformation and use row numbers instead
-  // [ ] for each do a counter or artificially add RecordID like row and base numbers on this
+  // [x] #144 Blanknodes
+  // [x] check for blank nodes as transformation and use row numbers instead
 
   writer.addQuad(
     namedNode(":TriplesMap"),
@@ -145,7 +145,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       {
                         predicate: namedNode("rr:template"),
                         //@here check if IRI
-                        object: literal(`${header.columnRefinement.data.iriPrefix}{${header.columnName}}`),
+                        object: literal(`${header.columnRefinement.data.iriPrefix}/rowNumber/${header.columnName}`),
                       },
                     ]
               ),
@@ -190,7 +190,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               );
             } else {
               // @here #128 logic for default name etc.
-              // TODO #128
+              // [x] #128
               // [x] make option to column refinement => inplace or keep original
               // [x] keep original - add custom IRI name as option - if specified not then use OWL sameAs as default
               colName = header.columnRefinement.KeepOriginalValueOptions.customIriName ? header.columnRefinement.KeepOriginalValueOptions.customIriName : undefined;

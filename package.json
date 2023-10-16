@@ -94,6 +94,7 @@
     "husky": "^8.0.3",
     "jshashes": "^1.0.8",
     "lint-staged": "^13.2.0",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "markdown-loader": "^8.0.0",
     "marked": "^4.3.0",
