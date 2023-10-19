@@ -48,11 +48,6 @@ const Publish: React.FC<Props> = ({}) => {
                 const refinement = wizardAppConfig.refinementOptions.find(
                   (config) => config.label === column.columnRefinement?.label
                 );
-                if (refinement.keepOriginalValue){
-                  if (refinement.keepOriginalValue.keepValue){
-                    refinement.keepOriginalValue.customIriName
-                  }
-                }
                 if (!refinement) throw new Error(`Unknown transformation: ${column.columnRefinement.label}`);
                 if (refinement?.type === "single" && column.columnRefinement.type === "single") {
                   toInject = refinement.transformation(row[columnIdx]);
@@ -80,8 +75,6 @@ const Publish: React.FC<Props> = ({}) => {
       // Transformation
       if (parsedCsv) {
         // Transformation done here for double-column single-param etc
-        // #code here we apply the RRML transformation and give the config file
-        console.log('🪵  | file: index.tsx:85 | transformFunction | transformationConfig.columnConfiguration:', transformationConfig.columnConfiguration)
         const transformationResult = await wizardAppConfig.applyTransformation({
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,

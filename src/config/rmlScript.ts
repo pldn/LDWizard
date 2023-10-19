@@ -1,7 +1,6 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
 import { DataFactory, Writer } from "n3";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers.ts";
-import validator from "validator";
 
 const { namedNode, literal } = DataFactory;
 
@@ -14,11 +13,10 @@ const rmlPrefixes: { [key: string]: string } = {
   "": "http://example.org/rules/",
   schema: "http://schema.org/",
   dbo: "http://dbpedia.org/ontology/",
-  owl: "http://www.w3.org/2002/07/owl#"
+  owl: "http://www.w3.org/2002/07/owl#",
 };
 async function getRmlTransformationScript(configuration: TransformationConfiguration): Promise<TransformationScript> {
   const baseIri = configuration.baseIri.toString();
-  console.log(9999, configuration.sourceFileName)
   // Create base RML interface
   const writer = new Writer({ prefixes: rmlPrefixes });
   const usesRefinedSource = configuration.columnConfiguration.some((config) => !!config.columnRefinement);
@@ -36,7 +34,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             object: literal(
               usesRefinedSource
                 ? getFileBaseName(configuration.sourceFileName) + ".csv"
-                : // ? getFileBaseName(configuration.sourceFileName) + "-emriched.csv"
+                : // ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
                   configuration.sourceFileName
             ),
           },
@@ -71,19 +69,18 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       configuration.key >= 0 &&
       configuration.columnConfiguration[configuration.key].columnName) ||
     undefined;
-    //@here the keyColumn name or blanknode is set --> change for enum
   const subjectTuple = !!keyColumnName
     ? {
         predicate: namedNode("rr:template"),
         object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{${keyColumnName}}`),
       }
-    : // RML doesn't support adding base-iri + row-numbers as an identifier, so we temporarily inject a _rowNumber column in rmlScript.ts 
-      { predicate: namedNode("rr:template"), object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{_rowNumber}`) };
+    : // RML doesn't support adding base-iri + row-numbers as an identifier, so we temporarily inject a _rowNumber column in rmlScript.ts
+      {
+        predicate: namedNode("rr:template"),
+        object: literal(`${getBaseIdentifierIri(configuration.baseIri.toString())}{_rowNumber}`),
+      };
   writer.addQuad(namedNode(":TriplesMap"), namedNode("rr:subjectMap"), writer.blank([subjectTuple]));
   // Assign "rdfs:Resource" as a class to each row
-  // [x] #144 Blanknodes
-  // [x] check for blank nodes as transformation and use row numbers instead
-
   writer.addQuad(
     namedNode(":TriplesMap"),
     namedNode("rr:predicateObjectMap"),
@@ -105,6 +102,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
   for (const header of configuration.columnConfiguration) {
     if (header.columnName === keyColumnName) continue;
     if (header.columnRefinement) {
+      if ((header.columnRefinement.yieldsIri == true) && (header.columnRefinement.yieldsLiteral == true)){
+        throw new Error(`Cannot use "yieldsIri" in combination with "yieldsLiteral" as columnRefinement options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
+      }
       // don't add both if column refinement is "to-iri"
       if (header.columnRefinement?.type === "to-iri") {
         // add each seperately
@@ -117,8 +117,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               object: namedNode(
                 header.propertyIri
                   ? header.propertyIri
-                  : //@phil 145 is this always creating an IRI? What are the other objectMaps doing
-                    `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
+                  : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
               ),
             },
             {
@@ -128,9 +127,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   ? [
                       {
                         predicate: namedNode("rml:reference"),
-                        //@here check if IRI
-                        // validator.isUrl(val) ? namedNode(val) : literal(val)
-                        object: literal(`${header.columnName}`),
+                        object: namedNode(`${header.columnName}`),
                       },
                       {
                         predicate: namedNode("rr:termType"),
@@ -139,13 +136,12 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ]
                   : [
                       {
-                        predicate: namedNode("rr:termType"),
-                        object: namedNode("rr:IRI"),
+                        predicate: namedNode("rr:template"),
+                        object: literal(`${header.columnRefinement.data.iriPrefix}{${header.columnName}}`),
                       },
                       {
-                        predicate: namedNode("rr:template"),
-                        //@here check if IRI
-                        object: literal(`${header.columnRefinement.data.iriPrefix}/rowNumber/${header.columnName}`),
+                        predicate: namedNode("rr:termType"),
+                        object: namedNode("rr:IRI"),
                       },
                     ]
               ),
@@ -155,14 +151,70 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       } else {
         // for any other column refinement add both original and refined value to the RML script
         // TODO #145
-        // [ ] check if to IRI col refinement yields IRI (test and check code above with TO_IRI option)
-        // [ ] make sure something returns an IRI if it is an IRI
-        if (header.columnRefinement.KeepOriginalValueOptions.keepValue) {
+        // [x] turn everything into an IRI by default
+        // [x] add yieldsIri option implementation
+        if (header.columnRefinement.KeepOriginalValueOptions && header.columnRefinement.KeepOriginalValueOptions.keepValue) {
           // keeps the original value as triple in combination with the refined value
           for (let i = 0; i < 2; i++) {
             let colName: string;
+            colName = header.columnName;
             if (i > 0) {
-              colName = header.columnName;
+              // for the refined data, add each seperately
+              writer.addQuad(
+                namedNode(":TriplesMap"),
+                namedNode("rr:predicateObjectMap"),
+                writer.blank([
+                  {
+                    predicate: namedNode("rr:predicate"),
+                    object: namedNode(
+                      header.propertyIri
+                        ? header.propertyIri
+                        : header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
+                        ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
+                        : "owl:sameAs"
+                    ),
+                  },
+                  {
+                    predicate: namedNode("rr:objectMap"),
+                    object: writer.blank(
+                      header.columnRefinement.yieldsLiteral
+                        ? [
+                            {
+                              predicate: namedNode("rml:reference"),
+                              object: literal(`${colName}-refined`),
+                            },
+                          ]
+                        : header.columnRefinement.yieldsIri
+                        ? [
+                          {
+                            predicate: namedNode("rml:reference"),
+                            object: literal(`${header.columnName}-refined`),
+                          },
+                          {
+                            predicate: namedNode("rr:termType"),
+                            object: namedNode("rr:IRI"),
+                          },
+                        ]
+                        : [
+                            {
+                              predicate: namedNode("rml:template"),
+                              object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}-refined}`),
+                            },
+                            {
+                              predicate: namedNode("rr:termType"),
+                              object: namedNode("rr:IRI"),
+                            },
+                          ]
+                    ),
+                  },
+                ])
+              );
+            } else {
+              // for the original data (unrefined) that we want to keep as well
+              // @here #128 logic for default name etc.
+              // [x] #128
+              // [x] make option to column refinement => inplace or keep original
+              // [x] keep original - add custom IRI name as option - if specified not then use OWL sameAs as default
               // add each seperately
               writer.addQuad(
                 namedNode(":TriplesMap"),
@@ -178,56 +230,45 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   },
                   {
                     predicate: namedNode("rr:objectMap"),
-                    object: writer.blank([
-                      {
-                        predicate: namedNode("rml:reference"),
-                        //@here check if IRI
-                        object: literal(`${colName}`),
-                      },
-                    ]),
-                  },
-                ])
-              );
-            } else {
-              // @here #128 logic for default name etc.
-              // [x] #128
-              // [x] make option to column refinement => inplace or keep original
-              // [x] keep original - add custom IRI name as option - if specified not then use OWL sameAs as default
-              colName = header.columnRefinement.KeepOriginalValueOptions.customIriName ? header.columnRefinement.KeepOriginalValueOptions.customIriName : undefined;
-              console.log(2344, colName)
-              console.log(header.columnRefinement.KeepOriginalValueOptions)
-              // add each seperately
-              writer.addQuad(
-                namedNode(":TriplesMap"),
-                namedNode("rr:predicateObjectMap"),
-                writer.blank([
-                  {
-                    predicate: namedNode("rr:predicate"),
-                    //@here check if IRI
-                    object: namedNode(
-                      header.propertyIri
-                        ? header.propertyIri
-                        : colName ? `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`: "owl:sameAs"
+                    object: writer.blank(
+                      header.columnRefinement.yieldsLiteral
+                        ? [
+                            {
+                              predicate: namedNode("rml:reference"),
+                              object: literal(`${header.columnName}`),
+                            },
+                          ]
+                        : header.columnRefinement.yieldsIri 
+                        ? [
+                          {
+                            predicate: namedNode("rml:reference"),
+                            object: literal(`${header.columnName}`),
+                          },
+                          {
+                            predicate: namedNode("rr:termType"),
+                            object: namedNode("rr:IRI"),
+                          },
+                        ]
+                        :[
+                            {
+                              predicate: namedNode("rml:template"),
+                              object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+                            },
+                            {
+                              predicate: namedNode("rr:termType"),
+                              object: namedNode("rr:IRI"),
+                            },
+                          ]
                     ),
-                  },
-                  {
-                    predicate: namedNode("rr:objectMap"),
-                    object: writer.blank([
-                      {
-                        predicate: namedNode("rml:reference"),
-                        object: literal(`${header.columnName}`),
-                      },
-                    ]),
                   },
                 ])
               );
             }
           }
         } else {
-          // during column refinement we do not keep the original an replace the original value
+          // when during column refinement we do not keep the original an replace the original value
           let colName: string;
           colName = header.columnName;
-          // add each seperately
           writer.addQuad(
             namedNode(":TriplesMap"),
             namedNode("rr:predicateObjectMap"),
@@ -240,20 +281,43 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               },
               {
                 predicate: namedNode("rr:objectMap"),
-                object: writer.blank([
-                  {
-                    predicate: namedNode("rml:reference"),
-                    //@here check if IRI
-                    object: literal(`${colName}`),
-                  },
-                ]),
+                object: writer.blank(
+                  header.columnRefinement.yieldsLiteral
+                    ? [
+                        {
+                          predicate: namedNode("rml:reference"),
+                          object: literal(`${colName}`),
+                        },
+                      ]
+                    : header.columnRefinement.yieldsIri ?
+                    [
+                      {
+                        predicate: namedNode("rml:reference"),
+                        object: literal(`${header.columnName}`),
+                      },
+                      {
+                        predicate: namedNode("rr:termType"),
+                        object: namedNode("rr:IRI"),
+                      },
+                    ]
+                    : [
+                        {
+                          predicate: namedNode("rml:template"),
+                          object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+                        },
+                        {
+                          predicate: namedNode("rr:termType"),
+                          object: namedNode("rr:IRI"),
+                        },
+                      ]
+                ),
               },
             ])
           );
         }
       }
     } else {
-      // non refined data
+      // when not using column refinement
       writer.addQuad(
         namedNode(":TriplesMap"),
         namedNode("rr:predicateObjectMap"),
@@ -270,9 +334,12 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             predicate: namedNode("rr:objectMap"),
             object: writer.blank([
               {
-                predicate: namedNode("rml:reference"),
-                //@here check if IRI or literal
-                object: literal(header.columnName),
+                predicate: namedNode("rml:template"),
+                object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+              },
+              {
+                predicate: namedNode("rr:termType"),
+                object: namedNode("rr:IRI"),
               },
             ]),
           },

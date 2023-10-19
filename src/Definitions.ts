@@ -102,7 +102,7 @@ export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promis
 export type ColumnRefinementType = "single" | "double-column" | "to-iri" | "single-param";
 export type KeepOriginalValueOptions = {
   keepValue: boolean // @phil dit is een probleem - kan niet worden toegepast per column aangezien dit wordt gebruikt om de refined csv te maken die dan in het totaal tijdens de rocket RML transformatie gebruikt wordt - niet per column maar het hele bestand
-  customIriName?: string
+  customPredicateIRI?: string
 }
 /**
  * Define transformation scripts in configuration
@@ -112,7 +112,9 @@ export interface BaseColumnRefinement {
   description: string;
   type: ColumnRefinementType;
   transformation: unknown;
-  keepOriginalValue?: KeepOriginalValueOptions
+  yieldsLiteral?: boolean;
+  yieldsIri?: boolean;
+  keepOriginalValue?: KeepOriginalValueOptions;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
   type: "single";
@@ -137,6 +139,8 @@ export type ColumnRefinements = ColumnRefinement[];
 
 interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type" > {
   data?: unknown;
+  yieldsIri?: boolean;
+  yieldsLiteral?: boolean;
   KeepOriginalValueOptions?: KeepOriginalValueOptions
 }
 interface SingleColumnRefinementSetting extends BaseColumnRefinementSetting {

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
+import lodash from "lodash";
 
 class EmptySpaceInRowError extends Error {
   constructor(message) {
@@ -61,24 +62,26 @@ const Upload: React.FC<Props> = ({ }) => {
       return { ...state, sourceFileName: sourceFile.name };
     });
 
-    const validateCSV: (data: string[][]) => void = (data) => {
-      const numColumns = data[0].filter(column => column !== ("" || " ")).length
+    const validateCSV: (data: string[][]) => boolean = (data) => {
+      data[0]
+      const numColumns = data[0].filter(column =>
+        column).length
       for (let i = 1; i < data.length; i++) {
-        if (data[i].includes((" " || ""))){
+        if (data[i].includes("") || data[i].includes(" ")){
           throw new EmptySpaceInRowError("Invalid CSV file format. The file includes row(s) without a value.")
         }
         if (data[i].length > numColumns){
           throw new EmptySpaceInColumnError("Invalid CSV file format. The file includes column(s) without a value.")
         }
       }
+      return true
     };
 
     setError(undefined);
     parseCSV(sourceFile)
       .then((parseResults) => {
-        const parsedData = parseResults.data;
         try {
-          validateCSV(parsedData)
+          if (validateCSV(parseResults.data)) setError(undefined);
           setParsedSource(parseResults.data);
           setTransformationConfig((state) => {
             return {
