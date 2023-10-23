@@ -9,7 +9,7 @@ import exampleCSV from "../src/config/assets/example.csv";
 import shapeFile from "../public/Person.ttl"
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = true;
+const useRuntimeConfigFile = false;
 
 let wizardConfig: WizardConfig;
 
