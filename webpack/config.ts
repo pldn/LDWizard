@@ -178,6 +178,10 @@ export function getConfig(opts: { production: boolean }) {
           type: "asset/resource", 
         },
         {
+          test: /\.ttl$/,
+          use: 'file-loader',
+        },
+        {
           test: /\.md$/,
           use: [
             {

@@ -12,6 +12,8 @@ export type ColumnConfiguration = {
   columnName: string;
   columnRefinement?: ColumnRefinementSetting | undefined;
   propertyIri?: string;
+  disabled?: boolean;
+  shaclColumn?: boolean;
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -24,6 +26,9 @@ export interface TransformationConfiguration {
   sourceFileName: string;
   /** Class URI applied to each row */
   resourceClass: string;
+  /** SHACL shape */
+  shaclShape: string;
+  requireShaclShape: boolean;
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;
@@ -100,7 +105,10 @@ export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promis
  */
 
 export type ColumnRefinementType = "single" | "double-column" | "to-iri" | "single-param";
-
+export type KeepOriginalValueOptions = {
+  keepValue: boolean
+  customPredicateIRI?: string
+}
 /**
  * Define transformation scripts in configuration
  */
@@ -109,6 +117,9 @@ export interface BaseColumnRefinement {
   description: string;
   type: ColumnRefinementType;
   transformation: unknown;
+  yieldsLiteral?: boolean;
+  yieldsIri?: boolean;
+  keepOriginalValue?: KeepOriginalValueOptions;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
   type: "single";
@@ -133,6 +144,9 @@ export type ColumnRefinements = ColumnRefinement[];
 
 interface BaseColumnRefinementSetting extends Pick<BaseColumnRefinement, "label" | "type" > {
   data?: unknown;
+  yieldsIri?: boolean;
+  yieldsLiteral?: boolean;
+  KeepOriginalValueOptions?: KeepOriginalValueOptions
 }
 interface SingleColumnRefinementSetting extends BaseColumnRefinementSetting {
   type: "single";
@@ -155,3 +169,17 @@ export type ColumnRefinementSetting =
   | DoubleColumnRefinementSetting
   | SingleColumnParamRefinementSetting
   | ToIriColumnRefinementSetting;
+
+export type ShaclShapeSetting = {
+  url: string,
+  targetShape?: string
+};
+
+export type ShaclShapeMeta = {
+  iri: string,
+  description: string,
+  store: Rdf.Store,
+  targetClasses: string[],
+  prefixes: { [key: string]: string }
+  properties: { [key: string]: any }[]
+};

@@ -14,3 +14,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+src/config/WizardConfig.js
+src/config/WizardConfig.d.ts.map
+src/config/WizardConfig.js.map

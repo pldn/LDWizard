@@ -9,12 +9,18 @@ export type TriplyDbReference = {
   link: string;
 };
 export type ColumnRefinementType = "single" | "double-column" | "single-param";
-
+export type KeepOriginalValueOptions = {
+  keepValue: boolean
+  customPredicateIRI?: string
+}
 export interface BaseColumnRefinement {
   label: string;
   description: string;
   type: ColumnRefinementType;
   transformation: unknown;
+  keepOriginalValue?: KeepOriginalValueOptions
+  yieldsIri?: boolean
+  yieldsLiteral?: boolean
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
   type: "single";
@@ -29,6 +35,10 @@ export interface SingleColumnParamRefinement extends BaseColumnRefinement {
   transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
 }
 export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
+export type ShaclShapeSetting = {
+  url: string,
+  targetShape?: string
+};
 export default interface WizardConfig {
   /**
    * Branding
@@ -67,4 +77,8 @@ export default interface WizardConfig {
   exampleCSV?: string;
 
   newDatasetAccessLevel?: "private" | "internal" | "public";
+
+  shaclShapes?: ShaclShapeSetting[],
+
+  requireShaclShape?: boolean
 }

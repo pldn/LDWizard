@@ -12,11 +12,12 @@ import * as React from "react";
 import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
 import config from "../../config/index.ts";
-import { ColumnRefinementSetting } from "../../Definitions.ts";
+import { ColumnConfiguration, ColumnRefinementSetting } from "../../Definitions.ts";
 import { useRecoilValue } from "recoil";
 import { transformationConfigState } from "../../state/index.ts";
+
 interface Props {
-  selectedColumn: number;
+  selectedColumn: ColumnConfiguration;
   selectedTransformation: ColumnRefinementSetting | undefined;
   onTransformationChange: (newTransformation: ColumnRefinementSetting | undefined) => void;
 }
@@ -81,6 +82,7 @@ const TransformationSelector: React.FC<Props> = ({
     );
   } else {
     const noOtherColumns = transformationConfig.columnConfiguration.length <= 1;
+    const selectedColumnId = transformationConfig.columnConfiguration.indexOf(selectedColumn)
     return (
       <div className={styles.columnConfigSection}>
         <Typography variant="subtitle1">Value refinement</Typography>
@@ -107,6 +109,9 @@ const TransformationSelector: React.FC<Props> = ({
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "single",
+                      yieldsIri: selectedTransformation.yieldsIri,
+                      yieldsLiteral: selectedTransformation.yieldsLiteral,
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue
                     });
                   } else if (selectedTransformation.type === "double-column") {
                     onTransformationChange({
@@ -115,14 +120,20 @@ const TransformationSelector: React.FC<Props> = ({
                       data: {
                         secondColumnIdx:
                           // Don't do transformations with the same column
-                          selectedColumn === 0 ? 1 : 0,
+                          selectedColumnId === 0 ? 1 : 0,
                       },
+                      yieldsIri: selectedTransformation.yieldsIri,
+                      yieldsLiteral: selectedTransformation.yieldsLiteral,
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue || undefined
                     });
                   } else if (selectedTransformation.type === "single-param") {
                     onTransformationChange({
                       label: selectedTransformation.label,
                       type: "single-param",
                       data: { iriPrefix: config.defaultBaseIri },
+                      yieldsIri: selectedTransformation.yieldsIri,
+                      yieldsLiteral: selectedTransformation.yieldsLiteral,
+                      KeepOriginalValueOptions: selectedTransformation.keepOriginalValue || undefined
                     });
                   }
                 }
@@ -184,6 +195,9 @@ const TransformationSelector: React.FC<Props> = ({
                     onTransformationChange({
                       ...selectedTransformation,
                       data: { secondColumnIdx: event.target.value as number },
+                      yieldsIri: selectedTransformation.yieldsIri,
+                      yieldsLiteral: selectedTransformation.yieldsLiteral,
+                      KeepOriginalValueOptions: selectedTransformation.KeepOriginalValueOptions
                     })
                   }
                 >
@@ -191,10 +205,10 @@ const TransformationSelector: React.FC<Props> = ({
                     <MenuItem
                       key={config.columnName}
                       value={idx}
-                      disabled={idx === transformationConfig.key || idx === selectedColumn}
+                      disabled={idx === transformationConfig.key || idx === selectedColumnId}
                     >
                       {config.columnName}
-                      {idx === selectedColumn && (
+                      {idx === selectedColumnId && (
                         <Typography variant="caption" className={styles.duplicateWarning}>
                           This column is currently selected
                         </Typography>
@@ -216,6 +230,9 @@ const TransformationSelector: React.FC<Props> = ({
                   onTransformationChange({
                     ...selectedTransformation,
                     data: { iriPrefix: event.target.value.trim() },
+                    yieldsIri: selectedTransformation.yieldsIri,
+                    yieldsLiteral: selectedTransformation.yieldsLiteral,
+                    KeepOriginalValueOptions: selectedTransformation.KeepOriginalValueOptions
                   })
                 }
                 InputLabelProps={{ shrink: true }}

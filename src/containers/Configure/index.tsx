@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { matrixState } from "../../state/index.ts";
+import { matrixState, transformationConfigState } from "../../state/index.ts";
 import styles from "./style.scss";
 import BaseIriField from "./BaseIriField.tsx";
 import FontAwesomeIcon from "../../components/FontAwesomeIcon/index.tsx";
@@ -32,6 +32,12 @@ import { Skeleton } from "@mui/material";
 import ColumnSelector from "./ColumnSelector.tsx";
 import ScrollCopier from "../../components/ScrollCopier/index.tsx";
 import { CommonProps } from "@mui/material/OverridableComponent.js";
+import ShaclShapeField from "./ShaclShapeField";
+import { ShaclShapeMeta } from '../../Definitions';
+import { wizardAppConfig } from "../../config";
+import { csvRowsToShaclRows } from "../../utils/csvRowsToShaclRows.ts";
+import ShaclShapeInformation from "./ShaclShapeInformation.tsx";
+
 interface Props {}
 
 export const Step = 2;
@@ -45,6 +51,8 @@ const useCanScroll = () => {
 };
 
 const Configure: React.FC<Props> = ({}) => {
+  const transformationConfig = useRecoilValue(transformationConfigState);
+  const { shaclShape, requireShaclShape, columnConfiguration } = transformationConfig
   const parsedCsv = useRecoilValue(matrixState);
   const navigate = useNavigate();
   const canScroll = useCanScroll();
@@ -54,6 +62,7 @@ const Configure: React.FC<Props> = ({}) => {
   const [isValidUrlBI, setIsValidUrlBI] = React.useState<boolean>(true)
   const [currentTablePage, setCurrentTablePage] = React.useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
+  const [shaclShapeMetas, setShaclShapeMetas] = React.useState([] as ShaclShapeMeta[])
 
   const handlePageChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
     setCurrentTablePage(page);
@@ -63,15 +72,25 @@ const Configure: React.FC<Props> = ({}) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setCurrentTablePage(0);
   };
-
   const confirmConfiguration = () => {
     navigate(`/${Step + 1}`);
   };
 
-  if (!parsedCsv) {
-    return <Navigate to="/1" />;
+  const shaclShapeMeta = shaclShapeMetas?.find(shaclShapeMeta => shaclShapeMeta.iri === transformationConfig.shaclShape)
+
+  React.useEffect(() => {
+    wizardAppConfig.getShaclShapes(transformationConfig.resourceClass)
+      .then(shaclShapeMetas => setShaclShapeMetas(shaclShapeMetas))
+  }, [transformationConfig]);
+
+
+  if (!parsedCsv) throw new Error('Must have data')
+
+  let [_csvHeader, ...csvRows] = parsedCsv
+
+  if (shaclShapeMeta && (shaclShape || requireShaclShape)) {
+    csvRows = csvRowsToShaclRows(csvRows, columnConfiguration, shaclShapeMeta)
   }
-  const [_csvHeader, ...csvRows] = parsedCsv
   return (
     <>
       <Container className={styles.globalSettingsForm}>
@@ -81,6 +100,10 @@ const Configure: React.FC<Props> = ({}) => {
             <ResourceClassField isValidUrl={isValidUrlRC} setIsValidUrl={setIsValidUrlRC} />
           </React.Suspense>
         </Box>
+        <Box className={styles.normalSettings}>
+          <ShaclShapeField />
+        </Box>
+        <ShaclShapeInformation />
         <Accordion variant="outlined" square className={styles.accordion}>
           <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
             <Typography>Advanced</Typography>
@@ -111,7 +134,7 @@ const Configure: React.FC<Props> = ({}) => {
                 />
               }
             >
-              <TableHeaders />
+              <TableHeaders shaclShapeMeta={shaclShapeMeta} />
             </React.Suspense>
             <TableBody>
               {csvRows
@@ -126,38 +149,24 @@ const Configure: React.FC<Props> = ({}) => {
                 );
               })}
             </TableBody>
-          </Table>
-          <TableFooter>
-            <TablePagination
-              count={csvRows.length}
-              onPageChange={handlePageChange}
-              page={currentTablePage}
-              rowsPerPage={rowsPerPage}
-              component="div"
-              onRowsPerPageChange={handleRowPerChangePage}
-            ></TablePagination>
+            <TableFooter>
+            <tr>
+              {/* https://stackoverflow.com/questions/398734/colspan-all-columns */}
+              <td colSpan={1000}>
+              <TablePagination
+                count={csvRows.length}
+                onPageChange={handlePageChange}
+                page={currentTablePage}
+                rowsPerPage={rowsPerPage}
+                component="div"
+                onRowsPerPageChange={handleRowPerChangePage}
+              ></TablePagination>
+              </td>
+            </tr>
           </TableFooter>
+          </Table>
         </TableContainer>
       </Paper>
-      <Box id="#navigationButtons" ref={navigationButtonsRef}>
-        <Button className={styles.actionButtons}  style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>
-          Back
-        </Button>
-        <Button disabled={(isValidUrlRC && isValidUrlBI) ? false : true} className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" onClick={confirmConfiguration}>
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-          style={{textTransform: 'none'}}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

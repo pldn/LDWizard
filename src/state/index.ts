@@ -21,6 +21,8 @@ export const transformationConfigState = atom<TransformationConfiguration>({
     columnConfiguration: [],
     sourceFileName: "input.csv",
     resourceClass: "http://www.w3.org/2000/01/rdf-schema#Resource",
+    shaclShape: "",
+    requireShaclShape: false,
     csvProps: {
       delimiter: ",",
     },
