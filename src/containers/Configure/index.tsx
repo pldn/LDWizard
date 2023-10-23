@@ -36,6 +36,7 @@ import ShaclShapeField from "./ShaclShapeField";
 import { ShaclShapeMeta } from '../../Definitions';
 import { wizardAppConfig } from "../../config";
 import { csvRowsToShaclRows } from "../../utils/csvRowsToShaclRows.ts";
+import ShaclShapeInformation from "./ShaclShapeInformation.tsx";
 
 interface Props {}
 
@@ -102,7 +103,7 @@ const Configure: React.FC<Props> = ({}) => {
         <Box className={styles.normalSettings}>
           <ShaclShapeField />
         </Box>
-        {/* <ShaclShapeInformation /> */}
+        <ShaclShapeInformation />
         <Accordion variant="outlined" square className={styles.accordion}>
           <AccordionSummary expandIcon={<FontAwesomeIcon icon={["fas", "caret-down"]} />}>
             <Typography>Advanced</Typography>

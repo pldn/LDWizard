@@ -5,6 +5,8 @@
 import WizardConfig from "../src/config/WizardConfig.js";
 //@ts-ignore
 import exampleCSV from "../src/config/assets/example.csv";
+//@ts-ignore
+import shapeFile from "../public/Person.ttl"
 
 // Turn this to "true" to enable this configuration (for development purposes)
 const useRuntimeConfigFile = true;
@@ -82,7 +84,7 @@ let runtimeConfig: WizardConfig = {
   ],
   requireShaclShape: true,
   shaclShapes: [{
-      url: '/Person.ttl',
+      url: shapeFile,
       targetShape: 'http://pldn.nl/ldwizard/Philosopher'
   }]
 };
