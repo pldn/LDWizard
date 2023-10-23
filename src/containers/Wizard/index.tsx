@@ -12,7 +12,7 @@ interface Props {}
 const Wizard: React.FC<Props> = () => {
   return (
     <Paper elevation={2} square>
-      <Steps />
+      <Steps type='steps' />
       <ErrorBoundary>
         <Routes>
           <Route path={`${UploadStep}`} element={<Upload />} />
@@ -27,6 +27,7 @@ const Wizard: React.FC<Props> = () => {
           <Route path={`${ExportStep}`} element={<Publish />} />
           <Route path="*" element={<Navigate to={`${UploadStep}`} />} />
         </Routes>
+        <Steps type='buttons' />
       </ErrorBoundary>
     </Paper>
   );

@@ -1,7 +1,7 @@
 const CLASS_SEARCH_QUERY = (term: string) => `prefix owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select distinct ?iri ?description {
+select ?iri (MIN(?descriptions) as ?description) {
   {
     # Support both OWL and RDFS classes.
     {
@@ -10,7 +10,7 @@ select distinct ?iri ?description {
       ?iri a rdfs:Class.
     }
     ?iri
-      rdfs:comment ?description;
+      rdfs:comment ?descriptions;
       rdfs:label ?label.
     # Prefer classes that match with the search term.
     filter(
@@ -27,16 +27,18 @@ select distinct ?iri ?description {
       ?iri a rdfs:Class.
     }
     ?iri
-      rdfs:comment ?description;
+      rdfs:comment ?descriptions;
       rdfs:label ?label.
   }
 }
+group by ?iri
+order by ?iri
 limit 10`;
 
 const PREDICATE_SEARCH_CONFIG = (term: string) => `prefix owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-select distinct ?iri ?description {
+select distinct ?iri (MIN(?descriptions) as ?description) {
   {
     # Support both OWL and RDF properties.
     {
@@ -47,7 +49,7 @@ select distinct ?iri ?description {
       ?iri a rdf:Property.
     }
     ?iri
-      rdfs:comment ?description;
+      rdfs:comment ?descriptions;
       rdfs:label ?label.
     # Prefer classes that match with the search term.
     filter(
@@ -66,10 +68,12 @@ select distinct ?iri ?description {
       ?iri a owl:ObjectProperty.
     }
     ?iri
-      rdfs:comment ?description;
+      rdfs:comment ?descriptions;
       rdfs:label ?label.
   }
 }
+group by ?iri
+order by ?iri
 limit 10`;
 
 interface SparqlResult {

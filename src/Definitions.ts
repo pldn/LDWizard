@@ -12,6 +12,8 @@ export type ColumnConfiguration = {
   columnName: string;
   columnRefinement?: ColumnRefinementSetting | undefined;
   propertyIri?: string;
+  disabled?: boolean;
+  shaclColumn?: boolean;
 };
 export interface TransformationConfiguration {
   /** Base IRI */
@@ -24,6 +26,9 @@ export interface TransformationConfiguration {
   sourceFileName: string;
   /** Class URI applied to each row */
   resourceClass: string;
+  /** SHACL shape */
+  shaclShape: string;
+  requireShaclShape: boolean;
   /** Meta information about the CSV dialect */
   csvProps: {
     delimiter: string;
@@ -101,7 +106,7 @@ export type UploadTransformation<P> = (opts: UploadTransformationI<P>) => Promis
 
 export type ColumnRefinementType = "single" | "double-column" | "to-iri" | "single-param";
 export type KeepOriginalValueOptions = {
-  keepValue: boolean // @phil dit is een probleem - kan niet worden toegepast per column aangezien dit wordt gebruikt om de refined csv te maken die dan in het totaal tijdens de rocket RML transformatie gebruikt wordt - niet per column maar het hele bestand
+  keepValue: boolean
   customPredicateIRI?: string
 }
 /**
@@ -164,3 +169,17 @@ export type ColumnRefinementSetting =
   | DoubleColumnRefinementSetting
   | SingleColumnParamRefinementSetting
   | ToIriColumnRefinementSetting;
+
+export type ShaclShapeSetting = {
+  url: string,
+  targetShape?: string
+};
+
+export type ShaclShapeMeta = {
+  iri: string,
+  description: string,
+  store: Rdf.Store,
+  targetClasses: string[],
+  prefixes: { [key: string]: string }
+  properties: { [key: string]: any }[]
+};

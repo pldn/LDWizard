@@ -32,6 +32,13 @@ th.tableHeader {
     cursor: default;
     background-color: #ccc;
   }
+  &.shaclColumn {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+    background-color: #ffdec4;
+  }
 }
 .hint {
   pointer-events: none;
@@ -71,4 +78,7 @@ div.refinementSelector {
 }
 .selector {
   min-width: 120px;
+}
+.shaclShapeSelector {
+  width: 100%;
 }

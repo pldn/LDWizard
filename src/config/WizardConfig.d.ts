@@ -37,6 +37,10 @@ export interface SingleColumnParamRefinement extends BaseColumnRefinement {
     transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
 }
 export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
+export type ShaclShapeSetting = {
+    url: string;
+    targetShape?: string;
+};
 export default interface WizardConfig {
     /**
      * Branding
@@ -74,5 +78,7 @@ export default interface WizardConfig {
     columnRefinements?: ColumnRefinement[];
     exampleCSV?: string;
     newDatasetAccessLevel?: "private" | "internal" | "public";
+    shaclShapes?: ShaclShapeSetting[];
+    requireShaclShape?: boolean;
 }
 //# sourceMappingURL=WizardConfig.d.ts.map

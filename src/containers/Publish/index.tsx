@@ -44,7 +44,6 @@ const Publish: React.FC<Props> = ({}) => {
               if (rowIdx === 0) {
                 toInject = column.columnName + "-refined";
               } else if (column.columnRefinement) {
-                // @here colummn refinement options --> 
                 const refinement = wizardAppConfig.refinementOptions.find(
                   (config) => config.label === column.columnRefinement?.label
                 );
@@ -103,14 +102,6 @@ const Publish: React.FC<Props> = ({}) => {
             <Typography variant="body2">{transformationError}</Typography>
           </Alert>
         </Container>
-        <Box>
-          <Button className={styles.actionButtons} style={{textTransform: 'none'}} onClick={() => navigate(`/${Step - 1}`)}>
-            Back
-          </Button>
-          <Button className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" disabled>
-            Next
-          </Button>
-        </Box>
       </>
     );
   }
@@ -163,25 +154,6 @@ const Publish: React.FC<Props> = ({}) => {
           return value;
         })}
       </Container>
-      <Box>
-        <Button className={styles.actionButtons} onClick={() => navigate(`/${Step - 1}`)}  style={{textTransform: 'none'}}>
-          Back
-        </Button>
-        <Button className={styles.actionButtons} variant="contained" color="primary" disabled  style={{textTransform: 'none'}}>
-          Next
-        </Button>
-        <Button
-          className={styles.actionButtons}
-          onClick={() => {
-            if (confirm("All progress will be lost, are you sure?")) {
-              window.location.replace("");
-            }
-          }}
-          style={{textTransform: 'none'}}
-        >
-          Restart
-        </Button>
-      </Box>
     </>
   );
 };

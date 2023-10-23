@@ -7,7 +7,7 @@ import WizardConfig from "../src/config/WizardConfig.js";
 import exampleCSV from "../src/config/assets/example.csv";
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = false;
+const useRuntimeConfigFile = true;
 
 let wizardConfig: WizardConfig;
 
@@ -80,6 +80,11 @@ let runtimeConfig: WizardConfig = {
       },
     },
   ],
+  requireShaclShape: true,
+  shaclShapes: [{
+      url: '../src/config/assets/Person.ttl',
+      targetShape: 'http://pldn.nl/ldwizard/Philosopher'
+  }]
 };
 
 useRuntimeConfigFile ? (wizardConfig = runtimeConfig) : (wizardConfig = {});
