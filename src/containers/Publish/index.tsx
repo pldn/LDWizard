@@ -44,7 +44,6 @@ const Publish: React.FC<Props> = ({}) => {
               if (rowIdx === 0) {
                 toInject = column.columnName + "-refined";
               } else if (column.columnRefinement) {
-                // @here colummn refinement options --> 
                 const refinement = wizardAppConfig.refinementOptions.find(
                   (config) => config.label === column.columnRefinement?.label
                 );

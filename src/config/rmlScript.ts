@@ -150,9 +150,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
         );
       } else {
         // for any other column refinement add both original and refined value to the RML script
-        // TODO #145
-        // [x] turn everything into an IRI by default
-        // [x] add yieldsIri option implementation
         if (header.columnRefinement.KeepOriginalValueOptions && header.columnRefinement.KeepOriginalValueOptions.keepValue) {
           // keeps the original value as triple in combination with the refined value
           for (let i = 0; i < 2; i++) {
@@ -211,10 +208,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               );
             } else {
               // for the original data (unrefined) that we want to keep as well
-              // @here #128 logic for default name etc.
-              // [x] #128
-              // [x] make option to column refinement => inplace or keep original
-              // [x] keep original - add custom IRI name as option - if specified not then use OWL sameAs as default
               // add each seperately
               writer.addQuad(
                 namedNode(":TriplesMap"),

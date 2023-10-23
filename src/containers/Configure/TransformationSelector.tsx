@@ -103,7 +103,6 @@ const TransformationSelector: React.FC<Props> = ({
                   });
                 const selectedTransformation = config.refinementOptions.find((ref) => ref.label === event.target.value);
                 if (selectedTransformation) {
-                  //@phil 128 here we do the single, double and single param - haal de boolean uit selectedTransformation en geef mee aan de transformatie
                   if (selectedTransformation.type === "single") {
                     onTransformationChange({
                       label: selectedTransformation.label,
