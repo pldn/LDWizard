@@ -82,7 +82,7 @@ let runtimeConfig: WizardConfig = {
   ],
   requireShaclShape: true,
   shaclShapes: [{
-      url: '../src/config/assets/Person.ttl',
+      url: '/Person.ttl',
       targetShape: 'http://pldn.nl/ldwizard/Philosopher'
   }]
 };
