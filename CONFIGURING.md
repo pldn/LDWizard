@@ -24,9 +24,9 @@ You can create your own LD Wizard application by following these steps:
 3. Start a typescript project:
 
    ```sh
-   npm init
-   npm i typescript --save-dev
-   npx tsc --init
+   yarn init
+   yarn add typescript --dev
+   yarn tsc --init
    ```
 
    The `tsconfig.json` file should have the following contents:
@@ -59,7 +59,7 @@ You can create your own LD Wizard application by following these steps:
       {  //... rest of package.json
          "scripts": {
             "build": "ldwizard-build ./src/config.ts",
-            "start": "yarn build && npx http-server -c-1 ./lib"
+            "start": "yarn build && http-server -c-1 ./lib"
          }
       }
 
@@ -107,13 +107,13 @@ Your LD Wizard application can now be found inside the `lib/` directory.
 You can upload your LD Wizard application to an online location and use it there. But you can also run the application locally by starting an HTTP server. If you do not yet have an HTTP server installed, run the following command:
 
 ```sh
-npm install -g http-server
+yarn global add http-server
 ```
 
 With this particular HTTP server the LDWizard can be started in the following way:
 
 ```sh
-npx http-server ./lib
+http-server ./lib
 ```
 
 Open <http://localhost:8080> in a web browser.
