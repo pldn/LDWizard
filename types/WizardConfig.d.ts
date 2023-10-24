@@ -8,11 +8,18 @@ export type TriplyDbReference = {
     link: string;
 };
 export type ColumnRefinementType = "single" | "double-column" | "single-param";
+export type KeepOriginalValueOptions = {
+    keepValue: boolean;
+    customPredicateIRI?: string;
+};
 export interface BaseColumnRefinement {
     label: string;
     description: string;
     type: ColumnRefinementType;
     transformation: unknown;
+    keepOriginalValue?: KeepOriginalValueOptions;
+    yieldsIri?: boolean;
+    yieldsLiteral?: boolean;
 }
 export interface SingleColumnRefinement extends BaseColumnRefinement {
     type: "single";
@@ -27,7 +34,14 @@ export interface SingleColumnParamRefinement extends BaseColumnRefinement {
     transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
 }
 export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
+export type ShaclShapeSetting = {
+    url: string;
+    targetShape?: string;
+};
 export default interface WizardConfig {
+    /**
+     * Branding
+     */
     appName?: string;
     dataplatformLink?: string;
     documentationLink?: string;
@@ -37,8 +51,14 @@ export default interface WizardConfig {
     icon?: string;
     favIcon?: string;
     homepageMarkdown?: string;
+    /**
+     * App settings
+     */
     defaultBaseIri?: string;
     publishOrder?: PublishElement[];
+    /**
+     * Helper Settings
+     */
     predicateConfig?: {
         method: "elastic" | "sparql";
         endpoint: string;
@@ -49,7 +69,12 @@ export default interface WizardConfig {
     };
     triplyDbInstances?: TriplyDbReference[];
     getAllowedPrefixes?: () => Promise<PrefixEntry[]>;
+    /**
+     * Refinement options
+     */
     columnRefinements?: ColumnRefinement[];
     exampleCSV?: string;
     newDatasetAccessLevel?: "private" | "internal" | "public";
+    shaclShapes?: ShaclShapeSetting[];
+    requireShaclShape?: boolean;
 }
