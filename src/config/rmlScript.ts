@@ -195,7 +195,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         : [
                             {
                               predicate: namedNode("rml:template"),
-                              object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}-refined}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -224,28 +224,33 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   {
                     predicate: namedNode("rr:objectMap"),
                     object: writer.blank(
-                      header.columnRefinement.yieldsLiteral
-                        ? [
-                            {
-                              predicate: namedNode("rml:reference"),
-                              object: literal(`${header.columnName}`),
-                            },
-                          ]
-                        : header.columnRefinement.yieldsIri 
-                        ? [
-                          {
-                            predicate: namedNode("rml:reference"),
-                            object: literal(`${header.columnName}`),
-                          },
-                          {
-                            predicate: namedNode("rr:termType"),
-                            object: namedNode("rr:IRI"),
-                          },
-                        ]
-                        :[
+                      // BUG input data should not be transformed the same as output data (in could be IRI while out could be literal and visa versa)
+                      // perhaps an inputData argument could be used when the data needs to be transformed in a particular manner
+
+                      // header.columnRefinement.yieldsLiteral
+                      //   ? [
+                      //       {
+                      //         predicate: namedNode("rml:reference"),
+                      //         object: literal(`${header.columnName}`),
+                      //       },
+                      //     ]
+                      //   : header.columnRefinement.yieldsIri 
+                      //   ? [
+                      //     {
+                      //       predicate: namedNode("rml:reference"),
+                      //       object: literal(`${header.columnName}`),
+                      //     },
+                      //     {
+                      //       predicate: namedNode("rr:termType"),
+                      //       object: namedNode("rr:IRI"),
+                      //     },
+                      //   ]
+                      //   :
+
+                        [
                             {
                               predicate: namedNode("rml:template"),
-                              object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -279,14 +284,14 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ? [
                         {
                           predicate: namedNode("rml:reference"),
-                          object: literal(`${colName}`),
+                          object: literal(`${colName}-refined`),
                         },
                       ]
                     : header.columnRefinement.yieldsIri ?
                     [
                       {
                         predicate: namedNode("rml:reference"),
-                        object: literal(`${header.columnName}`),
+                        object: literal(`${header.columnName}-refined`),
                       },
                       {
                         predicate: namedNode("rr:termType"),
@@ -296,7 +301,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     : [
                         {
                           predicate: namedNode("rml:template"),
-                          object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+                          object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
                         },
                         {
                           predicate: namedNode("rr:termType"),
@@ -328,7 +333,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             object: writer.blank([
               {
                 predicate: namedNode("rml:template"),
-                object: literal(`${getBasePredicateIri(baseIri)}{${cleanCsvValue(header.columnName)}}`),
+                object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),
               },
               {
                 predicate: namedNode("rr:termType"),

@@ -7,8 +7,15 @@ import { Matrix } from "../Definitions.ts";
  * @returns the header as a valid part an IRI
  */
 export function cleanCsvValue(value: unknown) {
-  if (typeof value === "string") return encodeURI(value.replace(/ /g, "_"));
-  if (typeof value === "number") return "" + value;
+  let result: string
+  if (typeof value === "string"){
+    result = encodeURI(value.replace(/ /g, "_"));
+    return result
+  } 
+  if (typeof value === "number"){
+    result = "" + value;
+    return result
+  }
   throw new Error("Expected CSV value to be a string, got " + typeof value);
 }
 
