@@ -67,9 +67,6 @@ const Upload: React.FC<Props> = ({ }) => {
       const numColumns = data[0].filter(column =>
         column).length
       for (let i = 1; i < data.length; i++) {
-        if (data[i].includes("") || data[i].includes(" ")){
-          throw new EmptySpaceInRowError("Invalid CSV file format. The file includes row(s) without a value.")
-        }
         if (data[i].length > numColumns){
           throw new EmptySpaceInColumnError("Invalid CSV file format. The file includes column(s) without a value.")
         }

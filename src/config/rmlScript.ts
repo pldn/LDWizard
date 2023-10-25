@@ -332,12 +332,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             predicate: namedNode("rr:objectMap"),
             object: writer.blank([
               {
-                predicate: namedNode("rml:template"),
-                object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),
-              },
-              {
-                predicate: namedNode("rr:termType"),
-                object: namedNode("rr:IRI"),
+                predicate: namedNode("rml:reference"),
+                object: literal(header.columnName),
               },
             ]),
           },
