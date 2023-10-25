@@ -39,18 +39,26 @@ let runtimeConfig: WizardConfig = {
       },
     },
     {
-      label: "Example: return IRI from input",
+      label: "Example: return base IRI + value",
       type: "single",
-      description: "In this transformation the returned value is the original IRI",
+      description: "In this transformation the returned value is the base IRI + value from CSV file",
+      transformation: async (term: string) => {
+        return `${term}`;
+      },
+    },
+    {
+      label: "Example: expect to return IRI in transformation",
+      type: "single",
+      description: "In this transformation the returned value should be an IRI, this can be applied to the 'IRIs' column in the example.csv file",
       transformation: async (term: string) => {
         return `${term}`;
       },
       yieldsIri: true
     },
     {
-      label: "Example: return value as literal",
+      label: "Example: expect to return literal in transformation",
       type: "single",
-      description: "In this transformation the returned value is turned into a literal",
+      description: "In this transformation the returned value should be a literal",
       transformation: async (term: string) => {
         return `${term}`;
       },
