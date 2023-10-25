@@ -1,10 +1,19 @@
 {
   "name": "@pldn/ldwizard",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "contributors": [
-    {"name": "Gerwin Bosch", "email": "gerwin.bosch@triply.cc"},
-    {"name": "Philippe Renzen", "email": "philippe.renzen@triply.cc"},
-    {"name": "Mark Lindeman", "email": "mark.lindeman@triply.cc"}
+    {
+      "name": "Gerwin Bosch",
+      "email": "gerwin.bosch@triply.cc"
+    },
+    {
+      "name": "Philippe Renzen",
+      "email": "philippe.renzen@triply.cc"
+    },
+    {
+      "name": "Mark Lindeman",
+      "email": "mark.lindeman@triply.cc"
+    }
   ],
   "author": {
     "name": "Triply",
