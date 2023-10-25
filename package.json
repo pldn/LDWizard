@@ -1,7 +1,15 @@
 {
   "name": "@pldn/ldwizard",
   "version": "3.0.1",
-  "author": "Gerwin Bosch <gerwin.bosch@triply.cc.com>",
+  "contributors": [
+    {"name": "Gerwin Bosch", "email": "gerwin.bosch@triply.cc.com"},
+    {"name": "Philippe Renzen", "email": "philippe.renzen@triply.cc.com"},
+    {"name": "Mark Lindeman", "email": "mark.lindeman@triply.cc.com"}
+  ],
+  "author": {
+    "name": "Triply",
+    "email": "info@triply.cc"
+  },
   "license": "EUPL-1.2",
   "scripts": {
     "prepublishOnly": "yarn run build",
