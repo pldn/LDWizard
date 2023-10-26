@@ -2448,6 +2448,13 @@
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
 
+"@types/sparqljs@^3.1.7":
+  version "3.1.7"
+  resolved "https://registry.yarnpkg.com/@types/sparqljs/-/sparqljs-3.1.7.tgz#81bb0bf735f397df3c097d7dc8ce470cb14839c7"
+  integrity sha512-5Vqh2FvlfqDsMhQLVuf7uU0+wcG7eVCPg8Irttma56fh5E9yrkih1k+Y17+KqXqp1Eg4UVNxFc4u4YndfgeJaQ==
+  dependencies:
+    rdf-js "^4.0.2"
+
 "@types/tapable@^1":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.8.tgz#b94a4391c85666c7b73299fd3ad79d4faa435310"
