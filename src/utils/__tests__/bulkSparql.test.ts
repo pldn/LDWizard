@@ -1,5 +1,5 @@
 import { DataFactory } from 'n3'
-import batchSparql from '../batchSparql.js'
+import bulkSparql from '../bulkSparql.js'
 import { assert } from "chai";
 
 const rq = `
@@ -17,15 +17,15 @@ const streetsAsIris = ['https://data.kkg.kadaster.nl/id/openbareRuimte/036130000
 
 describe("bulkSparql", function () {
   it("should work against Kadaster KG", async function () {
-     let enriched = await batchSparql(rq, streets, {sparqlEndpoint, transformer, transformedValueName: 'obj'})
+     let enriched = await bulkSparql(rq, streets, {sparqlEndpoint, transformer, transformedValueName: 'obj'})
      assert.deepEqual(streets, enriched)
-     enriched = await batchSparql(rq, streets, {sparqlEndpoint, transformer})
+     enriched = await bulkSparql(rq, streets, {sparqlEndpoint, transformer})
      assert.deepEqual(streetsAsIris, enriched)
   })
   it("should work against Kadaster KG with batchsize 1", async function () {
-     let enriched = await batchSparql(rq, streets, {sparqlEndpoint, transformer, transformedValueName: 'obj', batchSize: 1})
+     let enriched = await bulkSparql(rq, streets, {sparqlEndpoint, transformer, transformedValueName: 'obj', batchSize: 1})
      assert.deepEqual(streets, enriched)
-     enriched = await batchSparql(rq, streets, {sparqlEndpoint, transformer, batchSize: 1})
+     enriched = await bulkSparql(rq, streets, {sparqlEndpoint, transformer, batchSize: 1})
      assert.deepEqual(streetsAsIris, enriched)
   })
 })

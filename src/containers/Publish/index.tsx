@@ -1,15 +1,15 @@
 import React from "react";
 import styles from "./style.scss";
 import { Box, Container, Button, Typography, Skeleton, Alert, LinearProgress } from "@mui/material";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useGetRecoilValueInfo_UNSTABLE, useRecoilValue, useSetRecoilState } from "recoil";
+import { Navigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { matrixState, sourceState, transformationConfigState } from "../../state/index.ts";
 import TriplyDBUpload from "./TriplyDBPublishForm.tsx";
 import ErrorBoundary from "../../components/ErrorBoundary/index.tsx";
 import { currentTokenState } from "../../state/clientJs.ts";
 import DownloadResults from "./DownloadResults.tsx";
 import { wizardAppConfig, PublishElement } from "../../config/index.ts";
-import { Matrix, SingularSingleColumnRefinement, SingularDoubleColumnRefinement, SingularColumnParamRefinement, BulkSingleColumnRefinement, BulkDoubleColumnRefinement } from "../../Definitions.ts";
+import { Matrix } from "../../Definitions.ts";
 interface Props { }
 export const Step = 3;
 const Publish: React.FC<Props> = ({ }) => {
@@ -18,7 +18,6 @@ const Publish: React.FC<Props> = ({ }) => {
   const source = useRecoilValue(sourceState);
   const transformationConfig = useRecoilValue(transformationConfigState);
   const setCurrentToken = useSetRecoilState(currentTokenState);
-  const navigate = useNavigate();
   const [transformationResult, setTransformationResult] = React.useState<string>();
   const [transformationError, setTransformationError] = React.useState<string>();
   React.useEffect(() => {

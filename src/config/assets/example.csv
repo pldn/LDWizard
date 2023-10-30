@@ -1,4 +1,4 @@
-IRIs,Literals,Colors,Name,Family name,Birth place,Date of Birth
-https://www.first.com,First example of a literal description,Red,John,Appleseed,Amsterdam,01/02/1993
-https://www.second.com,Second example of a literal description,Blue,Lisa,Smith,Berlin,02-03-2023
-https://www.third.com,Third example of a literal description,Green,Jane,Doe,Paris,4/5/1999
+IRIs,Literals,Colors,Name,Family name,Birth place,Street,Date of Birth
+https://www.first.com,First example of a literal description,Red,John,Appleseed,Amsterdam,Schoolstraat,01/02/1993
+https://www.second.com,Second example of a literal description,Blue,Lisa,Smith,Utrecht,Kerkstraat,02-03-2023
+https://www.third.com,Third example of a literal description,Green,Jane,Doe,Rotterdam,Molenweg,4/5/1999
