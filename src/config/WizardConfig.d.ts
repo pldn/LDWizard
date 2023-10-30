@@ -27,6 +27,7 @@ export interface SingleBaseColumnRefinement extends BaseColumnRefinement {
     transformation: unknown;
 }
 export interface BulkBaseColumnRefinement extends BaseColumnRefinement {
+    batchSize?: number;
     bulkTransformation: unknown;
 }
 export interface SingularSingleColumnRefinement extends SingleBaseColumnRefinement {
