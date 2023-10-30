@@ -224,9 +224,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   {
                     predicate: namedNode("rr:objectMap"),
                     object: writer.blank(
-                      // BUG input data should not be transformed the same as output data (in could be IRI while out could be literal and visa versa)
-                      // perhaps an inputData argument could be used when the data needs to be transformed in a particular manner
-
                       // header.columnRefinement.yieldsLiteral
                       //   ? [
                       //       {

@@ -9,7 +9,7 @@ import exampleCSV from "../src/config/assets/example.csv";
 import shapeFile from "../public/Person.ttl"
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = false;
+const useRuntimeConfigFile = true;
 
 let wizardConfig: WizardConfig;
 
@@ -21,6 +21,18 @@ let runtimeConfig: WizardConfig = {
   secondaryColor: "#1565c0", // blue
   exampleCSV,
   columnRefinements: [
+    {
+      label: "Use bulk processing",
+      type:"single",
+      description: "This transformation uses bulk processing",
+      bulkTransformation: async (columnValues: string[]) => {
+        const results: string[] = []
+        for (const value of columnValues) {
+          results.push(`${value}-processed-in-bulk`)
+        }
+        return results;
+      }
+    },
     {
       label: "Convert lang ISO to Lexvo URIs",
       type: "single",

@@ -13,27 +13,46 @@ export type KeepOriginalValueOptions = {
     customPredicateIRI?: string;
 };
 export interface BaseColumnRefinement {
-    label: string;
-    description: string;
-    type: ColumnRefinementType;
-    transformation: unknown;
-    keepOriginalValue?: KeepOriginalValueOptions;
-    yieldsIri?: boolean;
-    yieldsLiteral?: boolean;
+  label: string;
+  description: string;
+  type: ColumnRefinementType;
+  yieldsLiteral?: boolean;
+  yieldsIri?: boolean;
+  keepOriginalValue?: KeepOriginalValueOptions;
 }
-export interface SingleColumnRefinement extends BaseColumnRefinement {
-    type: "single";
-    transformation: (value: string) => Promise<string | undefined>;
+export interface SingleBaseColumnRefinement extends BaseColumnRefinement {
+  transformation: unknown
 }
-export interface DoubleColumnRefinement extends BaseColumnRefinement {
-    type: "double-column";
-    transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
+export interface BulkBaseColumnRefinement extends BaseColumnRefinement {
+  bulkTransformation: unknown
 }
-export interface SingleColumnParamRefinement extends BaseColumnRefinement {
-    type: "single-param";
-    transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
+export interface SingularSingleColumnRefinement extends SingleBaseColumnRefinement {
+  type: "single";
+  transformation: (value: string) => Promise<string | undefined>;
 }
-export type ColumnRefinement = SingleColumnRefinement | DoubleColumnRefinement | SingleColumnParamRefinement;
+export interface SingularDoubleColumnRefinement extends SingleBaseColumnRefinement {
+  type: "double-column";
+  transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
+}
+export interface SingularColumnParamRefinement extends SingleBaseColumnRefinement {
+  type: "single-param";
+  transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
+}
+export interface BulkSingleColumnRefinement extends BulkBaseColumnRefinement {
+  type: "single";
+  bulkTransformation: (value: string[]) => Promise<string[] | undefined>;
+}
+export interface BulkDoubleColumnRefinement extends BulkBaseColumnRefinement {
+  type: "double-column";
+  bulkTransformation: (firstColumn: string[], selectedColumn: string[]) => Promise<string[] | undefined>;
+}
+export interface BulkSingleColumnParamRefinement extends BulkBaseColumnRefinement {
+  type: "single-param";
+  bulkTransformation: (value: string[], iriPrefix: string) => Promise<string[] | undefined>;
+}
+
+export type ColumnRefinement = SingularSingleColumnRefinement | SingularDoubleColumnRefinement | SingularColumnParamRefinement | BulkSingleColumnRefinement | BulkDoubleColumnRefinement | BulkSingleColumnParamRefinement;
+
 export type ShaclShapeSetting = {
     url: string;
     targetShape?: string;
