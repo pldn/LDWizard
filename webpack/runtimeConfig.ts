@@ -13,7 +13,7 @@ import bulkSparql from "../src/utils/bulkSparql.js";
 import { DataFactory } from "n3";
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = true;
+const useRuntimeConfigFile = false;
 
 let wizardConfig: WizardConfig;
 
@@ -37,6 +37,12 @@ let runtimeConfig: WizardConfig = {
         }
         return results;
       },
+      yieldsLiteral: true,
+      keepOriginalValue: {
+        keepValue: true,
+        keepAsLiteral: true,
+        customPredicateIRI: "https://www.exampleBulk.com"
+      }
     },
     {
       label: "Use bulk processing: SPARQL bulk refinement for street names",

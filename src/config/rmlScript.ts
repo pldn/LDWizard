@@ -105,6 +105,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       if ((header.columnRefinement.yieldsIri == true) && (header.columnRefinement.yieldsLiteral == true)){
         throw new Error(`Cannot use "yieldsIri" in combination with "yieldsLiteral" as columnRefinement options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
       }
+      if ((header.columnRefinement.KeepOriginalValueOptions.keepAsIri == true) && (header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral == true)){
+        throw new Error(`Cannot use "keepAsIri" in combination with "keepAsLiteral" as columnRefinement KeepOriginalValue options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
+      }
       // don't add both if column refinement is "to-iri"
       if (header.columnRefinement?.type === "to-iri") {
         // add each seperately
@@ -224,27 +227,25 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   {
                     predicate: namedNode("rr:objectMap"),
                     object: writer.blank(
-                      // header.columnRefinement.yieldsLiteral
-                      //   ? [
-                      //       {
-                      //         predicate: namedNode("rml:reference"),
-                      //         object: literal(`${header.columnName}`),
-                      //       },
-                      //     ]
-                      //   : header.columnRefinement.yieldsIri 
-                      //   ? [
-                      //     {
-                      //       predicate: namedNode("rml:reference"),
-                      //       object: literal(`${header.columnName}`),
-                      //     },
-                      //     {
-                      //       predicate: namedNode("rr:termType"),
-                      //       object: namedNode("rr:IRI"),
-                      //     },
-                      //   ]
-                      //   :
-
-                        [
+                      header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral
+                        ? [
+                            {
+                              predicate: namedNode("rml:reference"),
+                              object: literal(`${header.columnName}`),
+                            },
+                          ]
+                        : header.columnRefinement.KeepOriginalValueOptions.keepAsIri 
+                        ? [
+                          {
+                            predicate: namedNode("rml:reference"),
+                            object: literal(`${header.columnName}`),
+                          },
+                          {
+                            predicate: namedNode("rr:termType"),
+                            object: namedNode("rr:IRI"),
+                          },
+                        ]
+                        : [
                             {
                               predicate: namedNode("rml:template"),
                               object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),

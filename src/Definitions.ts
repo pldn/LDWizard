@@ -108,6 +108,8 @@ export type ColumnRefinementType = "single" | "double-column" | "to-iri" | "sing
 export type KeepOriginalValueOptions = {
   keepValue: boolean
   customPredicateIRI?: string
+  keepAsIri?: boolean
+  keepAsLiteral?: boolean
 }
 /**
  * Define transformation scripts in configuration
