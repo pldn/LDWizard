@@ -201,6 +201,44 @@ const wizardConfig: WizardConfig = {
   secondaryColor: "#1565c0", // blue
   columnRefinements: [
     {
+      label: "Use bulk processing: add '-processed-in-bulk' at the end of literal",
+      type: "single",
+      description: "This transformation uses bulk processing",
+      batchSize: 1,
+      bulkTransformation: async (columnValues: string[]) => {
+        const results: string[] = [];
+        for (const value of columnValues) {
+          results.push(`${value}-processed-in-bulk`);
+        }
+        return results;
+      },
+      yieldsLiteral: true,
+      keepOriginalValue: {
+        keepValue: true,
+        keepAsLiteral: true,
+        customPredicateIRI: "https://www.exampleBulk.com"
+      }
+    },
+    {
+      label: "Use bulk processing: SPARQL bulk refinement for street names",
+      type: "single",
+      description: "This transformation uses bulk processing",
+      bulkTransformation: async (columnValues: string[]) => {
+        const rq = `
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix sor: <https://data.kkg.kadaster.nl/sor/model/def/>
+select ?transformed ?obj where {
+  ?transformed skos:prefLabel ?obj; a sor:OpenbareRuimte
+  filter(sameTerm(?obj, ?searchValue))
+}
+`;
+        const sparqlEndpoint = "https://api.labs.kadaster.nl/datasets/dst/kkg/services/default/sparql";
+        const transformer = (value: string) => DataFactory.literal(value, "nl");
+        return bulkSparql(rq, columnValues, { sparqlEndpoint, transformer });
+      },
+      yieldsIri: true
+    },
+    {
       label: "Convert lang ISO to Lexvo URIs",
       type: "single",
       description:
@@ -218,22 +256,31 @@ const wizardConfig: WizardConfig = {
       },
     },
     {
-      label: "Example: return IRI from input",
+      label: "Example: return base IRI + value",
       type: "single",
-      description: "In this transformation the returned value is the original IRI",
+      description: "In this transformation the returned value is the base IRI + value from CSV file",
       transformation: async (term: string) => {
         return `${term}`;
       },
-      yieldsIri: true
     },
     {
-      label: "Example: return value as literal",
+      label: "Example: expect to return IRI in transformation",
       type: "single",
-      description: "In this transformation the returned value is turned into a literal",
+      description:
+        "In this transformation the returned value should be an IRI, this can be applied to the 'IRIs' column in the example.csv file",
       transformation: async (term: string) => {
         return `${term}`;
       },
-      yieldsLiteral: true
+      yieldsIri: true,
+    },
+    {
+      label: "Example: expect to return literal in transformation",
+      type: "single",
+      description: "In this transformation the returned value should be a literal",
+      transformation: async (term: string) => {
+        return `${term}`;
+      },
+      yieldsLiteral: true,
     },
     {
       label: "Example keepOriginalValue option: owl:sameAs",
@@ -244,7 +291,7 @@ const wizardConfig: WizardConfig = {
         return `${term}-copy`;
       },
       keepOriginalValue: {
-        keepValue: true
+        keepValue: true,
       },
     },
     {
@@ -257,7 +304,7 @@ const wizardConfig: WizardConfig = {
       },
       keepOriginalValue: {
         keepValue: true,
-        customPredicateIRI: "https://myCustomPredicate.org"
+        customPredicateIRI: "https://myCustomPredicate.org",
       },
     },
   ],
