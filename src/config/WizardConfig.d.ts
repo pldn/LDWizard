@@ -14,8 +14,8 @@ export type ColumnRefinementType = "single" | "double-column" | "single-param";
 export type KeepOriginalValueOptions = {
     keepValue: boolean;
     customPredicateIRI?: string;
-    keepAsIri?: boolean
-    keepAsLiteral?: boolean
+    keepAsIri?: boolean;
+    keepAsLiteral?: boolean;
 };
 export interface BaseColumnRefinement {
     label: string;

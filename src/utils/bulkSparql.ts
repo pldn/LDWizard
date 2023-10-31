@@ -53,7 +53,7 @@ const isVariable = (val: any): val is RdfJs.Variable => {
     Object.keys(val).includes('value')
 }
 
-export default async function batchSparql(query: string, values: string[], opts: Opts): Promise<string[]> {
+export default async function bulkSparql(query: string, values: string[], opts: Opts): Promise<string[]> {
   const request: RequestInit = {
     method: 'POST',
     headers: {

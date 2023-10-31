@@ -105,9 +105,6 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       if ((header.columnRefinement.yieldsIri == true) && (header.columnRefinement.yieldsLiteral == true)){
         throw new Error(`Cannot use "yieldsIri" in combination with "yieldsLiteral" as columnRefinement options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
       }
-      if ((header.columnRefinement.KeepOriginalValueOptions.keepAsIri == true) && (header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral == true)){
-        throw new Error(`Cannot use "keepAsIri" in combination with "keepAsLiteral" as columnRefinement KeepOriginalValue options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
-      }
       // don't add both if column refinement is "to-iri"
       if (header.columnRefinement?.type === "to-iri") {
         // add each seperately
@@ -154,6 +151,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       } else {
         // for any other column refinement add both original and refined value to the RML script
         if (header.columnRefinement.KeepOriginalValueOptions && header.columnRefinement.KeepOriginalValueOptions.keepValue) {
+          if ((header.columnRefinement.KeepOriginalValueOptions.keepAsIri == true) && (header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral == true)){
+            throw new Error(`Cannot use "keepAsIri" in combination with "keepAsLiteral" as columnRefinement KeepOriginalValue options in the refinement "${header.columnRefinement.label}", please only specify one in your configuration file.`)
+          }
           // keeps the original value as triple in combination with the refined value
           for (let i = 0; i < 2; i++) {
             let colName: string;
@@ -227,14 +227,14 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   {
                     predicate: namedNode("rr:objectMap"),
                     object: writer.blank(
-                      header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral
+                      header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral === true
                         ? [
                             {
                               predicate: namedNode("rml:reference"),
                               object: literal(`${header.columnName}`),
                             },
                           ]
-                        : header.columnRefinement.KeepOriginalValueOptions.keepAsIri 
+                        : header.columnRefinement.KeepOriginalValueOptions.keepAsIri === true
                         ? [
                           {
                             predicate: namedNode("rml:reference"),
@@ -244,8 +244,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                             predicate: namedNode("rr:termType"),
                             object: namedNode("rr:IRI"),
                           },
-                        ]
-                        : [
+                        ] : [
                             {
                               predicate: namedNode("rml:template"),
                               object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),

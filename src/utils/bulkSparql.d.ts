@@ -35,6 +35,6 @@ interface Opts {
      */
     transformer?: (value: string) => RdfJs.NamedNode | RdfJs.Literal;
 }
-export default function batchSparql(query: string, values: string[], opts: Opts): Promise<string[]>;
+export default function bulkSparql(query: string, values: string[], opts: Opts): Promise<string[]>;
 export {};
 //# sourceMappingURL=bulkSparql.d.ts.map

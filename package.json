@@ -178,7 +178,8 @@
       "import": {
         "default": "./src/index.ts"
       }
-    }
+    },
+    "./src/utils/bulkSparql": "./src/utils/bulkSparql.js"
   },
   "type": "module",
   "imports": {

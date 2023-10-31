@@ -217,7 +217,6 @@ const Publish: React.FC<Props> = ({ }) => {
             );
           }
         }
-        console.log('🪵  | file: index.tsx:226 | transformFunction | tempRefinedCsv:', tempRefinedCsv)
         setRefinedCsv(tempRefinedCsv);
       }
       // Transformation
