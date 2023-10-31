@@ -17,3 +17,6 @@ yarn-error.log
 src/config/WizardConfig.js
 src/config/WizardConfig.d.ts.map
 src/config/WizardConfig.js.map
+src/utils/bulkSparql.d.ts.map
+src/utils/bulkSparql.js
+src/utils/bulkSparql.js.map
