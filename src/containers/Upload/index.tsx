@@ -59,7 +59,7 @@ const Upload: React.FC<Props> = ({ }) => {
   const sourceText =
     (source && (typeof source === "string" ? "Input selected" : `Current file: ${source.name}`)) || "No file selected";
   const mappingSourceText =
-    (mappingSource && (typeof mappingSource === "string" ? "Input selected" : `Current file: ${mappingSource.name}`)) || "No file selected";
+    (mappingSource && (typeof mappingSource === "string" ? "Input selected" : `Mapping file: ${mappingSource.name}`)) || "No file selected";
   const handleCsvParse = (sourceFile: File) => {
     setLoading(true);
     setSource(sourceFile);
@@ -382,7 +382,7 @@ const Upload: React.FC<Props> = ({ }) => {
         {source &&
           <>
             <Typography variant="body1" style={{ textAlign: "center", paddingTop: "2rem" }}>
-              Optionally you can provide a RML or YARRRML mapping file to pre-load the mappings from, or click next
+              Optionally you can provide a RML (in turtle format), or YARRRML (in YAML format) mapping file to pre-load the mappings from, or click next
             </Typography>
             <div className={styles.button}
             onDragOver={(e) => handleDragOver(e)}
