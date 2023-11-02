@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
-import lodash from "lodash";
+import * as chardet from 'chardet';
 
 class EmptySpaceInRowError extends Error {
   constructor(message) {
@@ -30,7 +30,58 @@ const exampleFile = config.exampleCsv
 
 interface Props { }
 export const Step = 1;
-const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = (input) => {
+
+function hasUtf8Bom(buffer: Uint8Array): boolean {
+  return buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF;
+}
+
+function detectAndDecodeToUTF8(file: File): Promise<File | null> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      if (event.target) {
+        const buffer = new Uint8Array(event.target.result as ArrayBuffer);
+
+        // Check for Byte Order Marks (BOM) indicating UTF-8
+        if (hasUtf8Bom(buffer)) {
+          console.log('File is already in UTF-8 encoding (BOM detected). Skipping decoding.');
+          resolve(null);
+          return;
+        }
+
+        // Detecting the encoding
+        const detectedEncoding = chardet.detect(buffer);
+        console.log('Detected Encoding:', detectedEncoding);
+
+        // Convert to UTF-8 using detected encoding
+        const textDecoder = new TextDecoder(detectedEncoding);
+        const utf8Decoded = textDecoder.decode(buffer);
+        console.log('UTF-8 Decoded Content:', utf8Decoded);
+
+        // Create a Blob with the UTF-8 content
+        const blob = new Blob([utf8Decoded], { type: 'text/plain' });
+
+        // Create a File object from the Blob
+        const fileObject = new File([blob], 'decoded_utf8.txt', { type: 'text/plain' });
+
+        resolve(fileObject);
+      }
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+const parseCSV: (input: File) => Promise<Papa.ParseResult<string[]>> = async (input) => {
+  /**
+   * NOTE: Detecting the encoding of a file automatically can be a bit complex, as there's no foolproof way to detect the encoding with absolute certainty. However, libraries like chardet can help in making an educated guess about the encoding.
+   * The accuracy of automatic encoding detection can vary, so it might not always be 100% reliable.
+   */
+  input = await detectAndDecodeToUTF8(input)
+
   return new Promise((resolve, reject) => {
     Papa.parse<string[]>(input, {
       error: (e) => {
