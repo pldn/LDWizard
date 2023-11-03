@@ -45,19 +45,16 @@ function detectAndDecodeToUTF8(file: File): Promise<File | null> {
 
         // Check for Byte Order Marks (BOM) indicating UTF-8
         if (hasUtf8Bom(buffer)) {
-          console.log('File is already in UTF-8 encoding (BOM detected). Skipping decoding.');
           resolve(null);
           return;
         }
 
         // Detecting the encoding
         const detectedEncoding = chardet.detect(buffer);
-        console.log('Detected Encoding:', detectedEncoding);
 
         // Convert to UTF-8 using detected encoding
         const textDecoder = new TextDecoder(detectedEncoding);
         const utf8Decoded = textDecoder.decode(buffer);
-        console.log('UTF-8 Decoded Content:', utf8Decoded);
 
         // Create a Blob with the UTF-8 content
         const blob = new Blob([utf8Decoded], { type: 'text/plain' });
