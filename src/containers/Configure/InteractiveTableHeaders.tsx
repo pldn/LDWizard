@@ -193,7 +193,9 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                 <Autocomplete
                   freeSolo
                   options={autocompleteSuggestions}
-                  value={propertyIri}
+                  value={propertyIri || `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
+                    selectedHeader.columnName
+                  )}`}
                   renderOption={(props, option: AutocompleteSuggestion) => {
                     let titleString: string;
                     let description: string | undefined;
