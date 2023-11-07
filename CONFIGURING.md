@@ -35,8 +35,8 @@ You can create your own LD Wizard application by following these steps:
       {
          "compilerOptions": {
             "target": "ES2020",
-            "module": "ES2020",
-            "moduleResolution": "node",
+            "module": "nodenext",
+            "moduleResolution": "nodenext",
             "lib": ["ES2020", "DOM", "DOM.Iterable"],
             "useDefineForClassFields": false,
             "experimentalDecorators": true,
