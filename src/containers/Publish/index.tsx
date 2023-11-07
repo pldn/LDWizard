@@ -57,8 +57,10 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
             const refinement = wizardAppConfig.refinementOptions.find(
               (config) => config.label === column.columnRefinement?.label
             );
+            if ((column.columnRefinement && "bulkTransformation" in refinement && typeof refinement.bulkTransformation === 'function') && (column.columnRefinement && 'transformation' in refinement && typeof refinement.transformation === 'function')) throw new Error(`Cannot use both 'transformation' and 'bulkTransformation' in the same '${refinement.label}' refinement, please only specify one.`)
             // Bulk processing
             if (column.columnRefinement && "bulkTransformation" in refinement && typeof refinement.bulkTransformation === 'function') {
+              if (refinement.batchSize === 0) console.error('Cannot use batchSize of size 0, please increase value to be greater than 0 if you want to process in batches.\nCurrently transforming the entire column instead (as if batchSize were undefined).')
               if (refinement?.type === "single" && column.columnRefinement.type === "single") {
                 // Extracting values of the specified column
                 const rowValues = tempRefinedCsv.slice(1).map(row => row[columnIdx]);

@@ -20,43 +20,103 @@ export type KeepOriginalValueOptions = {
 export interface BaseColumnRefinement {
     label: string;
     description: string;
+    /**
+     * Defines the type of column refinement
+     * @property "single": a single column's values will be used for refinement/transformation
+     * @property "double-column" two different columns's values will be used for refinement/transformation
+     * @property "single-param" a single column's values with one parameter will be used for refinement/transformation
+     */
     type: ColumnRefinementType;
     yieldsLiteral?: boolean;
     yieldsIri?: boolean;
     keepOriginalValue?: KeepOriginalValueOptions;
 }
 export interface SingleBaseColumnRefinement extends BaseColumnRefinement {
-    transformation: unknown;
-}
-export interface BulkBaseColumnRefinement extends BaseColumnRefinement {
-    batchSize?: number;
-    bulkTransformation: unknown;
-}
-export interface SingularSingleColumnRefinement extends SingleBaseColumnRefinement {
+    transformation: unknown
+  }
+  export interface BulkBaseColumnRefinement extends BaseColumnRefinement {
+    /**
+     * Only used for `bulkTransformation`s
+     * 
+     * Size of elements of total size to perform bulk opperation on
+     * @example batchSize = 5 in array [1,2,3,4,5,6,7,8,9,10,11] yields:
+     * first batch => 1,2,3,4,5
+     * second batch => 6,7,8,9,10
+     * third batch => 11
+     */
+    batchSize?: number
+    bulkTransformation: unknown
+  }
+  export interface SingularSingleColumnRefinement extends SingleBaseColumnRefinement {
+    /**
+     * @property a single column's values will be used for refinement/transformation
+     */
     type: "single";
+    /**
+     * @param value value in column row used for transformation
+     * @returns transformed value of column row
+     */
     transformation: (value: string) => Promise<string | undefined>;
-}
-export interface SingularDoubleColumnRefinement extends SingleBaseColumnRefinement {
+  }
+  export interface SingularDoubleColumnRefinement extends SingleBaseColumnRefinement {
+    /**
+     * @property two different columns's values will be used for refinement/transformation
+     */
     type: "double-column";
+    /**
+     * @param value value in column row used for transformation
+     * @returns transformed value of column row
+     */
     transformation: (firstColumn: string, selectedColumn: string) => Promise<string | undefined>;
-}
-export interface SingularColumnParamRefinement extends SingleBaseColumnRefinement {
+  }
+  export interface SingularColumnParamRefinement extends SingleBaseColumnRefinement {
+    /**
+     * @property a single column's values with one parameter will be used for refinement/transformation
+     */
     type: "single-param";
+    /**
+     * @param value value in column row used for transformation
+     * @returns transformed value of column row
+     */
     transformation: (value: string, iriPrefix: string) => Promise<string | undefined>;
-}
-export interface BulkSingleColumnRefinement extends BulkBaseColumnRefinement {
-    type: "single";
-    bulkTransformation: (value: string[]) => Promise<string[] | undefined>;
-}
-export interface BulkDoubleColumnRefinement extends BulkBaseColumnRefinement {
+  }
+  export interface BulkSingleColumnRefinement extends BulkBaseColumnRefinement {
+    /**
+     * @property a single column's values will be used for refinement/transformation
+     */
+    type: "single";  
+    /**
+     * @param value values in column used for transformation (all row values as array)
+     * @returns transformed column values
+     */
+   bulkTransformation: (value: string[]) => Promise<string[] | undefined>;
+  }
+  export interface BulkDoubleColumnRefinement extends BulkBaseColumnRefinement {
+    /**
+     * @property two different columns's values will be used for refinement/transformation
+     */
     type: "double-column";
-    bulkTransformation: (firstColumn: string[], selectedColumn: string[]) => Promise<string[] | undefined>;
-}
-export interface BulkSingleColumnParamRefinement extends BulkBaseColumnRefinement {
+    /**
+     * @param value values in column used for transformation (all row values as array)
+     * @returns transformed column values
+     */
+   bulkTransformation: (firstColumn: string[], selectedColumn: string[]) => Promise<string[] | undefined>;
+  }
+  export interface BulkSingleColumnParamRefinement extends BulkBaseColumnRefinement {
+    /**
+     * @property a single column's values with one parameter will be used for refinement/transformation
+     */
     type: "single-param";
+    /**
+     * 
+     * @param value values in column used for transformation (all row values as array)
+     * @returns transformed column values
+     */
     bulkTransformation: (value: string[], iriPrefix: string) => Promise<string[] | undefined>;
-}
-export type ColumnRefinement = SingularSingleColumnRefinement | SingularDoubleColumnRefinement | SingularColumnParamRefinement | BulkSingleColumnRefinement | BulkDoubleColumnRefinement | BulkSingleColumnParamRefinement;
+  }
+  
+  export type ColumnRefinement = SingularSingleColumnRefinement | SingularDoubleColumnRefinement | SingularColumnParamRefinement | BulkSingleColumnRefinement | BulkDoubleColumnRefinement | BulkSingleColumnParamRefinement;
+  
 export type ShaclShapeSetting = {
     url: string;
     targetShape?: string;
