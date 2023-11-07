@@ -13,7 +13,7 @@ import bulkSparql from "../src/utils/bulkSparql.js";
 import { DataFactory } from "n3";
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = false;
+const useRuntimeConfigFile = true;
 
 let wizardConfig: WizardConfig;
 
@@ -29,7 +29,7 @@ let runtimeConfig: WizardConfig = {
       label: "Use bulk processing: add '-processed-in-bulk' at the end of literal",
       type: "single",
       description: "This transformation uses bulk processing",
-      batchSize: 1,
+      batchSize: 10,
       bulkTransformation: async (columnValues: string[]) => {
         const results: string[] = [];
         for (const value of columnValues) {

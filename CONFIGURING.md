@@ -204,7 +204,7 @@ const wizardConfig: WizardConfig = {
       label: "Use bulk processing: add '-processed-in-bulk' at the end of literal",
       type: "single",
       description: "This transformation uses bulk processing",
-      batchSize: 1,
+      batchSize: 10,
       bulkTransformation: async (columnValues: string[]) => {
         const results: string[] = [];
         for (const value of columnValues) {

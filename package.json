@@ -1,6 +1,6 @@
 {
   "name": "@pldn/ldwizard",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "contributors": [
     {
       "name": "Gerwin Bosch",
@@ -180,7 +180,8 @@
         "default": "./src/index.ts"
       }
     },
-    "./src/utils/bulkSparql": "./src/utils/bulkSparql.js"
+    "./WizardConfig": "./types/WizardConfig.d.ts",
+    "./bulkSparql": "./src/utils/bulkSparql.js"
   },
   "type": "module",
   "imports": {
