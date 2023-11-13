@@ -38,7 +38,7 @@ jobs:
         npm install --global yarn
 
     - name: Install Node 18 dependencies
-      if: ${{ matrix.node-version == "18.x" }}
+      if: ${{ matrix.node-version == '18.x' }}
       run: |
         yarn global add node-gyp
 
@@ -49,6 +49,10 @@ jobs:
     - name: Build the LDWizard
       run: |
         yarn build
+
+    - name: Run the ldwizard-build script on default config
+      run: |
+        yarn ldwizard-build webpack/runtimeConfig.ts
 
 
   docker:
