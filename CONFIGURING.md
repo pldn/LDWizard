@@ -25,7 +25,7 @@ You can create your own LD Wizard application by following these steps:
 
    ```sh
    yarn init
-   yarn add typescript --dev
+   yarn add typescript http-server --dev
    yarn tsc --init
    ```
 
@@ -82,7 +82,7 @@ You can create your own LD Wizard application by following these steps:
 
       `mkdir src`
 
-   * 6.2. Create the `config.ts` file in the created `src` directorywith the contents:
+   * 6.2. Create the [`config.ts`](https://github.com/pldn/LDWizard/blob/main/webpack/runtimeConfig.ts) file in the created `src` directory with the contents:
 
       ```ts
       // This is a template file
@@ -106,16 +106,22 @@ Your LD Wizard application can now be found inside the `lib/` directory.
 You can upload your LD Wizard application to an online location and use it there. But you can also run the application locally by starting an HTTP server. If you do not yet have an HTTP server installed, run the following command:
 
 ```sh
-yarn global add http-server
+yarn add --dev http-server
 ```
 
 With this particular HTTP server the LDWizard can be started in the following way:
 
 ```sh
-http-server ./lib
+yarn http-server ./lib
 ```
 
 Open <http://localhost:8080> in a web browser.
+
+To build your app and start it in one command, use:
+
+```bash
+yarn start
+```
 
 ### 1b. Configuration options
 
