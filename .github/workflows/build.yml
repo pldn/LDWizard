@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
     paths:
     - "*.json"
     - "yarn.lock"
@@ -39,7 +39,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        yarn --frozen-lockfile
+        yarn
+        # yarn --frozen-lockfile
 
     - name: Build the LDWizard
       run: |
