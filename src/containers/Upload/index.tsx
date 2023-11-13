@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { Parser, Store, DataFactory, Writer } from "n3";
+import { Parser, Store, DataFactory } from "n3";
 import RMLGenerator from "@rmlio/yarrrml-parser/lib/rml-generator";
 import { mappingSourceState, sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
@@ -165,7 +165,7 @@ const Upload: React.FC<Props> = ({ }) => {
         // Get the SubjectMap (subMap, which col is used to generate the subject)
         let subjectMapValue = null
         for (const subjectMapQuad of store.match(triplesMapSubject, namedNode(`${rr}subjectMap`), null)) {
-          for (const subMapTemplateQuad of store.match(subjectMapQuad.object, namedNode(`${rr}template`), null)) {
+          for (const subMapTemplateQuad of store.match(namedNode(subjectMapQuad.object.value), namedNode(`${rr}template`), null)) {
             subjectMapValue = subMapTemplateQuad.object.value;
           }
         }
@@ -197,7 +197,7 @@ const Upload: React.FC<Props> = ({ }) => {
 
         // Iterate over TriplesMap predicate-object mappings (poMap)
         for (const poMapQuad of store.match(triplesMapSubject, namedNode(`${rr}predicateObjectMap`), null)) {
-          const poMapSubject = poMapQuad.object
+          const poMapSubject = namedNode(poMapQuad.object.value)
 
           // Get the predicate of the predicate-object mapping (can be rr:predicate or rr:predicateMap)
           let poMapPredicate = null
@@ -206,7 +206,7 @@ const Upload: React.FC<Props> = ({ }) => {
           }
           if (!poMapPredicate) {
             for (const poMapPredicateQuad of store.match(poMapSubject, namedNode(`${rr}predicateMap`), null)) {
-              for (const poMapPredicateConstant of store.match(poMapPredicateQuad.object, namedNode(`${rr}constant`), null)) {
+              for (const poMapPredicateConstant of store.match(namedNode(poMapPredicateQuad.object.value), namedNode(`${rr}constant`), null)) {
                 poMapPredicate = poMapPredicateConstant.object.value
               }
             }
