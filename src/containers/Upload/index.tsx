@@ -325,12 +325,15 @@ const Upload: React.FC<Props> = ({ }) => {
       </div>
     ) : (
       <>
+        <Typography variant="body1" style={{ textAlign: "center", paddingTop: "2rem" }}>
+          Upload you own CSV file via the Drag and Drop area, or Load button
+        </Typography>
         <div className={styles.button}
         onDragOver={(e) => handleDragOver(e)}
         onDrop={(e) => handleDrop(e)}>
           <div className={styles.dragDropIndicator}>
             <Typography variant="body1" color="primary">
-              Drag and Drop Here
+              Drag and Drop CSV Here
             </Typography>
           </div>
           <Typography variant="body1" gutterBottom>
@@ -368,7 +371,7 @@ const Upload: React.FC<Props> = ({ }) => {
           </label>
           {exampleFile && (
             <Typography style={{ paddingTop: "1rem" }}>
-              Or try it with an{" "}
+              Or try with an{" "}
               <a
                 style={{ cursor: "pointer" }}
                 onClick={() => {
@@ -384,14 +387,14 @@ const Upload: React.FC<Props> = ({ }) => {
         {source &&
           <>
             <Typography variant="body1" style={{ textAlign: "center", paddingTop: "2rem" }}>
-              Optionally you can provide a RML (in turtle format), or YARRRML (in YAML format) mapping file to pre-load the mappings from, or click next
+              Optionally upload a RML file (in Turtle format), or a YARRRML file (in YAML format), to pre-load and reuse mappings defined previously
             </Typography>
             <div className={styles.button}
             onDragOver={(e) => handleDragOver(e)}
             onDrop={(e) => handleDrop(e)}>
               <div className={styles.dragDropIndicator}>
                 <Typography variant="body1" color="primary">
-                  Drag and Drop Here
+                  Drag and Drop Mappings Here
                 </Typography>
               </div>
               <Typography variant="body1" gutterBottom>
@@ -423,7 +426,7 @@ const Upload: React.FC<Props> = ({ }) => {
               <label htmlFor="rml-upload">
                 <Box textAlign='center'>
                   <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
-                    Load your mapping file
+                    Load Your Mapping File
                   </Button>
                 </Box>
               </label>

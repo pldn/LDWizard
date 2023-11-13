@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 ARG CONFIG_FILE
-# RUN yarn add "@pldn/ldwizard"
+# RUN yarn global add "@pldn/ldwizard"
 RUN yarn ldwizard-build ${CONFIG_FILE}
 
 
