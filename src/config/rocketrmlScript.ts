@@ -38,8 +38,6 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     let result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
     // Convert ntriples to turtle
     const rdfParser = new Parser();
-    // NOTE: the config passed is a TransformationConfig, we would need
-    // to pass the wizardAppConfig if we want to access the global getPrefixes() function
     const prefixes = {
       '': opts.config.baseIri,
       ldwid: opts.config.baseIri + "id/",
@@ -56,7 +54,11 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       pav: 'http://purl.org/pav/',
       prov: 'http://www.w3.org/ns/prov#',
       csvw: 'http://www.w3.org/ns/csvw#',
-      dbo: 'http://dbpedia.org/ontology/'
+      dbo: 'http://dbpedia.org/ontology/',
+      ...(await opts.wizardAppConfig.getPrefixes()).reduce((obj, item) => {
+        obj[item.prefixLabel] = item.iri;
+        return obj
+      }, {} as Record<string, string>)
     }
     const quads = rdfParser.parse(result, null, (prefix, namespace) => {
       prefixes[prefix] = namespace['id']
