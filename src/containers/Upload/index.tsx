@@ -171,13 +171,16 @@ const Upload: React.FC<Props> = ({ }) => {
             subjectMapValue = subMapTemplateQuad.object.value;
           }
         }
+        //
         if (subjectMapValue) {
           const match = subjectMapValue.match(regexExtractTemplate);
           if (match) {
             const baseIri = match[1];
             const keyColumnName = match[2];
             setTransformationConfig((state) => {
-              const keyIndex = state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);
+              const keyIndex = (keyColumnName === "_rowNumber")
+                ? undefined
+                : state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);
               if (keyIndex > -1) {
                 return {
                   ...state,

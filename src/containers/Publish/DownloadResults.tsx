@@ -108,8 +108,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             </CardContent>
             <CardActions>
               <SplitButton
-                // We don't propose to download YARRRML mappings if "Row number" is used as Key columns: not supported by YARRRML
-                actions={(transformationConfig.key !== undefined) ? ["rml", "yarrrml", "cow"] : ["rml", "cow"]}
+                actions={["rml", "yarrrml", "cow"]}
                 getButtonlabel={(selectedOption) => `Download ${selectedOption.toUpperCase()}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
