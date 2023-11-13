@@ -18,7 +18,7 @@ on:
 jobs:
 
   build:
-    name: Build with yarn
+    name: Build with Node.js
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,7 +37,7 @@ jobs:
       run: |
         npm install --global yarn
 
-    - name: Install Node 18 dependencies
+    - name: Install node-gyp dependency
       if: ${{ matrix.node-version == '18.x' }}
       run: |
         yarn global add node-gyp
