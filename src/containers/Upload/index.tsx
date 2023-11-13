@@ -126,12 +126,10 @@ const Upload: React.FC<Props> = ({ }) => {
       return { ...state };
     });
     setError(undefined);
-
-    const { namedNode, blankNode } = DataFactory;
+    const { namedNode } = DataFactory;
     const rdfType = namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
     const rr = "http://www.w3.org/ns/r2rml#"
     const rml = "http://semweb.mmlab.be/ns/rml#"
-    const regexExtractTemplate = /(.*?)\{(.*?)\}/
     // NOTE: Info about source file dont need to be extracted as a new source file is provided
 
     // First we parse the provided RML RDF file
@@ -173,7 +171,8 @@ const Upload: React.FC<Props> = ({ }) => {
         }
         //
         if (subjectMapValue) {
-          const match = subjectMapValue.match(regexExtractTemplate);
+          // We remove the /id/ fragment if present at the end to follow the LDWizard base IRI schema
+          const match = subjectMapValue.match(/(.*?)(?:id(?:#|\/))?\{(.*?)\}/);
           if (match) {
             const baseIri = match[1];
             const keyColumnName = match[2];
@@ -249,7 +248,7 @@ const Upload: React.FC<Props> = ({ }) => {
               const columnConfig = [...state.columnConfiguration];
               if (isTemplate) {
                 // Handle rr:template for IRI Prefix transformation
-                const match = poMapObjectValue.match(regexExtractTemplate);
+                const match = poMapObjectValue.match(/(.*?)\{(.*?)\}/);
                 const baseIri = match[1];
                 const keyColumnName = match[2];
                 const keyIndex = state.columnConfiguration.findIndex(obj => obj.columnName === keyColumnName);

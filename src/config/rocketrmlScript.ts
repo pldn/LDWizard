@@ -38,9 +38,12 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     let result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
     // Convert ntriples to turtle
     const rdfParser = new Parser();
-    // TODO: is it possible to get prefixes from getPrefixes() in the wizardAppConfig?
+    // NOTE: the config passed is a TransformationConfig, we would need
+    // to pass the wizardAppConfig if we want to access the global getPrefixes() function
     const prefixes = {
       '': opts.config.baseIri,
+      ldwid: opts.config.baseIri + "id/",
+      ldwdef: opts.config.baseIri + "def/",
       xsd: 'http://www.w3.org/2001/XMLSchema#',
       rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
       rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
@@ -52,6 +55,8 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       dcat: 'http://www.w3.org/ns/dcat#',
       pav: 'http://purl.org/pav/',
       prov: 'http://www.w3.org/ns/prov#',
+      csvw: 'http://www.w3.org/ns/csvw#',
+      dbo: 'http://dbpedia.org/ontology/'
     }
     const quads = rdfParser.parse(result, null, (prefix, namespace) => {
       prefixes[prefix] = namespace['id']

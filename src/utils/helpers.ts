@@ -11,7 +11,7 @@ export function cleanCsvValue(value: unknown) {
   if (typeof value === "string"){
     result = encodeURI(value.replace(/ /g, "_"));
     return result
-  } 
+  }
   if (typeof value === "number"){
     result = "" + value;
     return result
