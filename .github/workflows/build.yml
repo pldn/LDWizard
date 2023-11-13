@@ -37,10 +37,14 @@ jobs:
       run: |
         npm install --global yarn
 
+    - name: Install Node 18 dependencies
+      if: matrix.node-version == 18
+      run: |
+        yarn global add node-gyp
+
     - name: Install dependencies
       run: |
-        yarn
-        # yarn --frozen-lockfile
+        yarn --frozen-lockfile
 
     - name: Build the LDWizard
       run: |
