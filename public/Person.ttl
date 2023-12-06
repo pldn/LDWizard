@@ -14,52 +14,26 @@ self:Philosopher
 
     sh:property [
         sh:path schema:givenName ;
-        sh:datatype rdf:langString ; 
-        sh:languageIn ( "en" "nl" ) ;
+        sh:datatype xsd:string ; 
         sh:minCount 1 ;
         sh:maxCount 1 ;
     ] ;
 
     sh:property [
         sh:path schema:familyName ;
+        sh:datatype xsd:string ; 
         sh:minCount 1 ;
         sh:maxCount 1 ;
     ] ;
 
-    # sh:property [
-    #     sh:path rdf:type ;
-    #     sh:in ( dbo:Philosopher ) ;
-    #     sh:minCount 1 ;
-    #     sh:maxCount 1 ;
-    # ] ;
-
     sh:property [
         sh:path dbo:birthPlace ;
-        sh:nodeKind sh:IRI ;
-        sh:node self:Location ;
+        sh:datatype xsd:string1 ; 
+        sh:maxCount 1 ;
     ] ;
 
     sh:property [
         sh:path dbo:birthDate ;
-        sh:datatype xsd:date;
+        sh:datatype xsd:string ; 
         sh:maxCount 1 ;
     ] .
-
-# self:Location
-#     a sh:NodeShape ;
-
-#     sh:targetClass <http://dbpedia.org/ontology/Location> ;
-
-#     # sh:property [
-#     #     sh:path rdf:type ;
-#     #     sh:minCount 1 ;
-#     #     sh:maxCount 1 ;
-#     # ] ;
-
-#     sh:property [
-#         sh:path rdfs:label ;
-#         sh:datatype rdf:langString ;
-#         sh:languageIn ( "de" "fr" ) ;
-#         sh:minCount 1 ;
-#         sh:maxCount 1 ;
-#     ] .

@@ -32,6 +32,7 @@ const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const [selectedHeader, setSelectedHeader] = React.useState<ColumnConfiguration | undefined>();
   const prefixes = useRecoilValue(prefixState);
+  const [activeDragOverColumn, setActiveDragOverColumn] = React.useState('')
 
   let columns = transformationConfig.columnConfiguration
    
@@ -46,12 +47,21 @@ const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
 
   const dragOver = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
     event.preventDefault();
+    setActiveDragOverColumn(columnConfig.columnName)
     event.dataTransfer.dropEffect = "move";
   } : undefined
+
+
+  const dragOut = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
+    setActiveDragOverColumn('')
+  } : undefined
+
+  
 
   const dropArea = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
     event.preventDefault();
     const propertyIri = event.dataTransfer.getData("application/ld-wizard");
+    setActiveDragOverColumn('')
 
     setTransformationConfig((state) => {
       const columnConfiguration = [...state.columnConfiguration];
@@ -90,12 +100,13 @@ const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
 
             return (
               <TableCell
-              onDragStart={dragStart(columnConfig)}
+                onDragStart={dragStart(columnConfig)}
                 draggable={columnConfig.shaclColumn}
                 onDrop={dropArea(columnConfig)}
                 onDragOver={dragOver(columnConfig)}
+                onDragLeave={dragOut(columnConfig)}
                 key={`${columnConfig.columnName}${idx}`}
-                className={getClassName(styles.tableHeader, { [styles.disabled]: isKeyColumn, [styles.shaclColumn]: columnConfig.shaclColumn })}
+                className={getClassName(styles.tableHeader, { [styles.disabled]: isKeyColumn, [styles.shaclColumn]: columnConfig.shaclColumn, [styles.draggingOver]: columnConfig.columnName === activeDragOverColumn })}
                 // Implement the disable here, I still want to be able to use tooltip
                 onClick={columnConfig.disabled ? undefined : () => setSelectedHeader(columnConfig)}
                 // Replace Default tableCell with ButtonBase to create ripple effects on click

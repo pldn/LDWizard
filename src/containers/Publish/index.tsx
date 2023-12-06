@@ -10,6 +10,10 @@ import { currentTokenState } from "../../state/clientJs.ts";
 import DownloadResults from "./DownloadResults.tsx";
 import { wizardAppConfig, PublishElement } from "../../config/index.ts";
 import { Matrix } from "../../Definitions.ts";
+import { Validator } from 'shacl-engine'
+import rdf from 'rdf-ext'
+import { Parser, Store, Writer } from 'n3'
+
 interface Props { }
 export const Step = 3;
 const Publish: React.FC<Props> = ({ }) => {
@@ -21,6 +25,9 @@ const Publish: React.FC<Props> = ({ }) => {
   const [transformationResult, setTransformationResult] = React.useState<string>();
   const [transformationError, setTransformationError] = React.useState<string>();
   const [progress, setProgress] = React.useState(0);
+  const [conforms, setConforms] = React.useState(null);
+  const [shaclReportTurtle, setShaclReportTurtle] = React.useState('');
+
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   return (
@@ -252,6 +259,25 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
           source: tempRefinedCsv || parsedCsv,
           type: "rml",
         });
+        
+        if (transformationConfig.shaclShape) {
+          const shaclShapes = await wizardAppConfig.getShaclShapes()
+
+          const selectedShaclShape = shaclShapes.find(shaclShape => shaclShape.iri === transformationConfig.shaclShape)
+          const parser = new Parser()
+          const quads = await parser.parse(transformationResult)
+          const store = new Store(quads)
+          const validator = new Validator(selectedShaclShape.store, { factory: rdf })
+          const report = await validator.validate({ dataset: store })
+
+          setConforms(report.conforms)
+
+          if (!report.conforms) {
+            const writer = new Writer()
+            for (const quad of report.dataset) writer.addQuad(quad)
+            writer.end((error, result) => setShaclReportTurtle(result))
+          }
+        }
         setTransformationResult(transformationResult);
       }
     };
@@ -296,7 +322,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
   }
   const publishOptions: { [P in PublishElement]: React.ReactElement } = {
     download: (
-      <DownloadResults refinedCsv={refinedCsv} transformationResult={transformationResult} key="Download-to-browser" />
+      <DownloadResults shaclReport={shaclReportTurtle} shaclConforms={conforms} refinedCsv={refinedCsv} transformationResult={transformationResult} key="Download-to-browser" />
     ),
     triplyDB: (
       <ErrorBoundary
