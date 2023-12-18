@@ -25,6 +25,8 @@ let runtimeConfig: WizardConfig = {
   secondaryColor: "#1565c0", // blue
   exampleCSV,
   columnRefinements: [
+    // TODO improve examples
+    // TODO DOC comments for Opts
     {
       label: "Use bulk processing: add '-processed-in-bulk' at the end of literal",
       type: "single",

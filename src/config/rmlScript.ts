@@ -1,5 +1,5 @@
 import { TransformationScript, TransformationConfiguration } from "../Definitions.ts";
-import { DataFactory, Writer } from "n3";
+import { DataFactory, Quad, Writer } from "n3";
 import { cleanCsvValue, getBaseIdentifierIri, getBasePredicateIri, getFileBaseName } from "../utils/helpers.ts";
 
 const { namedNode, literal } = DataFactory;
@@ -15,51 +15,8 @@ const rmlPrefixes: { [key: string]: string } = {
   dbo: "http://dbpedia.org/ontology/",
   owl: "http://www.w3.org/2002/07/owl#",
 };
-// TODO fix owl:sameAs
 
-// [x] implement literal structure pattern
-/**
-ex:RowNumber/1 ex:predicate/Age :AgeValue1
-ex:RowNumber/1 ex:predicate/Age-refined :Age-refinedValue1
-:AgeValue1 rdf:type owl:NamedIndividual ;
-           rdf:value "20";
-           rdf:comment "Original literal value".
-:Age-refinedValue1 rdf:type owl:NamedIndividual ;
-           rdf:value "twenty" ;
-           rdf:comment "Refined literal value";
-:ageValue1 owl:sameAs :Age-refinedValue1
- */
-
-// [x] add option to not have owl:sameAs (default?) ==> should make normal literal and IRI
-// [x] implement IRI structure patterm
-/**
- * 
-ex:RowNumber/1 ex:predicate/Age ex:20
-ex:RowNumber/1 ex:predicate/Age-refined ex:twenty
-
-ex:20 owl:sameAs ex:twenty
- * 
- */
-
-// [ ] check correct transformation in values - see TODOs
-// TODO TEST owl:sameAs :
-// [ ] test if yield for original IRI & refined IRI combination works
-// [ ] test if yield for original IRI & refined LITERAL combination works
-// [ ] test if yield for original IRI & refined undefined combination works
-// [ ] test if yield for original LITERAL & refined LITERAL combination works
-// [ ] test if yield for original LITERAL & refined IRI combination works
-// [ ] test if yield for original LITERAL & refined undefined combination works
-// TODO implement for no defined yield => undefined
-// [ ] test if yield for original undefined & refined undefined combination works
-// [ ] test if yield for original undefined & refined IRI combination works
-// [ ] test if yield for original undefined & refined Literal combination works
-
-// TODO Property IRI behavior fixes
-// [ ]original value the given property IRI, but when customPredicateIRI is set, it will overrule the refined transformation's predicate
-// [ ]with no customPredicateIRI it should return the original column header IRI (if possible)
-
-// TODO documentation
-// [ ] add JSDOC comments to Definition.ts objects on what they do
+const owlSameAsQuads = []
 
 async function getRmlTransformationScript(configuration: TransformationConfiguration): Promise<TransformationScript> {
   const baseIri = configuration.baseIri.toString();
@@ -206,7 +163,28 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
             colName = header.columnName;
             if (i > 0) {
               if (header.columnRefinement.KeepOriginalValueOptions.owlSameAsRelationship) {
-                // if the refined data transformation should be kept as an IRI or Literal
+                /** Modeling for owl:sameAs
+                 * modeling for literals:
+                 * :id/1 :predicate/ColumnName :ColumnNameValue1.
+                 * :id/1 :predicate/ColumnName-refined :ColumnName-refinedValue1.
+                 * :ColumnName-refinedValue1 rdf:type owl:NamedNodeIndividual;
+                 *                   rdf:value "one";
+                 *                   rdf:comment "Refined literal value".
+                 * 
+                 * :ColumnNameValue1 rdf:type owl:NamedNodeIndividual;
+                 *                   rdf:value "1";
+                 *                   rdf:comment "Original literal value".
+                 *                   owl:sameAs :ColumnName-refinedValue1
+                 * 
+                 *-----------------------------------------------------------------
+                 * modeling for IRIs:
+                 * :id/1 :predicate/ColumnName :IRI1.
+                 * :id/1 :predicate/ColumnName-refined :IRI1-refined.
+                 * 
+                 * :IRI1 owl:sameAs :IRI1-refined
+                 * 
+                 */
+                // if the refined data transformation should be kept as Literal
                 if (header.columnRefinement.yieldsLiteral) {
                   writer.addQuad(
                     namedNode(":TriplesMap"),
@@ -217,7 +195,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         object: namedNode(
                           header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
                             ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
-                            : header.propertyIri
+                              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
                         ),
                       },
                       {
@@ -226,8 +204,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                           [
                             {
                               predicate: namedNode("rml:template"),
-                              // TODO check if this worked!! for row numbers
-                              object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined-_rowNumber}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -237,25 +214,70 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         ),
                       },
                     ])
-                  )
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  );
+                  // we want to create to reference to literal with a custom IRI
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode("rml:logicalSource"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rml:source"),
+                        object: writer.blank([
+                          { predicate: namedNode("rdf:type"), object: namedNode("csvw:Table") },
+                          {
+                            predicate: namedNode("csvw:url"),
+                            object: literal(
+                              usesRefinedSource
+                                ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                                : // ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                                configuration.sourceFileName
+                            ),
+                          },
+                          {
+                            predicate: namedNode("csvw:dialect"),
+                            object: writer.blank([
+                              {
+                                predicate: namedNode("rdf:type"),
+                                object: namedNode("csvw:Dialect"),
+                              },
+                              {
+                                predicate: namedNode("csvw:delimiter"),
+                                object: literal(configuration.csvProps.delimiter),
+                              },
+                              {
+                                predicate: namedNode("csvw:encoding"),
+                                object: literal("UTF-8"),
+                              },
+                            ]),
+                          },
+                        ]),
+                      },
+                      {
+                        predicate: namedNode("rml:referenceFormulation"),
+                        object: namedNode("ql:CSV"),
+                      },
+                    ])
+                  ));
+                  // writing the triples with a new subject at the end, push to an array to write these quads later
+                  // creating the IRI that links to the literal and for the owl:sameAs relation
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                       [
                         {
                           predicate: namedNode("rml:template"),
-                          // TODO check if this worked!! for row numbers
-                          object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined-_rowNumber}`),
+                          object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
                         },
                         {
                           predicate: namedNode("rr:termType"),
                           object: namedNode("rr:IRI"),
                         },
                       ]
-                    ))
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                    )))
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -266,18 +288,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         predicate: namedNode("rr:objectMap"),
                         object: writer.blank({
                           predicate: namedNode("rr:constant"),
-                          // TODO test if becomes IRI
                           object: namedNode(('owl:NamedIndividual')),
                         }),
                       },
-                      // {
-                      //   predicate: namedNode("rr:termType"),
-                      //   object: namedNode("rr:IRI"),
-                      // },
                     ])
-                  );
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  ));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -288,14 +305,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         predicate: namedNode("rr:objectMap"),
                         object: writer.blank({
                           predicate: namedNode("rr:reference"),
-                          // TODO test if literal is correct refined value
                           object: literal((`${colName}-refined`)),
                         }),
                       },
                     ])
-                  );
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  ));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -310,8 +326,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         }),
                       },
                     ])
-                  );
-                } else {
+                  ));
+                } if (header.columnRefinement.yieldsIri) {
                   // if refined has sameAs and yields IRI
                   writer.addQuad(
                     namedNode(":TriplesMap"),
@@ -322,7 +338,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         object: namedNode(
                           header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
                             ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
-                            : header.propertyIri
+                              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
                         ),
                       },
                       {
@@ -343,10 +359,40 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                     ])
                   );
+                } else if ((header.columnRefinement.yieldsLiteral === undefined) && (header.columnRefinement.yieldsIri === undefined)) {
+                  // refined value has sameAs but yield is undefined => returns template IRI
+                  writer.addQuad(
+                    namedNode(":TriplesMap"),
+                    namedNode("rr:predicateObjectMap"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rr:predicate"),
+                        object: namedNode(
+                          header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
+                            ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
+                              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
+                        ),
+                      },
+                      {
+                        predicate: namedNode("rr:objectMap"),
+                        object: writer.blank(
+                          [
+                            {
+                              predicate: namedNode("rml:template"),
+                              object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
+                            },
+                            {
+                              predicate: namedNode("rr:termType"),
+                              object: namedNode("rr:IRI"),
+                            },
+                          ]
+                        ),
+                      },
+                    ])
+                  );
                 }
-                // @philipperenzen
-                // TODO make else case should also work for undefined yieldsIRI/Literal => should create IRI from template
-              } else {
+              }
+              else {
                 // normal refined without owl:sameAs relationship
                 writer.addQuad(
                   namedNode(":TriplesMap"),
@@ -356,9 +402,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       predicate: namedNode("rr:predicate"),
                       object: namedNode(
                         header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
-                          ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
-                          : header.propertyIri
-                      ),
+                        ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
+                          : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
+                    ),
                     },
                     {
                       predicate: namedNode("rr:objectMap"),
@@ -400,8 +446,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
               // for the original data (unrefined) that we want to keep as well
               // add each seperately
               if (header.columnRefinement.KeepOriginalValueOptions.owlSameAsRelationship) {
-                // if the original data transformation should be kept as an IRI or Literal
-                if (header.columnRefinement.yieldsLiteral) {
+                // if the original data transformation should be kept as a Literal
+                if (header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral) {
                   writer.addQuad(
                     namedNode(":TriplesMap"),
                     namedNode("rr:predicateObjectMap"),
@@ -409,9 +455,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       {
                         predicate: namedNode("rr:predicate"),
                         object: namedNode(
-                          header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
-                            ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
-                            : header.propertyIri
+                          header.propertyIri
+                              ? header.propertyIri
+                              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
                         ),
                       },
                       {
@@ -420,8 +466,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                           [
                             {
                               predicate: namedNode("rml:template"),
-                              // TODO check if this worked!! for row numbers
-                              object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-_rowNumber}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-{_rowNumber}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -432,24 +477,67 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                     ])
                   )
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode("rml:logicalSource"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rml:source"),
+                        object: writer.blank([
+                          { predicate: namedNode("rdf:type"), object: namedNode("csvw:Table") },
+                          {
+                            predicate: namedNode("csvw:url"),
+                            object: literal(
+                              usesRefinedSource
+                                ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                                : // ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                                configuration.sourceFileName
+                            ),
+                          },
+                          {
+                            predicate: namedNode("csvw:dialect"),
+                            object: writer.blank([
+                              {
+                                predicate: namedNode("rdf:type"),
+                                object: namedNode("csvw:Dialect"),
+                              },
+                              {
+                                predicate: namedNode("csvw:delimiter"),
+                                object: literal(configuration.csvProps.delimiter),
+                              },
+                              {
+                                predicate: namedNode("csvw:encoding"),
+                                object: literal("UTF-8"),
+                              },
+                            ]),
+                          },
+                        ]),
+                      },
+                      {
+                        predicate: namedNode("rml:referenceFormulation"),
+                        object: namedNode("ql:CSV"),
+                      },
+                    ])
+                  ));
+                  // we want to write the new subjects at the end, therefore we push them to an array to write the quads later
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                       [
                         {
                           predicate: namedNode("rml:template"),
-                          // TODO check if this worked!! for row numbers
-                          object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-_rowNumber}`),
+                          object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-{_rowNumber}`),
                         },
                         {
                           predicate: namedNode("rr:termType"),
                           object: namedNode("rr:IRI"),
                         },
                       ]
-                    ))
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                    )))
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -460,18 +548,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         predicate: namedNode("rr:objectMap"),
                         object: writer.blank({
                           predicate: namedNode("rr:constant"),
-                          // TODO test if becomes IRI
                           object: namedNode(('owl:NamedIndividual')),
                         }),
                       },
-                      // {
-                      //   predicate: namedNode("rr:termType"),
-                      //   object: namedNode("rr:IRI"),
-                      // },
                     ])
-                  );
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  ));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -482,14 +565,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         predicate: namedNode("rr:objectMap"),
                         object: writer.blank({
                           predicate: namedNode("rr:reference"),
-                          // TODO test if literal is correct refined value
                           object: literal((`${colName}`)),
                         }),
                       },
                     ])
-                  );
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  ));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -504,10 +586,10 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                         }),
                       },
                     ])
-                  );
+                  ));
                   // adding owl:sameAs relationship
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -516,23 +598,46 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                       {
                         predicate: namedNode("rr:objectMap"),
-                        object: writer.blank([
-                          {
-                            predicate: namedNode("rml:template"),
-                            // TODO check if this worked!! for row numbers
-                            object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-_rowNumber}`),
-                          },
-                          {
-                            predicate: namedNode("rr:termType"),
-                            object: namedNode("rr:IRI"),
-                          },
-                        ]),
+                        object: writer.blank(
+                          header.columnRefinement.yieldsLiteral === true
+                            ? [
+                              {
+                                predicate: namedNode("rml:template"),
+                                object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                              },
+                              {
+                                predicate: namedNode("rr:termType"),
+                                object: namedNode("rr:IRI"),
+                              },
+                            ]
+
+                            : header.columnRefinement.yieldsIri === true
+                              ? [
+                                {
+                                  predicate: namedNode("rml:reference"),
+                                  object: literal(`${header.columnName}-refined`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
+                              : [
+                                {
+                                  predicate: namedNode("rml:template"),
+                                  object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
+                        ),
                       },
                     ])
-                  );
+                  ));
 
-                } else {
-                  // if original has sameAs and yields IRI
+                } if (header.columnRefinement.KeepOriginalValueOptions.keepAsIri) {
                   writer.addQuad(
                     namedNode(":TriplesMap"),
                     namedNode("rr:predicateObjectMap"),
@@ -540,9 +645,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       {
                         predicate: namedNode("rr:predicate"),
                         object: namedNode(
-                          header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI
-                            ? `${header.columnRefinement.KeepOriginalValueOptions.customPredicateIRI}`
-                            : header.propertyIri
+                          header.propertyIri
+                              ? header.propertyIri
+                              : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
                         ),
                       },
                       {
@@ -561,18 +666,55 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
 
                         ),
                       },
-
                     ])
                   );
-                  writer.addQuad(
-                    namedNode(":TriplesMap"),
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
+                    namedNode("rml:logicalSource"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rml:source"),
+                        object: writer.blank([
+                          { predicate: namedNode("rdf:type"), object: namedNode("csvw:Table") },
+                          {
+                            predicate: namedNode("csvw:url"),
+                            object: literal(
+                              usesRefinedSource
+                                ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                                : // ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                                configuration.sourceFileName
+                            ),
+                          },
+                          {
+                            predicate: namedNode("csvw:dialect"),
+                            object: writer.blank([
+                              {
+                                predicate: namedNode("rdf:type"),
+                                object: namedNode("csvw:Dialect"),
+                              },
+                              {
+                                predicate: namedNode("csvw:delimiter"),
+                                object: literal(configuration.csvProps.delimiter),
+                              },
+                              {
+                                predicate: namedNode("csvw:encoding"),
+                                object: literal("UTF-8"),
+                              },
+                            ]),
+                          },
+                        ]),
+                      },
+                      {
+                        predicate: namedNode("rml:referenceFormulation"),
+                        object: namedNode("ql:CSV"),
+                      },
+                    ])
+                  ));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
-                      [
-                        {
-                          predicate: namedNode("rml:template"),
-                          // TODO check if this worked!! for row numbers
-                          object: writer.blank(
                             [
                               {
                                 predicate: namedNode("rml:reference"),
@@ -583,42 +725,194 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                                 object: namedNode("rr:IRI"),
                               },
                             ]
-
-                          ),
+                    )))
+                  // if original has sameAs and should be kept as an IRI
+                    owlSameAsQuads.push(new Quad(
+                      namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
+                      namedNode("rr:predicateObjectMap"),
+                      writer.blank([
+                        {
+                          predicate: namedNode("rr:predicate"),
+                          object: namedNode("owl:sameAs"),
                         },
                         {
-                          predicate: namedNode("rr:termType"),
-                          object: namedNode("rr:IRI"),
+                          predicate: namedNode("rr:objectMap"),
+                          object: writer.blank(
+                            header.columnRefinement.yieldsLiteral === true
+                              ? [
+                                {
+                                  predicate: namedNode("rml:template"),
+                                  object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
+  
+                              : header.columnRefinement.yieldsIri === true
+                                ? [
+                                  {
+                                    predicate: namedNode("rml:reference"),
+                                    object: literal(`${header.columnName}-refined`),
+                                  },
+                                  {
+                                    predicate: namedNode("rr:termType"),
+                                    object: namedNode("rr:IRI"),
+                                  },
+                                ]
+                                : [
+                                  {
+                                    predicate: namedNode("rml:template"),
+                                    object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
+                                  },
+                                  {
+                                    predicate: namedNode("rr:termType"),
+                                    object: namedNode("rr:IRI"),
+                                  },
+                                ]
+                          ),
                         },
-                      ]
-                    ))
+                      ])
+                    ));
+                } else if ((header.columnRefinement.KeepOriginalValueOptions.keepAsLiteral === undefined) && (header.columnRefinement.KeepOriginalValueOptions.keepAsIri === undefined)) {
                   writer.addQuad(
                     namedNode(":TriplesMap"),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
                         predicate: namedNode("rr:predicate"),
-                        object: namedNode('owl:sameAs'),
+                        object: namedNode(
+                          header.propertyIri
+                            ? header.propertyIri
+                            : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                        ),
                       },
                       {
                         predicate: namedNode("rr:objectMap"),
                         object: writer.blank(
                           [
-                            {
-                              predicate: namedNode("rml:reference"),
-                              object: literal(`${header.columnName}-refined`),
-                            },
-                            {
-                              predicate: namedNode("rr:termType"),
-                              object: namedNode("rr:IRI"),
-                            },
-                          ]
-
+                                {
+                                  predicate: namedNode("rml:template"),
+                                  object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
                         ),
                       },
-
                     ])
                   );
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapOriginal${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode("rml:logicalSource"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rml:source"),
+                        object: writer.blank([
+                          { predicate: namedNode("rdf:type"), object: namedNode("csvw:Table") },
+                          {
+                            predicate: namedNode("csvw:url"),
+                            object: literal(
+                              usesRefinedSource
+                                ? getFileBaseName(configuration.sourceFileName) + ".csv"
+                                : // ? getFileBaseName(configuration.sourceFileName) + "-enriched.csv"
+                                configuration.sourceFileName
+                            ),
+                          },
+                          {
+                            predicate: namedNode("csvw:dialect"),
+                            object: writer.blank([
+                              {
+                                predicate: namedNode("rdf:type"),
+                                object: namedNode("csvw:Dialect"),
+                              },
+                              {
+                                predicate: namedNode("csvw:delimiter"),
+                                object: literal(configuration.csvProps.delimiter),
+                              },
+                              {
+                                predicate: namedNode("csvw:encoding"),
+                                object: literal("UTF-8"),
+                              },
+                            ]),
+                          },
+                        ]),
+                      },
+                      {
+                        predicate: namedNode("rml:referenceFormulation"),
+                        object: namedNode("ql:CSV"),
+                      },
+                    ])
+                  ));
+                  // we want to write the new subjects at the end, therefore we push them to an array to write the quads later
+                  // if the original value has sameAs but keepAs... is undefined => return template IRI
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode("rr:subjectMap"),
+                    writer.blank(
+                            [
+                              {
+                                predicate: namedNode("rml:template"),
+                                object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}}`),
+                              },
+                              {
+                                predicate: namedNode("rr:termType"),
+                                object: namedNode("rr:IRI"),
+                              },
+                            ]
+                    )))
+                  owlSameAsQuads.push(new Quad(
+                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode("rr:predicateObjectMap"),
+                    writer.blank([
+                      {
+                        predicate: namedNode("rr:predicate"),
+                        object: namedNode("owl:sameAs"),
+                      },
+                      {
+                        predicate: namedNode("rr:objectMap"),
+                        object: writer.blank(
+                          header.columnRefinement.yieldsLiteral === true
+                            ? [
+                              {
+                                predicate: namedNode("rml:template"),
+                                object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                              },
+                              {
+                                predicate: namedNode("rr:termType"),
+                                object: namedNode("rr:IRI"),
+                              },
+                            ]
+
+                            : header.columnRefinement.yieldsIri === true
+                              ? [
+                                {
+                                  predicate: namedNode("rml:reference"),
+                                  object: literal(`${header.columnName}-refined`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
+                              : [
+                                {
+                                  predicate: namedNode("rml:template"),
+                                  object: literal(`${getBasePredicateIri(baseIri)}{${header.columnName}-refined}`),
+                                },
+                                {
+                                  predicate: namedNode("rr:termType"),
+                                  object: namedNode("rr:IRI"),
+                                },
+                              ]
+                        ),
+                      },
+                    ])
+                  ));
                 }
               }
               else {
@@ -631,8 +925,8 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       predicate: namedNode("rr:predicate"),
                       object: namedNode(
                         header.propertyIri
-                          ? header.propertyIri
-                          : `${getBasePredicateIri(baseIri)}${cleanCsvValue(colName)}`
+                            ? header.propertyIri
+                            : `${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}`
                       ),
                     },
                     {
@@ -750,6 +1044,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
       );
     }
   }
+  writer.addQuads(owlSameAsQuads)
   return new Promise((resolve, reject) => {
     writer.end((error, result) => {
       if (error) reject(error);
