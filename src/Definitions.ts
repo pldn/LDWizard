@@ -110,6 +110,7 @@ export type KeepOriginalValueOptions = {
   customPredicateIRI?: string
   keepAsIri?: boolean
   keepAsLiteral?: boolean
+  owlSameAsRelationship?: boolean
 }
 /**
  * Define transformation scripts in configuration

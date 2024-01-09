@@ -13,7 +13,7 @@ import bulkSparql from "../src/utils/bulkSparql.js";
 import { DataFactory } from "n3";
 
 // Turn this to "true" to enable this configuration (for development purposes)
-const useRuntimeConfigFile = false;
+const useRuntimeConfigFile = true;
 
 let wizardConfig: WizardConfig;
 
@@ -117,6 +117,7 @@ select ?transformed ?obj where {
       },
       keepOriginalValue: {
         keepValue: true,
+        owlSameAsRelationship:true
       },
     },
     {

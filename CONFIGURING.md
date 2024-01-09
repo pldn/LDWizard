@@ -292,6 +292,7 @@ select ?transformed ?obj where {
       },
       keepOriginalValue: {
         keepValue: true,
+        owlSameAsRelationship:true
       },
     },
     {
@@ -309,10 +310,12 @@ select ?transformed ?obj where {
     },
   ],
   requireShaclShape: true,
-  shaclShapes: [{
-      url: '/Person.ttl',
-      targetShape: 'http://pldn.nl/ldwizard/Philosopher'
-  }]
+  shaclShapes: [
+    {
+      url: shapeFile,
+      targetShape: "http://pldn.nl/ldwizard/Philosopher",
+    },
+  ],
 };
 export default globalThis.wizardConfig = wizardConfig
 ```

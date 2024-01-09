@@ -25,7 +25,7 @@
     "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && yarn webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js",
     "dev": "yarn --development && tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
     "start": "yarn build && npx http-server -c-1 ./lib",
-    "ldwizard-build": "./webpack/ldwizard-build.js",
+    "ldwizard-build": "./webpack/lib/ldwizard-build.js",
     "test": "tsc -p ./tsconfig-test.json && mocha $(find ./test -name '*.test.js') --require source-map-support/register",
     "util:analyzeBundle": "ANALYZE_BUNDLE=true yarn run build",
     "util:bundlesize": "bundlesize",

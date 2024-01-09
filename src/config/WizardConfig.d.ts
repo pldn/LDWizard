@@ -16,6 +16,7 @@ export type KeepOriginalValueOptions = {
     customPredicateIRI?: string;
     keepAsIri?: boolean;
     keepAsLiteral?: boolean;
+    owlSameAsRelationship?: boolean;
 };
 export interface BaseColumnRefinement {
     label: string;
