@@ -140,7 +140,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   : [
                     {
                       predicate: namedNode("rr:template"),
-                      object: literal(`${header.columnRefinement.data.iriPrefix}{${header.columnName}}`),
+                      object: literal(`${header.columnRefinement.data.iriPrefix}{${cleanCsvValue(header.columnName)}}`),
                     },
                     {
                       predicate: namedNode("rr:termType"),
@@ -204,7 +204,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                           [
                             {
                               predicate: namedNode("rml:template"),
-                              object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-refined-{_rowNumber}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -216,9 +216,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   );
                   // we want to create to reference to literal with a custom IRI
-                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rml:logicalSource"),
                     writer.blank([
                       {
@@ -262,13 +262,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   // writing the triples with a new subject at the end, push to an array to write these quads later
                   // creating the IRI that links to the literal and for the owl:sameAs relation
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                       [
                         {
                           predicate: namedNode("rml:template"),
-                          object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                          object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-refined-{_rowNumber}`),
                         },
                         {
                           predicate: namedNode("rr:termType"),
@@ -277,7 +277,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       ]
                     )))
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -294,7 +294,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   ));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -311,7 +311,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   ));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapYieldLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapYieldLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -466,7 +466,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                           [
                             {
                               predicate: namedNode("rml:template"),
-                              object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-{_rowNumber}`),
+                              object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-{_rowNumber}`),
                             },
                             {
                               predicate: namedNode("rr:termType"),
@@ -477,9 +477,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                     ])
                   )
-                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rml:logicalSource"),
                     writer.blank([
                       {
@@ -522,13 +522,13 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   ));
                   // we want to write the new subjects at the end, therefore we push them to an array to write the quads later
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                       [
                         {
                           predicate: namedNode("rml:template"),
-                          object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-{_rowNumber}`),
+                          object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-{_rowNumber}`),
                         },
                         {
                           predicate: namedNode("rr:termType"),
@@ -537,7 +537,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       ]
                     )))
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -554,7 +554,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   ));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -571,7 +571,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   ));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -589,7 +589,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   ));
                   // adding owl:sameAs relationship
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsLiteral${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsLiteral${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -603,7 +603,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                             ? [
                               {
                                 predicate: namedNode("rml:template"),
-                                object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                                object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-refined-{_rowNumber}`),
                               },
                               {
                                 predicate: namedNode("rr:termType"),
@@ -668,9 +668,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                     ])
                   );
-                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapKeepAsIri${cleanCsvValue(header.columnName)}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsIri${cleanCsvValue(header.columnName)}`),
                     namedNode("rml:logicalSource"),
                     writer.blank([
                       {
@@ -712,7 +712,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     ])
                   ));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapKeepAsIri${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                             [
@@ -728,7 +728,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                     )))
                   // if original has sameAs and should be kept as an IRI
                     owlSameAsQuads.push(new Quad(
-                      namedNode(`:SameAsTriplesMapKeepAsIri${header.columnName}`),
+                      namedNode(`:SameAsTriplesMapKeepAsIri${cleanCsvValue(header.columnName)}`),
                       namedNode("rr:predicateObjectMap"),
                       writer.blank([
                         {
@@ -742,7 +742,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                               ? [
                                 {
                                   predicate: namedNode("rml:template"),
-                                  object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                                  object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-refined-{_rowNumber}`),
                                 },
                                 {
                                   predicate: namedNode("rr:termType"),
@@ -805,9 +805,9 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                       },
                     ])
                   );
-                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapOriginal${header.columnName}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
+                  owlSameAsQuads.push(new Quad(namedNode(`:SameAsTriplesMapOriginal${cleanCsvValue(header.columnName)}`), namedNode("rdf:type"), namedNode("rr:TriplesMap")));
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapOriginal${cleanCsvValue(header.columnName)}`),
                     namedNode("rml:logicalSource"),
                     writer.blank([
                       {
@@ -851,7 +851,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                   // we want to write the new subjects at the end, therefore we push them to an array to write the quads later
                   // if the original value has sameAs but keepAs... is undefined => return template IRI
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapOriginal${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:subjectMap"),
                     writer.blank(
                             [
@@ -866,7 +866,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                             ]
                     )))
                   owlSameAsQuads.push(new Quad(
-                    namedNode(`:SameAsTriplesMapOriginal${header.columnName}`),
+                    namedNode(`:SameAsTriplesMapOriginal${cleanCsvValue(header.columnName)}`),
                     namedNode("rr:predicateObjectMap"),
                     writer.blank([
                       {
@@ -880,7 +880,7 @@ async function getRmlTransformationScript(configuration: TransformationConfigura
                             ? [
                               {
                                 predicate: namedNode("rml:template"),
-                                object: literal(`${getBasePredicateIri(baseIri)}${header.columnName}-refined-{_rowNumber}`),
+                                object: literal(`${getBasePredicateIri(baseIri)}${cleanCsvValue(header.columnName)}-refined-{_rowNumber}`),
                               },
                               {
                                 predicate: namedNode("rr:termType"),
