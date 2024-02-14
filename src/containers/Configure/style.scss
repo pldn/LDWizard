@@ -32,11 +32,16 @@ th.tableHeader {
     cursor: default;
     background-color: #ccc;
   }
+  
   &.shaclColumn {
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
+    background-color: #ffdec4;
+  }
+
+  &.draggingOver {
     background-color: #ffdec4;
   }
 }

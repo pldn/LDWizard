@@ -12,13 +12,14 @@ import { getFileBaseName } from "../../utils/helpers.ts";
 interface Props {
   transformationResult: string;
   refinedCsv: Matrix | undefined;
+  shaclConforms: boolean | null,
+  shaclReport?: string
 }
-const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
+const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv, shaclConforms, shaclReport }) => {
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
   
   const transformationConfig = useRecoilValue(transformationConfigState);
-
 
   const downloadFile = (content: File | string | undefined, defaultName: string, mediaType: string) => {
     if (!downloadRef.current || !content) return;
@@ -87,8 +88,12 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             <CardHeader title="Download RDF" avatar={<FontAwesomeIcon icon="file" />} />
             <CardContent className={styles.downloadContent}>
               Download the transformed Linked Data (RDF) to your local machine.
+
+              {shaclConforms === false ? <span><br /><br /><FontAwesomeIcon icon={["fas", "xmark"]} /> The data does not conform to the selected SHACL shape</span> : null}
+              {shaclConforms === true ? <span><br /><br /><FontAwesomeIcon icon={["fas", "check"]} /> The data does conform to the selected SHACL shape</span> : null}
             </CardContent>
             <CardActions>
+              {shaclConforms !== false ? 
               <Button
                 onClick={() => downloadFile(transformationResult, rdfFileName, "application/n-triples")}
                 component="span"
@@ -97,7 +102,20 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                 style={{textTransform: 'none'}}
               >
                 Download RDF
-              </Button>
+              </Button> :
+              <SplitButton
+              actions={["rdf", "shacl"]}
+              getOptionsLabel={(option) => option === 'rdf' ? `RDF` : 'SHACL report'}
+              getButtonlabel={(selectedOption) => selectedOption === 'rdf' ? `Download RDF` : 'Download SHACL report'}
+              onActionSelected={(result) => {
+                if (result === 'rdf') {
+                  downloadFile(transformationResult, rdfFileName, "application/n-triples")
+                }
+                else {
+                  downloadFile(shaclReport, 'shacl-validation-report.nt', "application/n-triples")
+                }
+              }}
+              />}
             </CardActions>
           </Card>
           <Card variant="outlined" className={styles.downloadSegment}>
