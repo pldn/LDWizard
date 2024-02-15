@@ -45,11 +45,11 @@ Anyone in our LDWizard developer community can solve issues on a voluntary basis
 
 ## Gatekeeper role and quality control
 
-We have agreed upon to have a gatekeeper role in our development community for a 1-year period (from September 2022 to September 2023).
+We have agreed upon to have a gatekeeper role in our development community for a 1-year period (from August 2023 to August 2024).
 
 Our gatekeeper is:
 
-* [Mark Lindeman](https://github.com/mightymax)
+* [Gerwin Bosch](https://github.com/GerwinBosch)
 
 Who has been assigned with the following tasks:
 
