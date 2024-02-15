@@ -12,7 +12,7 @@ import HintWrapper from "../../components/HintWrapper/index.tsx";
 import styles from "./style.scss";
 import { AutocompleteSuggestion } from "../../Definitions.ts";
 import { wizardAppConfig } from "../../config/index.ts";
-import { getPrefixInfoFromPrefixedValue, getPrefixed } from "@triply/utils/lib/prefixUtils.js";
+import { getPrefixInfoFromPrefixedValue, getPrefixed } from "@triply/utils/prefixUtils.js";
 
 interface Props {
   isValidUrl: boolean,

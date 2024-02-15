@@ -1,4 +1,4 @@
-import { PrefixesArray, getPrefixed } from '@triply/utils/lib/prefixUtils'
+import { PrefixesArray, getPrefixed } from '@triply/utils/prefixUtils.js'
 import { ColumnConfiguration, ShaclShapeMeta } from '../Definitions.ts'
 
 

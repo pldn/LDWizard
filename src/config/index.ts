@@ -20,8 +20,8 @@ import {
 
 import defaultImage from "./assets/LDWizard.png";
 import defaultFavIcon from "./assets/favIcon.svg";
-import { PrefixesArray } from "@triply/utils/lib/prefixUtils.ts";
-import { AccessLevel as DatasetAccessLevel } from "@triply/utils/lib/Models.ts";
+import { PrefixesArray } from "@triply/utils/prefixUtils.ts";
+import { AccessLevel as DatasetAccessLevel } from "@triply/utils/Models.ts";
 import WizardConfig from "./WizardConfig.ts";
 import getShaclShapes from "./shaclShapes.tsx";
 const defaultEndpoint = "https://api.data.netwerkdigitaalerfgoed.nl/datasets/ld-wizard/sdo/services/sparql/sparql";

@@ -29,7 +29,7 @@ program.action(async () => {
     });
     compiler.hooks.done.tap("LDWizard-base", (stats) => {
       if (!stats.hasErrors()) {
-        console.info(stats.toString(webpackConfig.stats));
+        console.info(stats.toString(typeof webpackConfig.stats !== "boolean"?webpackConfig.stats:"No stats :("));
         return resolve();
       }
       console.error(stats.toJson().errors?.[0]);
