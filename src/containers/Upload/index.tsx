@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { Parser, Store, DataFactory } from "n3";
+import { Parser, Store, DataFactory, Term } from "n3";
 import RMLGenerator from "@rmlio/yarrrml-parser/lib/rml-generator";
 import { mappingSourceState, sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
@@ -122,9 +122,6 @@ const Upload: React.FC<Props> = ({ }) => {
   const handleRmlParse = (sourceFile: File) => {
     setLoading(true);
     setMappingSource(sourceFile);
-    setTransformationConfig((state) => {
-      return { ...state };
-    });
     setError(undefined);
     const { namedNode } = DataFactory;
     const rdfType = namedNode("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
@@ -165,11 +162,11 @@ const Upload: React.FC<Props> = ({ }) => {
         // Get the SubjectMap (subMap, which col is used to generate the subject)
         let subjectMapValue = null
         for (const subjectMapQuad of store.match(triplesMapSubject, namedNode(`${rr}subjectMap`), null)) {
-          for (const subMapTemplateQuad of store.match(namedNode(subjectMapQuad.object.value), namedNode(`${rr}template`), null)) {
+          for (const subMapTemplateQuad of store.match(subjectMapQuad.object as Term, namedNode(`${rr}template`), null)) {
             subjectMapValue = subMapTemplateQuad.object.value;
           }
         }
-        //
+
         if (subjectMapValue) {
           // We remove the /id/ fragment if present at the end to follow the LDWizard base IRI schema
           const match = subjectMapValue.match(/(.*?)(?:id(?:#|\/))?\{(.*?)\}/);
@@ -197,7 +194,7 @@ const Upload: React.FC<Props> = ({ }) => {
 
         // Iterate over TriplesMap predicate-object mappings (poMap)
         for (const poMapQuad of store.match(triplesMapSubject, namedNode(`${rr}predicateObjectMap`), null)) {
-          const poMapSubject = namedNode(poMapQuad.object.value)
+          const poMapSubject = poMapQuad.object as Term
 
           // Get the predicate of the predicate-object mapping (can be rr:predicate or rr:predicateMap)
           let poMapPredicate = null
@@ -325,7 +322,7 @@ const Upload: React.FC<Props> = ({ }) => {
       </div>
     ) : (
       <>
-        <Typography variant="body1" style={{ textAlign: "center", paddingTop: "2rem" }}>
+        <Typography variant="body1" className={styles.uploadTitle}>
           Upload you own CSV file via the Drag and Drop area, or Load button
         </Typography>
         <div className={styles.button}
@@ -364,16 +361,16 @@ const Upload: React.FC<Props> = ({ }) => {
           />
           <label htmlFor="csv-upload">
             <Box textAlign='center'>
-              <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
+              <Button component="span" variant="contained" className={styles.loadButton} startIcon={<FontAwesomeIcon icon="upload" />}>
                 Load Your CSV File
               </Button>
             </Box>
           </label>
           {exampleFile && (
-            <Typography style={{ paddingTop: "1rem" }}>
+            <Typography className={styles.paddingTop}>
               Or try with an{" "}
               <a
-                style={{ cursor: "pointer" }}
+                className={styles.pointer}
                 onClick={() => {
                   handleCsvParse(exampleFile);
                 }}
@@ -386,7 +383,7 @@ const Upload: React.FC<Props> = ({ }) => {
 
         {source &&
           <>
-            <Typography variant="body1" style={{ textAlign: "center", paddingTop: "2rem" }}>
+            <Typography variant="body1" className={styles.uploadTitle}>
               Optionally upload a RML file (in Turtle format), or a YARRRML file (in YAML format), to pre-load and reuse mappings defined previously
             </Typography>
             <div className={styles.button}
@@ -425,7 +422,7 @@ const Upload: React.FC<Props> = ({ }) => {
               />
               <label htmlFor="rml-upload">
                 <Box textAlign='center'>
-                  <Button component="span" variant="contained" style={{textTransform: 'none'}} startIcon={<FontAwesomeIcon icon="upload" />}>
+                  <Button component="span" variant="contained" className={styles.loadButton} startIcon={<FontAwesomeIcon icon="upload" />}>
                     Load Your Mapping File
                   </Button>
                 </Box>
@@ -434,7 +431,7 @@ const Upload: React.FC<Props> = ({ }) => {
           </>
         }
         {error &&
-          <div className={styles.button} style={{ marginTop: "1rem" }}>
+          <div className={`${styles.button} ${styles.paddingTop}`}>
             <Alert severity="error">
               <AlertTitle>Error</AlertTitle>{error}
             </Alert>

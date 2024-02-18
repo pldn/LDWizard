@@ -96,7 +96,7 @@ export const wizardAppConfig: WizardAppConfig = {
   exampleCsv: config.exampleCSV || undefined,
 
   requireShaclShape: !!config.requireShaclShape,
-  
+
   /**
    * Search and IRI Processing
    */
@@ -120,8 +120,24 @@ export const wizardAppConfig: WizardAppConfig = {
     config.getAllowedPrefixes ||
     (async () => [
       {
+        iri: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        prefixLabel: "rdf",
+      },
+      {
+        iri: "http://www.w3.org/2000/01/rdf-schema#",
+        prefixLabel: "rdfs",
+      },
+      {
         iri: "https://schema.org/",
         prefixLabel: "schema",
+      },
+      {
+        iri: "http://purl.org/dc/elements/1.1/",
+        prefixLabel: "dc",
+      },
+      {
+        iri: "http://purl.org/dc/terms/",
+        prefixLabel: "dcterms",
       },
     ]),
   /**

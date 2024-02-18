@@ -42,19 +42,6 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       '': opts.config.baseIri,
       ldwid: opts.config.baseIri + "id/",
       ldwdef: opts.config.baseIri + "def/",
-      xsd: 'http://www.w3.org/2001/XMLSchema#',
-      rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-      rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-      schema: 'https://schema.org/',
-      foaf: 'http://xmlns.com/foaf/0.1/',
-      dc: 'http://purl.org/dc/elements/1.1/',
-      dcterms: 'http://purl.org/dc/terms/',
-      owl: 'http://www.w3.org/2002/07/owl#',
-      dcat: 'http://www.w3.org/ns/dcat#',
-      pav: 'http://purl.org/pav/',
-      prov: 'http://www.w3.org/ns/prov#',
-      csvw: 'http://www.w3.org/ns/csvw#',
-      dbo: 'http://dbpedia.org/ontology/',
       ...(await opts.wizardAppConfig.getPrefixes()).reduce((obj, item) => {
         obj[item.prefixLabel] = item.iri;
         return obj
@@ -66,6 +53,7 @@ const applyTransformation: ApplyTransformation = async (opts) => {
     const serializer = new Writer({ format: 'Turtle', prefixes: prefixes });
     serializer.addQuads(quads);
     serializer.end((error, turtleData) => {
+      // This block runs synchronously and populates the result variable
       if (!error) {
         result = turtleData
       }
