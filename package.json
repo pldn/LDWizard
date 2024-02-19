@@ -80,7 +80,7 @@
     "@types/n3": "^1.16.4",
     "@types/node": "^20.11.18",
     "@types/papaparse": "^5.3.14",
-    "@types/react": "18.2.55",
+    "@types/react": "18.2.56",
     "@types/react-dom": "^18.2.19",
     "@types/react-router-dom": "^5.3.3",
     "@types/validator": "^13.11.9",
