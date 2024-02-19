@@ -4,6 +4,8 @@
 
 LD Wizard is a framework for creating end-user focused Graphical User Interfaces (GUIs) that simplify the creation and publication of linked data.
 
+[![Build](https://github.com/pldn/LDWizard/actions/workflows/build.yml/badge.svg)](https://github.com/pldn/LDWizard/actions/workflows/build.yml)
+
 ## 1. LD Wizard Project Implementations
 
 So far, the following LDWizard variants have been configured from the LDWizard Core:
