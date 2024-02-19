@@ -78,9 +78,9 @@
     "@types/lodash-es": "^4.17.12",
     "@types/mocha": "^10.0.6",
     "@types/n3": "^1.16.4",
-    "@types/node": "^20.11.18",
+    "@types/node": "^20.11.19",
     "@types/papaparse": "^5.3.14",
-    "@types/react": "18.2.55",
+    "@types/react": "18.2.56",
     "@types/react-dom": "^18.2.19",
     "@types/react-router-dom": "^5.3.3",
     "@types/validator": "^13.11.9",
@@ -99,7 +99,7 @@
     "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jest": "^27.8.0",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-lodash": "^7.4.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "^6.2.0",
@@ -129,7 +129,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-refresh": "^0.14.0",
-    "react-router-dom": "^6.22.0",
+    "react-router-dom": "^6.22.1",
     "recoil": "^0.7.7",
     "rocketrml": "^2.1.2",
     "sass-loader": "^14.1.0",
@@ -144,11 +144,11 @@
     "url": "^0.11.3",
     "url-loader": "^4.1.1",
     "validator": "^13.9.0",
-    "webpack": "^5.90.1",
+    "webpack": "^5.90.2",
     "webpack-build-notifier": "^2.3.0",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.1"
+    "webpack-dev-server": "^5.0.2"
   },
   "husky": {
     "hooks": {
