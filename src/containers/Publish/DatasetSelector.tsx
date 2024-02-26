@@ -12,9 +12,9 @@ const AccountSelector: React.FC<Props> = () => {
     <FormControl className={styles.itemSelector}>
       <InputLabel>Dataset</InputLabel>
       <Select
-        value={datasets.length > 0 ? selectedDataset : "empty"}
+        value={datasets.length > 0 ? selectedDataset + "": "empty"}
         onChange={(event) => {
-          setSelectedDataset(event.target.value as number);
+          setSelectedDataset(+event.target.value);
         }}
         displayEmpty
         disabled={datasets.length === 0}
