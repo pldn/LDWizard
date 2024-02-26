@@ -68,7 +68,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/lab": "5.0.0-alpha.165",
-    "@mui/material": "^5.15.10",
+    "@mui/material": "^5.15.11",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "@svgr/webpack": "^8.1.0",
     "@triply/triplydb": "^7.0.2",
