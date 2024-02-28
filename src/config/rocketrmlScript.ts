@@ -42,7 +42,7 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       '': opts.config.baseIri,
       ldwid: opts.config.baseIri + "id/",
       ldwdef: opts.config.baseIri + "def/",
-      ...(await opts.wizardAppConfig.getPrefixes()).reduce((obj, item) => {
+      ...opts.prefixes.reduce((obj, item) => {
         obj[item.prefixLabel] = item.iri;
         return obj
       }, {} as Record<string, string>)

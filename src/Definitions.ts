@@ -1,4 +1,5 @@
 import Rdf from "rdf-js";
+import { PrefixesArray } from "@triply/utils/prefixUtils.ts";
 /**
  * General definitions
  */
@@ -82,8 +83,7 @@ export interface ApplyTransformationI {
   config: TransformationConfiguration;
   type: TransformationType;
   source: Source | Matrix;
-  wizardAppConfig: any; // It would be better to use the WizardAppConfig interface
-  // but we would need to import from config, which might create circular dependencies
+  prefixes: PrefixesArray
 }
 /**
  * Apply the transformation to the source data
