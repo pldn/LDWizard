@@ -39,7 +39,7 @@ jobs:
 
     - name: Build the LDWizard
       run: |
-        npm run build
+        npm run build --omit=dev
 
     - name: Run the ldwizard-build script on default config
       run: |
