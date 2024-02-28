@@ -21,13 +21,13 @@
   },
   "license": "EUPL-1.2",
   "scripts": {
-    "prepublishOnly": "yarn run build",
-    "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && yarn webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js",
-    "dev": "yarn --development && tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
-    "start": "yarn build && npx http-server -c-1 ./lib",
+    "prepublishOnly": "npm run build",
+    "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js",
+    "dev": "tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
+    "start": "npm run build && npx http-server -c-1 ./lib",
     "ldwizard-build": "./webpack/lib/ldwizard-build.js",
     "test": "tsc -p ./tsconfig-test.json && mocha $(find ./test -name '*.test.js') --require source-map-support/register",
-    "util:analyzeBundle": "ANALYZE_BUNDLE=true yarn run build",
+    "util:analyzeBundle": "ANALYZE_BUNDLE=true npm run build",
     "util:bundlesize": "bundlesize",
     "util:lint": "ESLINT_STRICT=true  eslint --ext .tsx --ext .ts ./src",
     "util:markStable": "git tag -d stable && git push origin :refs/tags/stable && git tag stable && git push origin stable",
@@ -149,7 +149,7 @@
     "webpack-build-notifier": "^2.3.0",
     "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-server": "^4.15.1"
   },
   "husky": {
     "hooks": {

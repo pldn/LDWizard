@@ -24,11 +24,7 @@ The easiest way to contribute to the LDWizard codebase is by reporting bugs and 
 
 ### Installation guide
 
-Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com). The Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/). Once you have installed Node.js, use the npm package manager that comes bundled with Node.js to install Yarn, the package manager for LDWizard:
-
-```bash
-npm install --global yarn
-```
+Install [Node.js](https://nodejs.org). Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/).
 
 ### Pull Request process
 
@@ -36,16 +32,16 @@ Perform the following steps in order to develop LD Wizard Core locally:
 
 1. Clone this repository and go into its root directory.
 
-2. Run `yarn` to install the dependencies.
+2. Run `npm install` to install the dependencies.
 
-3. Run `yarn dev` to start the LD-wizard in local development with the default configuration.
+3. Run `npm run dev` to start the LD-wizard in local development with the default configuration.
 
 4. Visit <http://localhost:4000> in a web browser.
 
 5. Publish a new version of the LDWizard core via the following command.
 
 ```sh
-yarn build && yarn publish
+npm run build && npm publish
 ```
 
 ### Write documentation

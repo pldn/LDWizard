@@ -8,11 +8,7 @@ We encourage new users who are working in other domains to create new LDWizard v
 
 You can create your own LD Wizard application by following these steps:
 
-1. Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com). The Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/). Once you have installed Node.js, use the npm package manager that comes bundled with Node.js to install Yarn, the package manager for LDWizard:
-
-   ```bash
-   npm install --global yarn
-   ```
+1. Install [Node.js](https://nodejs.org). Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/).
 
 2. Create a directory for your application:
 
@@ -24,9 +20,9 @@ You can create your own LD Wizard application by following these steps:
 3. Start a typescript project:
 
    ```sh
-   yarn init
-   yarn add typescript http-server --dev
-   yarn tsc --init
+   npm init
+   npm install typescript --dev
+   npm exec tsc --init
    ```
 
    The `tsconfig.json` file should have the following contents:
@@ -59,30 +55,24 @@ You can create your own LD Wizard application by following these steps:
       {  //... rest of package.json
          "scripts": {
             "build": "ldwizard-build ./src/config.ts",
-            "start": "yarn build && http-server -c-1 ./lib"
+            "start": "npm run build && http-server -c-1 ./lib"
          }
       }
 
       ```
 
-4. Create a `.yarnrc` file with:
-
-   ```yarnrc
-   --ignore-engines true
-   ```
-
-5. Add the LD Wizard dependency:
+4. Add the LD Wizard dependency:
 
    ```sh
-   yarn add @pldn/ldwizard
+   npm install @pldn/ldwizard
    ```
 
-6. Create a configuration file called `config.ts` in the `./src` directory and enter the following content:
-   * 6.1. Run the command:
+5. Create a configuration file called `config.ts` in the `./src` directory and enter the following content:
+   * 5.1. Run the command:
 
       `mkdir src`
 
-   * 6.2. Create the [`config.ts`](https://github.com/pldn/LDWizard/blob/main/webpack/runtimeConfig.ts) file in the created `src` directory with the contents:
+   * 5.2. Create the [`config.ts`](https://github.com/pldn/LDWizard/blob/main/webpack/runtimeConfig.ts) file in the created `src` directory with the contents:
 
       ```ts
       // This is a template file
@@ -93,26 +83,22 @@ You can create your own LD Wizard application by following these steps:
       export default globalThis.wizardConfig = wizardConfig;
       ```
 
-7. Run the following command to build your application:
+6. Run the following command to build your application:
 
    ```sh
-   yarn build
+   npm exec build
    ```
 
 Your LD Wizard application can now be found inside the `lib/` directory.
 
 ### 1a. Run locally
 
-You can upload your LD Wizard application to an online location and use it there. But you can also run the application locally by starting an HTTP server. If you do not yet have an HTTP server installed, run the following command:
+You can upload your LD Wizard application to an online location and use it there. But you can also run the application locally by starting an HTTP server.
+
+If you don't have a HTTP server installed you can use the following command:
 
 ```sh
-yarn add --dev http-server
-```
-
-With this particular HTTP server the LDWizard can be started in the following way:
-
-```sh
-yarn http-server ./lib
+npm exec http-server ./lib
 ```
 
 Open <http://localhost:8080> in a web browser.
@@ -120,7 +106,7 @@ Open <http://localhost:8080> in a web browser.
 To build your app and start it in one command, use:
 
 ```bash
-yarn start
+npm run start
 ```
 
 ### 1b. Configuration options
@@ -130,8 +116,8 @@ You can customize your LD Wizard application by adding the following configurati
 | setting                 | type                                                 | default                                                                                                                                 | description                                                                                                                                                |
 | ----------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `appName`               | `string`                                             | LD Wizard                                                                                                                               | The name of the LD Wizard instance.                                                                                                                        |
-| `icon`                  | `string`                                             | <img src="https://github.com/pldn/LDWizard/blob/main/src/config/assets/LDWizard.png?raw=true" height="50">             | The icon that is used inside the application.                                                                                                              |
-| `favIcon`               | `string`                                             | <img src="https://github.com/pldn/LDWizard/blob/main/src/config/assets/favIcon.svg?raw=true" height="50">              | The icon that is used as the 'favicon'. This icon commonly appears in web browser tabs.                                                                    |
+| `icon`                  | `string`                                             | <img src="https://github.com/pldn/LDWizard/blob/main/src/config/assets/LDWizard.png?raw=true" height="50" alt="LD Wizard icon">             | The icon that is used inside the application.                                                                                                              |
+| `favIcon`               | `string`                                             | <img src="https://github.com/pldn/LDWizard/blob/main/src/config/assets/favIcon.svg?raw=true" height="50" alt="LD Wizard icon">              | The icon that is used as the 'favicon'. This icon commonly appears in web browser tabs.                                                                    |
 | `primaryColor`          | `string`                                             | #6d1e70 <svg height="20" viewBox="0 -10 20 30" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" fill="#6d1e70" r="10"/></svg> | The primary color that is used in the application.                                                                                                         |
 | `secondaryColor`        | `string`                                             | #a90362 <svg height="20" viewBox="0 -10 20 30" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" fill="#a90362" r="10"/></svg> | The secondary color that is used in the application.                                                                                                       |
 | `homepageMarkdown`      | `string`                                             | `undefined`                                                                                                                             | Optional name of a Markdown file that acts as the homepage for the LD Wizard application.                                                                  |
@@ -165,16 +151,16 @@ When `classConfig` and/or `predicateConfig` are set to `sparql`, LD Wizard uses 
 
 These queries support class and property descriptions that follow linked data standards and best practices:
 
-- Use [`owl:Class`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class) or [`rdfs:Class`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23Class) to declare that something is a class.
-- Use [`owl:DatatypeProperty`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23DatatypeProperty), [`owl:ObjectProperty`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23ObjectProperty), or [`rdf:Property`](https://triplydb.com/w3c/rdf/browser?resource=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23Property) to declare that something is a property.
-- Use [`rdfs:label`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23label) for human-readable labels.
-- Use [`rdfs:comment`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23comment) for human-readable descriptions.
+* Use [`owl:Class`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class) or [`rdfs:Class`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23Class) to declare that something is a class.
+* Use [`owl:DatatypeProperty`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23DatatypeProperty), [`owl:ObjectProperty`](https://triplydb.com/w3c/owl/browser?resource=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23ObjectProperty), or [`rdf:Property`](https://triplydb.com/w3c/rdf/browser?resource=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23Property) to declare that something is a property.
+* Use [`rdfs:label`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23label) for human-readable labels.
+* Use [`rdfs:comment`](https://triplydb.com/w3c/rdfs/browser?resource=http%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23comment) for human-readable descriptions.
 
 ### 2b. Suggestions with ElasticSearch
 
 When `classConfig` and/or `preficateConfig` are set to `elastic`, LD Wizard uses generic ElasticSearch text queries to retrieve suggestions for classes and properties. The ElasticSearch queries that are used can be found [in the LD Wizard Core repository](https://github.com/pldn/LDWizard/blob/main/src/config/elasticSearch.ts).
 
-These queries support class and property descriptions that follow linked data standards and best practices. See [Section 3a](#3a-suggestions-with-sparql) for details.
+These queries support class and property descriptions that follow linked data standards and best practices. See [Section 2a](#2a-suggestions-with-sparql) for details.
 
 In order to create an ElasticSearch service that can be queried in this way, your linked dataset must be indexed as a collection of JSON files. The most standards-compatible way of doing this is to create one [JSON-LD](https://www.w3.org/TR/json-ld11/) file per non-trivial node. A JSON-LD file contains the [Concise Bounded Description (CBD)](https://www.w3.org/Submission/CBD/) for a particular node. Trivial nodes are nodes that are already included in the CBD (e.g., blank nodes). These trivial nodes should not be indexed separately.
 

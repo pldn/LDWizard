@@ -27,7 +27,7 @@ export function getConfig(opts: { production: boolean }) {
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
   // Ignore optional dependency from RocketRML
-  plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u }));
+  plugins.push(new webpack.IgnorePlugin({ resourceRegExp: /xpath-iterator$/u }));
 
   if (development) {
     plugins.push(new ReactRefreshWebpackPlugin());

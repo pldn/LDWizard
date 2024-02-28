@@ -5,7 +5,7 @@ on:
     branches: [ "*" ]
     paths:
     - "*.json"
-    - "yarn.lock"
+    - "package-lock.json"
     - "src/**"
     - "webpack/**"
     - "docker/**"
@@ -33,26 +33,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Install yarn
-      run: |
-        npm install --global yarn
-
-    - name: Install node-gyp dependency
-      if: ${{ matrix.node-version == '18.x' }}
-      run: |
-        yarn global add node-gyp
-
     - name: Install dependencies
       run: |
-        yarn --frozen-lockfile
+        npm ci
 
     - name: Build the LDWizard
       run: |
-        yarn build
+        npm run build
 
     - name: Run the ldwizard-build script on default config
       run: |
-        yarn ldwizard-build webpack/runtimeConfig.ts
+        npm exec ldwizard-build webpack/runtimeConfig.ts
 
 
   docker:
