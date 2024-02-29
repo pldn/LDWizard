@@ -16,5 +16,5 @@
     "noImplicitThis": false,
     "noUnusedLocals": false,
   },
-  "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts"],
+  "include": ["./src/**/*", "./webpack/*.ts", "./typings-custom/main.d.ts", "script/ldwizard-build.ts"],
 }

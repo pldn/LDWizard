@@ -8,9 +8,8 @@ import TerserPlugin from "terser-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import { compact } from "lodash-es";
-import { Renderer as MarkdownRenderer } from "marked";
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 
 import * as url from "url";
 
@@ -21,7 +20,7 @@ export function getConfig(opts: { production: boolean }) {
     new webpack.DefinePlugin({
       __DEVELOPMENT__: development,
     }),
-    new NodePolyfillPlugin()
+    new NodePolyfillPlugin(),
   ];
 
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -38,14 +37,14 @@ export function getConfig(opts: { production: boolean }) {
       new MiniCssExtractPlugin({
         filename: "[name].min.css",
         chunkFilename: "[id].css",
-      })
+      }),
     );
   }
   plugins.push(
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "../index.html"),
       favicon: "",
-    })
+    }),
   );
 
   plugins.push(new webpack.ProvidePlugin({ Buffer: ["buffer", "Buffer"] }));
@@ -133,14 +132,16 @@ export function getConfig(opts: { production: boolean }) {
           use: ["source-map-loader"],
           exclude: [
             // These packages have issues with their sourcemaps
-            development ? path.resolve(__dirname, "../../node_modules/rdf-data-factory") : path.resolve(__dirname, "../../node_modules"),
+            development
+              ? path.resolve(__dirname, "../../node_modules/rdf-data-factory")
+              : path.resolve(__dirname, "../../node_modules"),
             path.resolve(__dirname, "../../node_modules/@triply/utils"),
           ],
           enforce: "pre",
         },
         {
           test: /\.csv$/,
-          type: "asset/source", 
+          type: "asset/source",
 
           // use: [
           //   {
@@ -175,26 +176,15 @@ export function getConfig(opts: { production: boolean }) {
         },
         {
           test: /\.png$/,
-          type: "asset/resource", 
+          type: "asset/resource",
         },
         {
           test: /\.ttl$/,
-          use: 'file-loader',
+          use: "file-loader",
         },
         {
           test: /\.md$/,
-          use: [
-            {
-              loader: "html-loader",
-            },
-            {
-              loader: "markdown-loader",
-              options: {
-                pedantic: true,
-                renderer: new MarkdownRenderer(),
-              },
-            },
-          ],
+          use: "file-loader",
         },
       ],
     },
@@ -202,7 +192,7 @@ export function getConfig(opts: { production: boolean }) {
       extensions: [".json", ".js", ".ts", ".tsx", ".scss"],
       modules: ["node_modules", path.resolve("./src")],
       alias: {
-        "fs-extra": false
+        "fs-extra": false,
       },
       fallback: {
         fs: false,

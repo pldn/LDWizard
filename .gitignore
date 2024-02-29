@@ -3,6 +3,7 @@ node_modules
 lib
 /test
 .npmrc
+script/bin
 
 # Based on https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 .pnp.*
