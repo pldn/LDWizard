@@ -251,6 +251,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
           config: transformationConfig,
           source: tempRefinedCsv || parsedCsv,
           type: "rml",
+          prefixes: await wizardAppConfig.getPrefixes(),
         });
         setTransformationResult(transformationResult);
       }

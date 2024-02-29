@@ -16,7 +16,7 @@ interface Props {
 const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) => {
   const downloadRef = React.useRef<HTMLAnchorElement>(null);
   const source = useRecoilValue(sourceState);
-  
+
   const transformationConfig = useRecoilValue(transformationConfigState);
 
 
@@ -35,7 +35,7 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
   if (!source) return null;
 
   const rdfFileName =
-    (source && source instanceof File &&  "name" in source) ? getFileBaseName(source.name) + ".nt" : "result.nt";
+    (source && source instanceof File &&  "name" in source) ? getFileBaseName(source.name) + ".ttl" : "result.ttl";
 
   return (
     (<Card variant="outlined">
@@ -104,11 +104,11 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
             <CardHeader title="Download script" avatar={<FontAwesomeIcon icon="file-code" />} />
             <CardContent className={styles.downloadContent}>
               Download the RML mappings that you can use to run the transformation yourself. The following mapping languages are
-              supported: RML, CoW.
+              supported: RML, YARRRML, CoW.
             </CardContent>
             <CardActions>
               <SplitButton
-                actions={["rml", "cow"]}
+                actions={["rml", "yarrrml", "cow"]}
                 getButtonlabel={(selectedOption) => `Download ${selectedOption.toUpperCase()}`}
                 getOptionsLabel={(option) => (option === "cow" ? "CoW" : option.toUpperCase())}
                 onActionSelected={(result) =>
@@ -125,10 +125,15 @@ const DownloadResults: React.FC<Props> = ({ transformationResult, refinedCsv }) 
                               ? `convert.csv-metadata.json`
                               : `${refinedCsv ? fileBase + "-enriched.csv" : source?.name}-metadata.json`;
                           downloadFile(file, fileName, "application/json+ld");
+                        } else if (result === "yarrrml") {
+                          downloadFile(file, `${fileBase || "rules"}.yarrrml.yml`, "text/x-yaml");
                         } else if (result === "rml") {
                           downloadFile(file, `${fileBase || "rules"}.rml.ttl`, "text/turtle");
                         }
                       }
+                    })
+                    .catch((e) => {
+                      console.error(`Error generating the mappings: ${e.message}`);
                     })
                 }
               />

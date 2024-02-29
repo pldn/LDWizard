@@ -1,7 +1,6 @@
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 
 RUN apk --no-cache add g++ gcc libgcc libstdc++ linux-headers make python3 git
-RUN npm install --quiet node-gyp -g
 WORKDIR /app
 
 COPY package.json ./
@@ -14,7 +13,7 @@ COPY . .
 RUN yarn build
 
 ARG CONFIG_FILE
-# RUN yarn add "@pldn/ldwizard"
+# RUN yarn global add "@pldn/ldwizard"
 RUN yarn ldwizard-build ${CONFIG_FILE}
 
 

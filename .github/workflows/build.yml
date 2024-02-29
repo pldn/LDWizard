@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
     paths:
     - "*.json"
     - "yarn.lock"
@@ -18,23 +18,29 @@ on:
 jobs:
 
   build:
-    name: Build with yarn
+    name: Build with Node.js
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [14.x, 16.x, 18.x, 20.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
     - name: Install yarn
       run: |
         npm install --global yarn
+
+    - name: Install node-gyp dependency
+      if: ${{ matrix.node-version == '18.x' }}
+      run: |
+        yarn global add node-gyp
 
     - name: Install dependencies
       run: |
@@ -44,13 +50,17 @@ jobs:
       run: |
         yarn build
 
+    - name: Run the ldwizard-build script on default config
+      run: |
+        yarn ldwizard-build webpack/runtimeConfig.ts
+
 
   docker:
     name: Build Docker image
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Build the Docker image
       run: |

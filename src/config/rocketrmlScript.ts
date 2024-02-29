@@ -3,6 +3,7 @@ import getRmlTransformationScript from "./rmlScript.ts";
 import { matrixToCsv } from "../utils/helpers.ts";
 import parser from "rocketrml";
 import lodash from "lodash";
+import { Parser, Writer } from "n3";
 
 /**
  * Different from the other transformation script, as it is also used in the wizard to transform the data.
@@ -34,11 +35,30 @@ const applyTransformation: ApplyTransformation = async (opts) => {
       xmlPerformanceMode: false,
       replace: false,
     };
-    const result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => {
-      console.error(err);
-      throw(err)
+    let result = await parser.parseFileLive(rmlMappings.toString(), inputFiles, options).catch((err) => { console.log(err); });
+    // Convert ntriples to turtle
+    const rdfParser = new Parser();
+    const prefixes = {
+      '': opts.config.baseIri,
+      ldwid: opts.config.baseIri + "id/",
+      ldwdef: opts.config.baseIri + "def/",
+      ...opts.prefixes.reduce((obj, item) => {
+        obj[item.prefixLabel] = item.iri;
+        return obj
+      }, {} as Record<string, string>)
+    }
+    const quads = rdfParser.parse(result, null, (prefix, namespace) => {
+      prefixes[prefix] = namespace['id']
+    })
+    const serializer = new Writer({ format: 'Turtle', prefixes: prefixes });
+    serializer.addQuads(quads);
+    serializer.end((error, turtleData) => {
+      // This block runs synchronously and populates the result variable
+      if (!error) {
+        result = turtleData
+      }
     });
-    return result;
+    return result
   } else {
     throw new Error("Not supported");
   }

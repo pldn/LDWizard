@@ -1,8 +1,9 @@
 import Rdf from "rdf-js";
+import { PrefixesArray } from "@triply/utils/prefixUtils.ts";
 /**
  * General definitions
  */
-export type TransformationType = "cow" | "rml";
+export type TransformationType = "cow" | "rml" | "yarrrml";
 export type Matrix = Array<Array<string>>;
 export type Source = File | string;
 export type TransformationScript = string | {};
@@ -82,6 +83,7 @@ export interface ApplyTransformationI {
   config: TransformationConfiguration;
   type: TransformationType;
   source: Source | Matrix;
+  prefixes: PrefixesArray
 }
 /**
  * Apply the transformation to the source data
@@ -135,7 +137,7 @@ export interface SingleBaseColumnRefinement extends BaseColumnRefinement {
 export interface BulkBaseColumnRefinement extends BaseColumnRefinement {
   /**
    * Only used for `bulkTransformation`s
-   * 
+   *
    * Size of elements of total size to perform bulk opperation on
    * @example batchSize = 5 in array [1,2,3,4,5,6,7,8,9,10,11] yields:
    * first batch => 1,2,3,4,5
@@ -182,7 +184,7 @@ export interface BulkSingleColumnRefinement extends BulkBaseColumnRefinement {
   /**
    * @property a single column's values will be used for refinement/transformation
    */
-  type: "single";  
+  type: "single";
   /**
    * @param value values in column used for transformation (all row values as array)
    * @returns transformed column values
@@ -206,7 +208,7 @@ export interface BulkSingleColumnParamRefinement extends BulkBaseColumnRefinemen
    */
   type: "single-param";
   /**
-   * 
+   *
    * @param value values in column used for transformation (all row values as array)
    * @returns transformed column values
    */

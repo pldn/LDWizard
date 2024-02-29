@@ -93,7 +93,7 @@ const TriplyDBUploadProcess: React.FC<Props> = ({ transformationResult, refinedC
       // We need to get a mutable object as we create a local job
       const ds = await (await App.get(token).getAccount(selectedAccount.accountName)).getDataset(selectedDataset?.name);
       setProcessText("Uploading results");
-      await ds.importFromFiles([stringToFile(transformationResult, "results.nt", "application/n-triples")]);
+      await ds.importFromFiles([stringToFile(transformationResult, "results.ttl", "text/turtle")]);
       setProcessText("Uploading scripts");
 
       const cowScript = await wizardAppConfig.getTransformationScript(transformationConfig, "cow");

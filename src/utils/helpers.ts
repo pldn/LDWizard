@@ -11,7 +11,7 @@ export function cleanCsvValue(value: unknown) {
   if (typeof value === "string"){
     result = encodeURI(value.replace(/ /g, "_"));
     return result
-  } 
+  }
   if (typeof value === "number"){
     result = "" + value;
     return result
@@ -26,6 +26,9 @@ export function getBasePredicateIri(baseIri: string) {
   return baseIri + "def/";
 }
 export function getBaseIdentifierIri(baseIri: string) {
+  if (baseIri.endsWith("/id/") || baseIri.endsWith("/id#")) {
+    return baseIri
+  }
   if (baseIri.endsWith("#")) {
     return baseIri.slice(0, -1) + "/id#";
   }

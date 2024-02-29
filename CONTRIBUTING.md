@@ -20,6 +20,8 @@ The easiest way to contribute to the LDWizard codebase is by reporting bugs and 
 
 ## Local development and maintenance
 
+[![Build](https://github.com/pldn/LDWizard/actions/workflows/build.yml/badge.svg)](https://github.com/pldn/LDWizard/actions/workflows/build.yml)
+
 ### Installation guide
 
 Install [Node.js](https://nodejs.org) and [Yarn](https://yarnpkg.com). The Node.js has [a page how to install Node using a package manager](https://nodejs.org/en/download/package-manager/). Once you have installed Node.js, use the npm package manager that comes bundled with Node.js to install Yarn, the package manager for LDWizard:
