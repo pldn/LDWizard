@@ -41,8 +41,8 @@
     "ldwizard-build": "./script/bin/ldwizard-build.js"
   },
   "scripts": {
-    "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && webpack --config ./webpack/lib/config.js && npm run buildScript",
-    "buildScript": "rm -rf ./script/bin ./script/tsconfig-buildScript.tsbuildinfo && tsc -p tsconfig-buildScript.json && chmod +x ./script/bin/ldwizard-build.js",
+    "build": "shx rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && webpack --config ./webpack/lib/config.js && npm run buildScript",
+    "buildScript": "shx rm -rf ./script/bin ./script/tsconfig-buildScript.tsbuildinfo && tsc -p tsconfig-buildScript.json && chmod +x ./script/bin/ldwizard-build.js",
     "dev": "tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
     "ldwizard-build": "./script/bin/ldwizard-build.js",
     "prepublishOnly": "npm run build --omit=dev",
@@ -160,6 +160,7 @@
     "rehype-raw": "^7.0.0",
     "rocketrml": "^2.1.2",
     "sass-loader": "^14.1.1",
+    "shx": "^0.3.4",
     "source-map-loader": "^5.0.0",
     "source-map-support": "^0.5.21",
     "style-loader": "^3.3.4",
