@@ -29,11 +29,6 @@
     }
   },
   "exports": {
-    ".": {
-      "import": {
-        "default": "./src/index.ts"
-      }
-    },
     "./WizardConfig": "./types/WizardConfig.d.ts",
     "./bulkSparql": "./src/utils/bulkSparql.js"
   },
