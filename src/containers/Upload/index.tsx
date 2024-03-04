@@ -9,7 +9,6 @@ import { Parser, Store, DataFactory, Term } from "n3";
 import RMLGenerator from "@rmlio/yarrrml-parser/lib/rml-generator";
 import { mappingSourceState, sourceState, matrixState, transformationConfigState } from "../../state/index.ts";
 import config from "../../config/index.ts";
-import * as chardet from 'chardet';
 
 class EmptySpaceInRowError extends Error {
   constructor(message) {

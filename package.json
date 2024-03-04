@@ -1,6 +1,11 @@
 {
   "name": "@pldn/ldwizard",
   "version": "3.0.9",
+  "license": "EUPL-1.2",
+  "author": {
+    "name": "Triply",
+    "email": "info@triply.cc"
+  },
   "contributors": [
     {
       "name": "Gerwin Bosch",
@@ -15,25 +20,41 @@
       "email": "mark.lindeman@triply.cc"
     }
   ],
-  "author": {
-    "name": "Triply",
-    "email": "info@triply.cc"
+  "type": "module",
+  "imports": {
+    "#*": {
+      "import": {
+        "default": "./src/*"
+      }
+    }
   },
-  "license": "EUPL-1.2",
+  "exports": {
+    "./WizardConfig": "./types/WizardConfig.d.ts",
+    "./bulkSparql": "./src/utils/bulkSparql.js"
+  },
+  "bin": {
+    "ldwizard-build": "./script/bin/ldwizard-build.js"
+  },
   "scripts": {
-    "prepublishOnly": "npm run build",
-    "build": "rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && webpack --config ./webpack/lib/config.js  && chmod +x ./webpack/lib/ldwizard-build.js",
+    "build": "shx rm -rf ./webpack/lib ./lib ./webpack/tsconfig-webpack.tsbuildinfo && tsc -p ./tsconfig.json && tsc -p tsconfig-webpack.json && webpack --config ./webpack/lib/config.js && npm run buildScript",
+    "buildScript": "shx rm -rf ./script/bin ./script/tsconfig-buildScript.tsbuildinfo && tsc -p tsconfig-buildScript.json && chmod +x ./script/bin/ldwizard-build.js",
     "dev": "tsc -p tsconfig-webpack.json && webpack serve --history-api-fallback --host 0.0.0.0 --port 4000 --hot  --config ./webpack/lib/config.js",
+    "ldwizard-build": "./script/bin/ldwizard-build.js",
+    "prepublishOnly": "npm run build --omit=dev",
     "start": "npm run build && npx http-server -c-1 ./lib",
-    "ldwizard-build": "./webpack/lib/ldwizard-build.js",
     "test": "tsc -p ./tsconfig-test.json && mocha $(find ./test -name '*.test.js') --require source-map-support/register",
     "util:analyzeBundle": "ANALYZE_BUNDLE=true npm run build",
     "util:bundlesize": "bundlesize",
     "util:lint": "ESLINT_STRICT=true  eslint --ext .tsx --ext .ts ./src",
     "util:markStable": "git tag -d stable && git push origin :refs/tags/stable && git tag stable && git push origin stable",
     "util:prettify": "prettier --parser typescript --write $(find ./src -regex '.*\\.tsx?$') && prettier --parser css --write $(find ./src -regex '.*\\.?scss$')",
-    "util:validateTs:watch": "tsc -p ./tsconfig-validate.json --noEmit --watch --preserveWatchOutput",
-    "util:validateTs": "tsc -p ./tsconfig-validate.json --noEmit"
+    "util:validateTs": "tsc -p ./tsconfig-validate.json --noEmit",
+    "util:validateTs:watch": "tsc -p ./tsconfig-validate.json --noEmit --watch --preserveWatchOutput"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.ts?(x)": [
@@ -50,11 +71,11 @@
       "prettier --parser css --write"
     ]
   },
-  "bin": {
-    "ldwizard-build": "./webpack/lib/ldwizard-build.js"
-  },
   "dependencies": {
-    "-": "^0.0.1",
+    "commander": "^12.0.0",
+    "esbuild": "^0.20.1"
+  },
+  "devDependencies": {
     "@babel/core": "^7.23.9",
     "@babel/plugin-transform-runtime": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
@@ -62,6 +83,7 @@
     "@babel/runtime": "^7.23.9",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@esbuild-kit/esm-loader": "^2.6.5",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
@@ -84,6 +106,7 @@
     "@types/react": "18.2.58",
     "@types/react-dom": "^18.2.19",
     "@types/react-router-dom": "^5.3.3",
+    "@types/sparqljs": "^3.1.10",
     "@types/validator": "^13.11.9",
     "@types/webpack": "^5.28.5",
     "@types/webpack-bundle-analyzer": "^4.7.0",
@@ -93,9 +116,7 @@
     "babel-loader": "^9.1.2",
     "bundlesize2": "^0.0.31",
     "chai": "^5.1.0",
-    "chardet": "^2.0.0",
     "classnames": "^2.5.1",
-    "commander": "^12.0.0",
     "css-loader": "^6.10.0",
     "css-minimizer-webpack-plugin": "^6.0.0",
     "eslint": "^8.57.0",
@@ -111,8 +132,6 @@
     "lint-staged": "^15.2.2",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "markdown-loader": "^8.0.0",
-    "marked": "^12.0.0",
     "mini-css-extract-plugin": "^2.8.0",
     "mocha": "^10.3.0",
     "n3": "^1.17.2",
@@ -129,11 +148,14 @@
     "rdf-js": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-refresh": "^0.14.0",
     "react-router-dom": "^6.22.1",
     "recoil": "^0.7.7",
+    "rehype-raw": "^7.0.0",
     "rocketrml": "^2.1.2",
     "sass-loader": "^14.1.1",
+    "shx": "^0.3.4",
     "source-map-loader": "^5.0.0",
     "source-map-support": "^0.5.21",
     "style-loader": "^3.3.4",
@@ -151,11 +173,6 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "bundlesize": [
     {
       "compression": "none",
@@ -165,26 +182,5 @@
       "compression": "none",
       "path": "lib/LDWizard-base.min.css"
     }
-  ],
-  "devDependencies": {
-    "@esbuild-kit/esm-loader": "^2.6.5",
-    "@types/sparqljs": "^3.1.10"
-  },
-  "exports": {
-    ".": {
-      "import": {
-        "default": "./src/index.ts"
-      }
-    },
-    "./WizardConfig": "./types/WizardConfig.d.ts",
-    "./bulkSparql": "./src/utils/bulkSparql.js"
-  },
-  "type": "module",
-  "imports": {
-    "#*": {
-      "import": {
-        "default": "./src/*"
-      }
-    }
-  }
+  ]
 }

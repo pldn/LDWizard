@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 import { program } from "commander";
-import webpack from "webpack";
-import { getConfig } from "./config.js";
 import * as path from "path";
 import * as fs from "fs";
+import * as esbuild from "esbuild";
 import url from "url";
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
@@ -15,29 +14,30 @@ program.action(async () => {
     program.outputHelp();
     throw new Error("No config file specified");
   }
-  const webpackConfig = getConfig({ production: true });
   console.info("Config found at", path.resolve(process.cwd(), entrypoint));
-  // here we set the entry point to the config file or custom config file
-  (webpackConfig.entry as webpack.EntryObject)["config"] = path.resolve(process.cwd(), entrypoint);
-
-  const compiler = webpack(webpackConfig);
-  compiler.name = "LDWizard-base";
-  console.info("Start webpack compilation");
-  await new Promise<void>((resolve, reject) => {
-    compiler.hooks.compile.tap("LDWizard-base", () => {
-      console.info(`[LD-Wizard] Compiling `);
-    });
-    compiler.hooks.done.tap("LDWizard-base", (stats) => {
-      if (!stats.hasErrors()) {
-        console.info(stats.toString(typeof webpackConfig.stats !== "boolean"?webpackConfig.stats:"No stats :("));
-        return resolve();
-      }
-      console.error(stats.toJson().errors?.[0]);
-      return reject(`Failed to compile LD-Wizard`);
-    });
-    compiler.run(() => {});
+  const outFolder = path.resolve(process.cwd(), "./lib");
+  // Ensure that the outfolder exist
+  if (!fs.existsSync(outFolder)) fs.mkdirSync(outFolder, { recursive: true });
+  const wizardLibDir = path.resolve(__dirname, "../../lib");
+  
+  console.info("Compiling config")
+  await esbuild.build({
+    entryPoints: [path.resolve(process.cwd(), entrypoint)],
+    bundle: true,
+    minify: true,
+    sourcemap: true,
+    outfile: path.resolve(outFolder, "config.min.js"),
+    loader: { ".csv": "text", ".ttl": "text", ".svg": "file", ".png": "file", ".md": "text" },
   });
-  console.info("Moving docker files");
+  
+  console.info("Copy ldwizard files");
+  const wizardLibFiles = fs.readdirSync(wizardLibDir);
+  for (const file of wizardLibFiles) {
+    // We've just compiled these, lets not override them.
+    if (file.startsWith("config.min.js")) continue;
+    fs.copyFileSync(path.resolve(wizardLibDir, file), path.resolve(outFolder, file));
+  }
+  
   const dockerOriginFolder = path.resolve(__dirname, "../../docker");
   const dockerFolder = path.resolve(process.cwd(), "docker");
 
