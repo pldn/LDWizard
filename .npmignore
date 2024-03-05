@@ -1,6 +1,6 @@
 tsconfig-webpack.tsbuildinfo
 node_modules
-lib
+webpack/lib
 lerna-debug.log
 yarn-error.log
 /test
