@@ -95,7 +95,7 @@
     "@rmlio/yarrrml-parser": "^1.6.2",
     "@svgr/webpack": "^8.1.0",
     "@triply/triplydb": "^7.0.2",
-    "@triply/utils": "3.2.0",
+    "@triply/utils": "4.0.0",
     "@types/chai": "^4.3.12",
     "@types/html-webpack-plugin": "^3.2.9",
     "@types/lodash-es": "^4.17.12",
