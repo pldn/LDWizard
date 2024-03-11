@@ -80,7 +80,7 @@
     "@babel/plugin-transform-runtime": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
-    "@babel/runtime": "^7.23.9",
+    "@babel/runtime": "^7.24.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@esbuild-kit/esm-loader": "^2.6.5",
