@@ -101,7 +101,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/mocha": "^10.0.6",
     "@types/n3": "^1.16.4",
-    "@types/node": "^20.11.20",
+    "@types/node": "^20.11.25",
     "@types/papaparse": "^5.3.14",
     "@types/react": "18.2.58",
     "@types/react-dom": "^18.2.19",
