@@ -27,51 +27,60 @@ import TransformationSelector from "./TransformationSelector.tsx";
 import validator from "validator";
 import { configColumnsToShaclColumns } from "../../utils/csvRowsToShaclRows.ts";
 
-interface Props { shaclShapeMeta?: ShaclShapeMeta }
+interface Props {
+  shaclShapeMeta?: ShaclShapeMeta;
+}
 const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
   const [transformationConfig, setTransformationConfig] = useRecoilState(transformationConfigState);
   const [selectedHeader, setSelectedHeader] = React.useState<ColumnConfiguration | undefined>();
   const prefixes = useRecoilValue(prefixState);
 
-  let columns = transformationConfig.columnConfiguration
-   
+  let columns = transformationConfig.columnConfiguration;
+
   if (shaclShapeMeta) {
-    columns = configColumnsToShaclColumns(columns, shaclShapeMeta, prefixes)
+    columns = configColumnsToShaclColumns(columns, shaclShapeMeta, prefixes);
   }
 
-  const dragStart = (columnConfig: ColumnConfiguration) => columnConfig.shaclColumn ? (event: any) => {
-    event.dataTransfer.setData("application/ld-wizard", columnConfig.propertyIri);
-    event.dataTransfer.effectAllowed = "move";
-  } : undefined
+  const dragStart = (columnConfig: ColumnConfiguration) =>
+    columnConfig.shaclColumn
+      ? (event: any) => {
+          event.dataTransfer.setData("application/ld-wizard", columnConfig.propertyIri);
+          event.dataTransfer.effectAllowed = "move";
+        }
+      : undefined;
 
-  const dragOver = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-  } : undefined
+  const dragOver = (columnConfig: ColumnConfiguration) =>
+    !columnConfig.shaclColumn
+      ? (event: any) => {
+          event.preventDefault();
+          event.dataTransfer.dropEffect = "move";
+        }
+      : undefined;
 
-  const dropArea = (columnConfig: ColumnConfiguration) => !columnConfig.shaclColumn ? (event: any) => {
-    event.preventDefault();
-    const propertyIri = event.dataTransfer.getData("application/ld-wizard");
+  const dropArea = (columnConfig: ColumnConfiguration) =>
+    !columnConfig.shaclColumn
+      ? (event: any) => {
+          event.preventDefault();
+          const propertyIri = event.dataTransfer.getData("application/ld-wizard");
 
-    setTransformationConfig((state) => {
-      const columnConfiguration = [...state.columnConfiguration];
-      // Objects in recoil arrays are read-only
-      const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
-      const index = state.columnConfiguration.indexOf(columnConfig)!
-      columnConfiguration[index] = {
-        ...selectedHeader,
-        columnName: columnConfig.columnName,
-        propertyIri: processedPropertyIri,
-      }
+          setTransformationConfig((state) => {
+            const columnConfiguration = [...state.columnConfiguration];
+            // Objects in recoil arrays are read-only
+            const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
+            const index = state.columnConfiguration.indexOf(columnConfig)!;
+            columnConfiguration[index] = {
+              ...selectedHeader,
+              columnName: columnConfig.columnName,
+              propertyIri: processedPropertyIri,
+            };
 
-      return {
-        ...state,
-        columnConfiguration: columnConfiguration,
-      };
-    });
-
-
-  } : undefined
+            return {
+              ...state,
+              columnConfiguration: columnConfiguration,
+            };
+          });
+        }
+      : undefined;
   return (
     <>
       <TableHead>
@@ -82,31 +91,38 @@ const TableHeaders: React.FC<Props> = ({ shaclShapeMeta }) => {
             const fullUri =
               propertyIRI ??
               `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
-                columnConfig.columnName
+                columnConfig.columnName,
               )}`;
             const shortUri = propertyIRI !== undefined ? getPrefixed(propertyIRI, prefixes) || propertyIRI : "";
             const isKeyColumn = idx === transformationConfig.key;
-            const disabled = isKeyColumn || columnConfig.disabled
+            const disabled = isKeyColumn || columnConfig.disabled;
 
             return (
               <TableCell
-              onDragStart={dragStart(columnConfig)}
+                onDragStart={dragStart(columnConfig)}
                 draggable={columnConfig.shaclColumn}
                 onDrop={dropArea(columnConfig)}
                 onDragOver={dragOver(columnConfig)}
                 key={`${columnConfig.columnName}${idx}`}
-                className={getClassName(styles.tableHeader, { [styles.disabled]: isKeyColumn, [styles.shaclColumn]: columnConfig.shaclColumn })}
+                className={getClassName(styles.tableHeader, {
+                  [styles.disabled]: isKeyColumn,
+                  [styles.shaclColumn]: columnConfig.shaclColumn,
+                })}
                 // Implement the disable here, I still want to be able to use tooltip
                 onClick={columnConfig.disabled ? undefined : () => setSelectedHeader(columnConfig)}
                 // Replace Default tableCell with ButtonBase to create ripple effects on click
-                component={disabled ? undefined : (props) => (
-                  <Tooltip
-                    PopperProps={{ className: styles.tooltip }}
-                    title={isKeyColumn ? "This column will be used to create identifiers" : fullUri}
-                  >
-                    <ButtonBase {...props} component="th" />
-                  </Tooltip>
-                )}
+                component={
+                  disabled
+                    ? undefined
+                    : (props) => (
+                        <Tooltip
+                          PopperProps={{ className: styles.tooltip }}
+                          title={isKeyColumn ? "This column will be used to create identifiers" : fullUri}
+                        >
+                          <ButtonBase {...props} component="th" />
+                        </Tooltip>
+                      )
+                }
               >
                 <strong>{columnConfig.columnName + (isKeyColumn ? " (Key)" : "")}</strong>
                 <br />
@@ -134,10 +150,14 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
 
   const [autocompleteError, setAutocompleteError] = React.useState<string | undefined>();
   const [autocompleteSuggestions, setAutocompleteSuggestions] = React.useState<AutocompleteSuggestion[]>([]);
-  const selectedColumn = selectedHeader
-  const [propertyIri, setPropertyIri] = React.useState(selectedColumn?.propertyIri || "");
+  const selectedColumn = selectedHeader;
+  const [propertyIri, setPropertyIri] = React.useState(
+    selectedColumn?.propertyIri || selectedHeader
+      ? `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(selectedHeader.columnName)}`
+      : "",
+  );
   const [selectedRefinement, setSelectedTransformation] = React.useState(selectedColumn?.columnRefinement);
-  const [isValidUrl, setIsValidUrl] = React.useState<boolean>(true)
+  const [isValidUrl, setIsValidUrl] = React.useState<boolean>(true);
 
   // Async call for results effect
   React.useEffect(() => {
@@ -164,12 +184,12 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
       const columnConfiguration = [...state.columnConfiguration];
       // Objects in recoil arrays are read-only
       const processedPropertyIri = propertyIri.length > 0 ? propertyIri.trim() : undefined;
-      const index = state.columnConfiguration.indexOf(selectedHeader)
+      const index = state.columnConfiguration.indexOf(selectedHeader);
       columnConfiguration[index] = {
         ...selectedHeader,
         propertyIri: processedPropertyIri,
         columnRefinement: selectedRefinement,
-      }
+      };
       return {
         ...state,
         columnConfiguration: columnConfiguration,
@@ -181,10 +201,7 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
   return (
     <Dialog open={selectedHeader !== undefined} onClose={onClose} fullWidth maxWidth="md">
       <form onSubmit={confirmIri}>
-        <DialogTitle>
-          Column configuration (
-            {selectedHeader?.columnName})
-        </DialogTitle>
+        <DialogTitle>Column configuration ({selectedHeader?.columnName})</DialogTitle>
         <DialogContent>
           {selectedHeader !== undefined && (
             <>
@@ -193,9 +210,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                 <Autocomplete
                   freeSolo
                   options={autocompleteSuggestions}
-                  value={propertyIri || `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
-                    selectedHeader.columnName
-                  )}`}
+                  defaultValue={
+                    selectedColumn?.propertyIri ||
+                    `${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
+                      selectedHeader.columnName,
+                    )}`
+                  }
+                  value={propertyIri}
                   renderOption={(props, option: AutocompleteSuggestion) => {
                     let titleString: string;
                     let description: string | undefined;
@@ -229,13 +250,13 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                     if (!newValue) return;
                     if (typeof newValue === "string") {
                       setPropertyIri(newValue);
-                      setIsValidUrl(validator.isURL(newValue))
+                      setIsValidUrl(validator.isURL(newValue));
                     } else if ("iri" in newValue) {
                       setPropertyIri(newValue.iri);
-                      setIsValidUrl(validator.isURL(newValue.iri))
+                      setIsValidUrl(validator.isURL(newValue.iri));
                     } else {
                       setPropertyIri(newValue.value);
-                      setIsValidUrl(validator.isURL(newValue.value))
+                      setIsValidUrl(validator.isURL(newValue.value));
                     }
                   }}
                   disableClearable
@@ -247,16 +268,16 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
                         autoFocus
                         label="Property URI"
                         error={!!autocompleteError || !isValidUrl}
-                        helperText={isValidUrl ? "" : 'Invalid URL'}
+                        helperText={isValidUrl ? "" : "Invalid URL"}
                         placeholder={`${getBasePredicateIri(transformationConfig.baseIri.toString())}${cleanCsvValue(
-                          selectedHeader.columnName
+                          selectedHeader.columnName,
                         )}`}
                         InputLabelProps={{ shrink: true }}
                         type="url"
                         inputMode="url"
                         fullWidth
                         onChange={(event) => {
-                          setIsValidUrl(validator.isURL(event.currentTarget.value))
+                          setIsValidUrl(validator.isURL(event.currentTarget.value));
                           const prefixInfo = getPrefixInfoFromPrefixedValue(event.currentTarget.value, prefixes);
                           if (prefixInfo.prefixLabel) {
                             setPropertyIri(`${prefixInfo.iri}${prefixInfo.localName}`);
@@ -280,10 +301,17 @@ const ColumnConfigDialog: React.FC<AutoCompleteProps> = ({ selectedHeader, onClo
           )}
         </DialogContent>
         <DialogActions>
-          <Button disabled={!isValidUrl} className={styles.actionButtons} style={{textTransform: 'none'}} variant="contained" color="primary" type="submit">
+          <Button
+            disabled={!isValidUrl}
+            className={styles.actionButtons}
+            style={{ textTransform: "none" }}
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
             Confirm
           </Button>
-          <Button className={styles.actionButtons} onClick={onClose} style={{textTransform: 'none'}}>
+          <Button className={styles.actionButtons} onClick={onClose} style={{ textTransform: "none" }}>
             Cancel
           </Button>
         </DialogActions>
